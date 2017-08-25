@@ -2,7 +2,7 @@
 
 Kubernetes is now available as a DC/OS package to quickly, and reliably run Kubernetes clusters on Mesosphere DC/OS.
 
-<video src="assets/ui-install.gif" width="320" height="200" controls preload></video>
+<img src="assets/ui-install.gif" align="left" height="400" width="600"></img>
 
 ## Pre-Requisites
 
