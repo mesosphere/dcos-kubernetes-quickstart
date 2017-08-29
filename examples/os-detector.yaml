@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: osdetect
+spec:
+  replicas: 3
+  template:
+    metadata:
+      name: osdetector
+      labels:
+        app: osdetector
+    spec:
+      containers:
+      - name: osdetector
+        image: smugcloud/osdetector:blue
+        imagePullPolicy: Always
+        args: ["--cassandra-host", "node.cassandra.l4lb.thisdcos.directory:9042"]
+        ports:
+        - containerPort: 8080
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: osdetect
+spec:
+  selector:
+    app: osdetector
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 31000
+  type: NodePort

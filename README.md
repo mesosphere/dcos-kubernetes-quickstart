@@ -21,10 +21,10 @@ Once the above pre-requisites have been met, clone this repo.
 git clone git@github.com:mesosphere/dcos-kubernetes-quickstart.git && cd dcos-kubernetes-quickstart
 ```
 
-Set your GCE credentials as environment variables
+Set your GCE credentials as environment variables.  
 
 ```
-TODO
+export GOOGLE_APPLICATION_CREDENTIALS=<PATH TO YOUR CREDENTIAL FILE>
 ```
 
 The remainder of this quick-start will execute in a Docker container, and create your cluster on GCE, with Kubernetes configured.  Simply run
