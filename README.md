@@ -13,7 +13,7 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ## Quickstart
 
-You are now ready to create a 5 node DC/OS cluster.
+You are now ready to create a DC/OS cluster.
 
 Once the above pre-requisites have been met, clone this repo.
 
@@ -30,21 +30,32 @@ export GOOGLE_APPLICATION_CREDENTIALS=<PATH TO YOUR CREDENTIAL FILE>
 The remainder of this quick-start will execute in a Docker container, and create your cluster on GCE, with Kubernetes configured.  Simply run
 
 ```
+When it completes, connect to the 
 make docker
-# you are now in a container
-make all
-# The cluster provisioning will take ~15 minutes.  When it completes, connect to the 
-# Kubernetes API Server
-# Make sure the API Server and Kubelet's are up
+# You are now in a container
+make launch-dcos 
+# Launches DC/OS cluster. The cluster provisioning will take ~15 minutes.  
+make setup-cli 
+# Configures the DC/OS CLI and kubectl
+make install 
+# Installs kubernetes on your cluster. Takes ~2 minutes
+make kubectl-tunnel 
+# Creates a ssh tunnel to a node-agent for APIServer access
+# Make sure the API Server and Kubelet's are up by running:
 
 kubectl get nodes
 
 # If you see a result like this, everything is working properly, and you are now running Kubernetes on DC/OS
 
 NAME                                   STATUS    AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos   Ready     2m        v1.7.3
-kube-node-1-kubelet.kubernetes.mesos   Ready     2m        v1.7.3
-kube-node-2-kubelet.kubernetes.mesos   Ready     2m        v1.7.3
+kube-node-0-kubelet.kubernetes.mesos   Ready     13s       v1.7.5 
+kube-node-1-kubelet.kubernetes.mesos   Ready     13s       v1.7.5 
+kube-node-2-kubelet.kubernetes.mesos   Ready     13s       v1.7.5 
+
+make uninstall 
+# Uninstalls kubernetes
+make destroy-dcos 
+# Deletes the DC/OS cluster
 ```
 
 ## Installing DC/OS CLI
