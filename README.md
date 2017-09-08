@@ -188,3 +188,7 @@ Endpoints:		9.0.2.5:53
 Session Affinity:	None
 Events:			<none>
 ```
+
+## Documents
+
+For more details, please see the [docs folder](docs)
