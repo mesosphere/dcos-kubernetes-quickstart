@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: osdetect
 spec:
-  replicas: 3
+  replicas: 10
   template:
     metadata:
       name: osdetector
