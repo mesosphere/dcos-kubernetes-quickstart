@@ -51,6 +51,11 @@ kube-node-2-kubelet.kubernetes.mesos   Ready     2m        v1.7.3
 
 The recommended method to install the DC/OS CLI is from the DC/OS web interface. Or, you can manually install the CLI by using the instructions below.
 
+[Installing the DC/OS CLI on Linux](https://dcos.io/docs/1.10/cli/install/#linux)
+[Installing the DC/OS CLI on macOS](https://dcos.io/docs/1.10/cli/install/#osx)
+[Installing the DC/OS CLI on Windows](https://dcos.io/docs/1.10/cli/install/#windows)
+
+
 ## Installing Kubectl
 
 Use the Kubernetes command-line tool, kubectl, to deploy and manage applications on Kubernetes. Using kubectl, you can inspect cluster resources; create, delete, and update components; and look at your new cluster and bring up example apps.
