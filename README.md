@@ -30,7 +30,6 @@ export GOOGLE_APPLICATION_CREDENTIALS=<PATH TO YOUR CREDENTIAL FILE>
 The remainder of this quick-start will execute in a Docker container, and create your cluster on GCE, with Kubernetes configured.  Simply run
 
 ```
-When it completes, connect to the 
 make docker
 # You are now in a container.
 make launch-dcos 
@@ -41,7 +40,7 @@ make install
 # Installs kubernetes on your cluster. Takes ~2 minutes.
 make kubectl-tunnel 
 # Creates a ssh tunnel to a node-agent for APIServer access.
-# Make sure the API Server and Kubelet's are up by running:
+# Make sure the API Server and Kubelets are up by running:
 
 kubectl get nodes
 
@@ -160,7 +159,7 @@ kubectl create -f add-ons/dns/kubedns-deployment.yaml
 
 **NOTE:** The Kubernetes namespace where `kube-dns` will be running is `kube-system` and not `default`.
 
-A successfull deployment should look like the following:
+A successful deployment should look like the following:
 ```bash
 $ kubectl -n kube-system get deployment,pods
 NAME              DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
