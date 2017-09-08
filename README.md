@@ -4,6 +4,10 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ![](assets/ui-install.gif)
 
+**KUBERNETES ON DC/OS  IS BETA, DO NOT USE IT FOR PRODUCTION CLUSTERS!**
+
+**But, please try it out! Give us feedback at:**
+**https://github.com/mesosphere/dcos-kubernetes-quickstart/issues**
 
 ## Pre-Requisites
 
@@ -21,7 +25,7 @@ Once the above pre-requisites have been met, clone this repo.
 git clone git@github.com:mesosphere/dcos-kubernetes-quickstart.git && cd dcos-kubernetes-quickstart
 ```
 
-Set your GCE credentials as environment variables.  
+Set your GCE credentials as environment variables.
 
 ```
 export GOOGLE_APPLICATION_CREDENTIALS=<PATH TO YOUR CREDENTIAL FILE>
@@ -32,13 +36,13 @@ The remainder of this quick-start will execute in a Docker container, and create
 ```
 make docker
 # You are now in a container.
-make launch-dcos 
-# Launches DC/OS cluster. The cluster provisioning will take ~15 minutes.  
-make setup-cli 
+make launch-dcos
+# Launches DC/OS cluster. The cluster provisioning will take ~15 minutes.
+make setup-cli
 # Configures the DC/OS CLI and kubectl.
-make install 
+make install
 # Installs kubernetes on your cluster. Takes ~2 minutes.
-make kubectl-tunnel 
+make kubectl-tunnel
 # Creates a ssh tunnel to a node-agent for APIServer access.
 # Make sure the API Server and Kubelets are up by running:
 
@@ -47,13 +51,13 @@ kubectl get nodes
 # If you see a result like this, everything is working properly, and you are now running Kubernetes on DC/OS.
 
 NAME                                   STATUS    AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos   Ready     13s       v1.7.5 
-kube-node-1-kubelet.kubernetes.mesos   Ready     13s       v1.7.5 
-kube-node-2-kubelet.kubernetes.mesos   Ready     13s       v1.7.5 
+kube-node-0-kubelet.kubernetes.mesos   Ready     13s       v1.7.5
+kube-node-1-kubelet.kubernetes.mesos   Ready     13s       v1.7.5
+kube-node-2-kubelet.kubernetes.mesos   Ready     13s       v1.7.5
 
-make uninstall 
+make uninstall
 # Uninstalls kubernetes.
-make destroy-dcos 
+make destroy-dcos
 # Deletes the DC/OS cluster.
 ```
 
@@ -140,10 +144,10 @@ kubectl config use-context dcos-k8s
 Test access by retrieving the Kubernetes cluster nodes:
 ```bash
 $ kubectl get nodes
-NAME                                   STATUS    AGE       VERSION       
-kube-node-0-kubelet.kubernetes.mesos   Ready     7m        v1.7.5        
-kube-node-1-kubelet.kubernetes.mesos   Ready     7m        v1.7.5        
-kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.7.5        
+NAME                                   STATUS    AGE       VERSION
+kube-node-0-kubelet.kubernetes.mesos   Ready     7m        v1.7.5
+kube-node-1-kubelet.kubernetes.mesos   Ready     7m        v1.7.5
+kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.7.5
 ```
 
 ## Mandatory add-ons
