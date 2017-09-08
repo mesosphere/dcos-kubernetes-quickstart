@@ -32,20 +32,20 @@ The remainder of this quick-start will execute in a Docker container, and create
 ```
 When it completes, connect to the 
 make docker
-# You are now in a container
+# You are now in a container.
 make launch-dcos 
 # Launches DC/OS cluster. The cluster provisioning will take ~15 minutes.  
 make setup-cli 
-# Configures the DC/OS CLI and kubectl
+# Configures the DC/OS CLI and kubectl.
 make install 
-# Installs kubernetes on your cluster. Takes ~2 minutes
+# Installs kubernetes on your cluster. Takes ~2 minutes.
 make kubectl-tunnel 
-# Creates a ssh tunnel to a node-agent for APIServer access
+# Creates a ssh tunnel to a node-agent for APIServer access.
 # Make sure the API Server and Kubelet's are up by running:
 
 kubectl get nodes
 
-# If you see a result like this, everything is working properly, and you are now running Kubernetes on DC/OS
+# If you see a result like this, everything is working properly, and you are now running Kubernetes on DC/OS.
 
 NAME                                   STATUS    AGE       VERSION
 kube-node-0-kubelet.kubernetes.mesos   Ready     13s       v1.7.5 
@@ -53,9 +53,9 @@ kube-node-1-kubelet.kubernetes.mesos   Ready     13s       v1.7.5
 kube-node-2-kubelet.kubernetes.mesos   Ready     13s       v1.7.5 
 
 make uninstall 
-# Uninstalls kubernetes
+# Uninstalls kubernetes.
 make destroy-dcos 
-# Deletes the DC/OS cluster
+# Deletes the DC/OS cluster.
 ```
 
 ## Installing DC/OS CLI
