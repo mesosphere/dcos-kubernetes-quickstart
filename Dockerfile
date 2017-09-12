@@ -25,16 +25,14 @@ ENV LANG en_US.UTF-8
 
 RUN pip3 install awscli
 
-RUN git clone https://github.com/dcos/dcos-launch.git && \
-    cd dcos-launch && \
-    git checkout 61389f393f136908f429cfe8ebccbd5e2412da47
-WORKDIR dcos-launch
-RUN pip3 install -r requirements.txt
-RUN python3 setup.py develop
-
 WORKDIR /usr/local/bin
-RUN curl -o dcos https://downloads.dcos.io/binaries/cli/linux/x86-64/0.5.5/dcos
-RUN chmod +x dcos
+# Install required binaries: dcos, dcos-launch and kubectl
+ENV DCOS_LAUNCH_VERSION 0.5.5
+RUN curl -o dcos https://downloads.dcos.io/binaries/cli/linux/x86-64/$DCOS_LAUNCH_VERSION/dcos \
+    && chmod +x dcos
+
+RUN curl -o dcos-launch https://downloads.dcos.io/dcos-launch/bin/linux/dcos-launch \
+    && chmod +x dcos-launch
 
 ENV KUBERNETES_VERSION v1.7.5
 ENV KUBERNETES_DOWNLOAD_URL https://storage.googleapis.com/kubernetes-release/release/$KUBERNETES_VERSION/bin/linux/amd64/kubectl
