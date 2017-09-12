@@ -2,7 +2,7 @@
 
 Kubernetes is now available as a DC/OS package to quickly, and reliably run Kubernetes clusters on Mesosphere DC/OS.
 
-![](assets/ui-install.gif)
+![](docs/assets/ui-install.gif)
 
 **KUBERNETES ON DC/OS  IS BETA, DO NOT USE IT FOR PRODUCTION CLUSTERS!**
 
@@ -34,19 +34,15 @@ export GOOGLE_APPLICATION_CREDENTIALS=<PATH TO YOUR CREDENTIAL FILE>
 The remainder of this quick-start will execute in a Docker container, and create your cluster on GCE, with Kubernetes configured.  Simply run
 
 ```
-make docker
-# You are now in a container.
-make launch-dcos
-# Launches DC/OS cluster. The cluster provisioning will take ~15 minutes.
-make setup-cli
-# Configures the DC/OS CLI and kubectl.
-make install
-# Installs kubernetes on your cluster. Takes ~2 minutes.
-make kubectl-tunnel
-# Creates a ssh tunnel to a node-agent for APIServer access.
-# Make sure the API Server and Kubelets are up by running:
+$ make docker
+```
 
-kubectl get nodes
+You are now in a container from which you will deploy the cluster and required tools.
+```
+$ make deploy
+# Installation might take ~ 8minutes.
+
+$ kubectl get nodes
 
 # If you see a result like this, everything is working properly, and you are now running Kubernetes on DC/OS.
 
@@ -192,6 +188,10 @@ Endpoints:		9.0.2.5:53
 Session Affinity:	None
 Events:			<none>
 ```
+
+## Deploy Kubernetes workloads on DCOS
+
+To deploy your first kubernetes workloads on DC/OS, please see the [examples folder](examples/README.md)
 
 ## Documents
 
