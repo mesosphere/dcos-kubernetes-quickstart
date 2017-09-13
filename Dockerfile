@@ -1,27 +1,18 @@
-FROM ubuntu:16.04
+FROM centos:7
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN yum update -y && yum install -y epel-release && yum install -y \
+  python34-pip \
   curl \
   jq \
   make \
-  build-essential \
-  libssl-dev \
-  libffi-dev \
-  python-dev \
-  python3-pip \
-  python3-venv \
-  python3-setuptools \
-  openssh-client \
+  kernel-devel \
+  kernel-headers \
+  openssl-devel \
+  libffi-devel \
+  openssh-clients \
   git \
-  locales \
   rsync \
-  sudo && apt-get clean
-
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    dpkg-reconfigure --frontend=noninteractive locales && \
-    update-locale LANG=en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-ENV LANG en_US.UTF-8
+  sudo && yum clean all
 
 RUN pip3 install awscli
 
