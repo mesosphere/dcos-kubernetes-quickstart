@@ -161,6 +161,6 @@ docker:
 deploy: docker dcos-launch setup-cli install
 
 install-kube-dns: kubectl-config
-	kubectl create -f add-ons/dns/kubedns-cm.yaml
-	kubectl create -f add-ons/dns/kubedns-svc.yaml
-	kubectl create -f add-ons/dns/kubedns-deployment.yaml
+	kubectl apply -f add-ons/dns/kubedns-cm.yaml
+	kubectl apply -f add-ons/dns/kubedns-svc.yaml
+	kubectl apply -f add-ons/dns/kubedns-deployment.yaml
