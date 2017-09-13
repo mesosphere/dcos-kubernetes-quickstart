@@ -12,6 +12,7 @@ RUN yum update -y && yum install -y epel-release && yum install -y \
   openssh-clients \
   git \
   rsync \
+  which \
   sudo && yum clean all
 
 RUN pip3 install awscli
