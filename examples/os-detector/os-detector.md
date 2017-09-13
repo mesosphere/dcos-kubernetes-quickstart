@@ -17,7 +17,7 @@ We are going to deploy a web application that counts the number of operating sys
 
 ```
 # TODO: CHANGE THE NAME ONCE THE NEW SDK PACKAGE GOES LIVE
-dcos package install beta-cassandra
+dcos package install cassandra
 ```
 
 We need to set up the Cassandra keyspace and table so let's start the `csql` terminal
