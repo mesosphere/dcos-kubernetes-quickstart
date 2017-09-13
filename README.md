@@ -42,6 +42,9 @@ You are now in a container from which you will deploy the cluster and required t
 $ make deploy
 # Installation might take ~ 8minutes.
 
+# Creates a ssh tunnel to a node-agent for APIServer access.
+$ make kubectl-tunnel
+# Make sure the API Server and Kubelets are up by running:
 $ kubectl get nodes
 
 # If you see a result like this, everything is working properly, and you are now running Kubernetes on DC/OS.

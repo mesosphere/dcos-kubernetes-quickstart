@@ -158,7 +158,7 @@ docker:
 	$(call docker_container, /bin/bash, -t)
 
 
-deploy: docker dcos-launch setup-cli install kubectl-tunnel
+deploy: docker dcos-launch setup-cli install
 
 install-kube-dns: kubectl-config
 	kubectl create -f add-ons/dns/kubedns-cm.yaml
