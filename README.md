@@ -193,6 +193,15 @@ Session Affinity:	None
 Events:			<none>
 ```
 
+## Optional add-ons
+
+Here's how to install the Dashboard add-on to the working Kubernetes cluster:
+```bash
+kubectl create -f add-ons/dashboard/kubernetes-dashboard.yaml
+```
+
+If the deployment was successful, point your browser to the url: `http://localhost:9000/ui` to access the Kubernetes Dashboard.
+
 ## Documents
 
 For more details, please see the [docs folder](docs)
