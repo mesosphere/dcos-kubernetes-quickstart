@@ -11,7 +11,7 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ## Pre-Requisites
 
-* Google Cloud (GCE) credentials ([AWS](docs/aws.md) is supported as well) with the necessary [permissions](docs/gce_permissions.md)
+* Google Cloud (GCE) credentials ([AWS](docs/aws.md) is supported as well) with the necessary [permissions](docs/gce-service-account.md)
 * Linux/Mac machine to execute the samples below
 * Docker CE 17+
 
@@ -192,9 +192,18 @@ Session Affinity:	None
 Events:			<none>
 ```
 
+### Optional add-ons
+
+Here's how to install the Dashboard add-on to the working Kubernetes cluster:
+```bash
+kubectl create -f add-ons/dashboard/kubernetes-dashboard.yaml
+```
+
+If the deployment was successful, point your browser to the url: `http://localhost:9000/ui` to access the Kubernetes Dashboard.
+
 ## Deploy Kubernetes workloads on DCOS
 
-To deploy your first kubernetes workloads on DC/OS, please see the [examples folder](examples/README.md)
+To deploy your first Kubernetes workloads on DC/OS, please see the [examples folder](examples/README.md)
 
 ## Documents
 

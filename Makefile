@@ -144,7 +144,7 @@ NUM_MASTERS := $(if ${NUM_MASTERS},${NUM_MASTERS},1)
 define docker_container
 	docker run -i \
 		-v $(GOOGLE_APPLICATION_CREDS):/credentials.json \
-		-e GOOGLE_APPLICATION_CREDENTIALS=/credentials.json \
+		-e GCE_CREDENTIALS_PATH=/credentials.json \
 		-e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
 		-e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
 		-e NUM_PRIVATE_AGENTS=${NUM_PRIVATE_AGENTS} \
@@ -158,7 +158,7 @@ docker:
 	$(call docker_container, /bin/bash, -t)
 
 
-deploy: docker dcos-launch setup-cli install
+deploy: launch-dcos setup-cli install
 
 install-kube-dns: kubectl-config
 	kubectl apply -f add-ons/dns/kubedns-cm.yaml
