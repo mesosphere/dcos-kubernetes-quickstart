@@ -25,7 +25,8 @@ Once the above pre-requisites have been met, clone this repo.
 git clone git@github.com:mesosphere/dcos-kubernetes-quickstart.git && cd dcos-kubernetes-quickstart
 ```
 
-Set your GCE credentials as environment variables.
+Set your GCE credentials as environment variables. More information on how to obtain
+you credentials can be found [here](https://developers.google.com/identity/protocols/application-default-credentials)
 
 ```
 export GOOGLE_APPLICATION_CREDENTIALS=<PATH TO YOUR CREDENTIAL FILE>
