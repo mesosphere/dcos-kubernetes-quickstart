@@ -51,4 +51,4 @@ kubectl create -f os-detector.yaml
 
 From here, the application is deployed, and available at port `31000` on the nodes which Kubernetes is running.  Ensure your firewall is allowing traffic on that port, and you can navigate to your browser to interact with the app.
 
-![](../../assets/os-detector.gif)
+![](../../docs/assets/os-detector.gif)
