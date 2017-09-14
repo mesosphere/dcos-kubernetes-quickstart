@@ -1,8 +1,13 @@
 # Kubernetes on DC/OS
 
+<a href="http://teamcity.mesosphere.io/viewType.html?buildTypeId=ClosedSource_KubernetesAws_PrTest&guest=1">
+<img src="http://teamcity.mesosphere.io/app/rest/builds/buildType:(id:ClosedSource_KubernetesAws_PrTest)/statusIcon"/>
+</a>
+
+
 Kubernetes is now available as a DC/OS package to quickly, and reliably run Kubernetes clusters on Mesosphere DC/OS.
 
-![](assets/ui-install.gif)
+![](docs/assets/ui-install.gif)
 
 **KUBERNETES ON DC/OS  IS BETA, DO NOT USE IT FOR PRODUCTION CLUSTERS!**
 
@@ -25,7 +30,8 @@ Once the above pre-requisites have been met, clone this repo.
 git clone git@github.com:mesosphere/dcos-kubernetes-quickstart.git && cd dcos-kubernetes-quickstart
 ```
 
-Set your GCE credentials as environment variables.
+Set your GCE credentials as environment variables. More information on how to obtain
+you credentials can be found [here](https://developers.google.com/identity/protocols/application-default-credentials)
 
 ```
 export GOOGLE_APPLICATION_CREDENTIALS=<PATH TO YOUR CREDENTIAL FILE>
@@ -34,19 +40,19 @@ export GOOGLE_APPLICATION_CREDENTIALS=<PATH TO YOUR CREDENTIAL FILE>
 The remainder of this quick-start will execute in a Docker container, and create your cluster on GCE, with Kubernetes configured.  Simply run
 
 ```
-make docker
-# You are now in a container.
-make launch-dcos
-# Launches DC/OS cluster. The cluster provisioning will take ~15 minutes.
-make setup-cli
-# Configures the DC/OS CLI and kubectl.
-make install
-# Installs kubernetes on your cluster. Takes ~2 minutes.
-make kubectl-tunnel
-# Creates a ssh tunnel to a node-agent for APIServer access.
-# Make sure the API Server and Kubelets are up by running:
+$ make docker
+```
 
-kubectl get nodes
+You are now in a container from which you will deploy the cluster and required tools.
+
+```
+$ make deploy
+# Installation might take ~ 8minutes.
+
+# Creates a ssh tunnel to a node-agent for APIServer access.
+$ make kubectl-tunnel
+# Make sure the API Server and Kubelets are up by running:
+$ kubectl get nodes
 
 # If you see a result like this, everything is working properly, and you are now running Kubernetes on DC/OS.
 
@@ -80,11 +86,13 @@ Follow instructions [here](https://kubernetes.io/docs/tasks/tools/install-kubect
 
 In order to access the Kubernetes API from outside the DC/OS cluster, one needs SSH access to a node-agent.
 On a terminal window, run:
+
 ```bash
 ssh -N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 <USER>@<HOST>
 ```
 
 When the Kubernetes API task(s) are healthy, it should be accessible on `http://localhost:9000`. Reaching this endpoint should show something like this:
+
 ```bash
 $ curl http://localhost:9000
 {
@@ -193,7 +201,7 @@ Session Affinity:	None
 Events:			<none>
 ```
 
-## Optional add-ons
+### Optional add-ons
 
 Here's how to install the Dashboard add-on to the working Kubernetes cluster:
 ```bash
@@ -201,6 +209,10 @@ kubectl create -f add-ons/dashboard/kubernetes-dashboard.yaml
 ```
 
 If the deployment was successful, point your browser to the url: `http://localhost:9000/ui` to access the Kubernetes Dashboard.
+
+## Deploy Kubernetes workloads on DCOS
+
+To deploy your first Kubernetes workloads on DC/OS, please see the [examples folder](examples/README.md)
 
 ## Documents
 
