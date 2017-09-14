@@ -44,6 +44,7 @@ $ make docker
 ```
 
 You are now in a container from which you will deploy the cluster and required tools.
+
 ```
 $ make deploy
 # Installation might take ~ 8minutes.
@@ -85,11 +86,13 @@ Follow instructions [here](https://kubernetes.io/docs/tasks/tools/install-kubect
 
 In order to access the Kubernetes API from outside the DC/OS cluster, one needs SSH access to a node-agent.
 On a terminal window, run:
+
 ```bash
 ssh -N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 <USER>@<HOST>
 ```
 
 When the Kubernetes API task(s) are healthy, it should be accessible on `http://localhost:9000`. Reaching this endpoint should show something like this:
+
 ```bash
 $ curl http://localhost:9000
 {
