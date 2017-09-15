@@ -16,7 +16,7 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ## Pre-Requisites
 
-* Google Cloud (GCE) credentials ([AWS](docs/aws.md) is supported as well) with the necessary [permissions](docs/gce-service-account.md)
+* Google Cloud (GCE) credentials ([AWS](docs/aws.md) and [Azure](docs/azure.md) are supported as well) with the necessary [permissions](docs/gce-service-account.md)
 * Linux/Mac machine to execute the samples below
 * Docker CE 17+
 
