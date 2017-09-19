@@ -1,10 +1,5 @@
 # Kubernetes on DC/OS
 
-<a href="http://teamcity.mesosphere.io/viewType.html?buildTypeId=ClosedSource_KubernetesAws_PrTest&guest=1">
-<img src="http://teamcity.mesosphere.io/app/rest/builds/buildType:(id:ClosedSource_KubernetesAws_PrTest)/statusIcon"/>
-</a>
-
-
 Kubernetes is now available as a DC/OS package to quickly, and reliably run Kubernetes clusters on Mesosphere DC/OS.
 
 ![](docs/assets/ui-install.gif)
