@@ -153,62 +153,10 @@ kube-node-1-kubelet.kubernetes.mesos   Ready     7m        v1.7.5
 kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.7.5
 ```
 
-## Mandatory add-ons
-
-**NOTE:** As of this moment, only `kube-dns` is a mandatory plug-in.
-
-Assuming one has a working Kubernetes cluster with enough available resources, here's how to install the add-on:
-```bash
-kubectl create -f add-ons/dns/kubedns-cm.yaml
-kubectl create -f add-ons/dns/kubedns-svc.yaml
-kubectl create -f add-ons/dns/kubedns-deployment.yaml
-```
-
-**NOTE:** The Kubernetes namespace where `kube-dns` will be running is `kube-system` and not `default`.
-
-A successful deployment should look like the following:
-```bash
-$ kubectl -n kube-system get deployment,pods
-NAME              DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
-deploy/kube-dns   1         1         1            1           1h
-
-NAME                           READY     STATUS    RESTARTS   AGE
-po/kube-dns-1115425399-mwsn8   3/3       Running   0          1h
-```
-
-And a Kubernetes service should be exposed on `10.100.0.10` with at least one endpoint (pod):
-```bash
-$ kubectl -n kube-system describe svc kube-dns
-Name:			kube-dns
-Namespace:		kube-system
-Labels:			k8s-app=kube-dns
-			kubernetes.io/cluster-service=true
-			kubernetes.io/name=KubeDNS
-Annotations:		<none>
-Selector:		k8s-app=kube-dns
-Type:			ClusterIP
-IP:			10.100.0.10
-Port:			dns	53/UDP
-Endpoints:		9.0.2.5:53
-Port:			dns-tcp	53/TCP
-Endpoints:		9.0.2.5:53
-Session Affinity:	None
-Events:			<none>
-```
-
-### Optional add-ons
-
-Here's how to install the Dashboard add-on to the working Kubernetes cluster:
-```bash
-kubectl create -f add-ons/dashboard/kubernetes-dashboard.yaml
-```
-
-If the deployment was successful, point your browser to the url: `http://localhost:9000/ui` to access the Kubernetes Dashboard.
-
 ## Deploy Kubernetes workloads on DCOS
 
 To deploy your first Kubernetes workloads on DC/OS, please see the [examples folder](examples/README.md)
 
 ## Documents
 
-For more details, please see the [docs folder](docs)
+For more details, please see the [docs folder](docs) as well was the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.0-1.7.6-beta)
