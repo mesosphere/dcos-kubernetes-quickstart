@@ -160,3 +160,13 @@ To deploy your first Kubernetes workloads on DC/OS, please see the [examples fol
 ## Documents
 
 For more details, please see the [docs folder](docs) as well was the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.0-1.7.6-beta)
+
+## Roadmap
+
+Kubernetes on DC/OS is currently in Beta, and not recommended for Production.  For Production certification, we will be delivering incremental functionality:
+
+- [x] Helm Support
+- [ ] Provide better option than SSH tunnel for API server authentication
+- [ ] Robust external ingress for Kubernetes Services
+- [ ] Ability to dynamically expand the Kubernetes nodes
+- [ ] Non-disruptive Kubernetes version upgrades
