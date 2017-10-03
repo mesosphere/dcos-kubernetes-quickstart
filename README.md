@@ -11,7 +11,7 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ## Pre-Requisites
 
-* Google Cloud (GCE) credentials ([AWS](docs/aws.md) and [Azure](docs/azure.md) are supported as well) with the necessary [permissions](docs/gce-service-account.md)
+* Google Cloud (GCE) credentials ([AWS](docs/aws.md) and [Azure](docs/azure.md) are supported as well) with the necessary [permissions](docs/gce.md)
 * Linux/Mac machine to execute the samples below
 * Docker CE 17+
 
@@ -52,9 +52,9 @@ $ kubectl get nodes
 # If you see a result like this, everything is working properly, and you are now running Kubernetes on DC/OS.
 
 NAME                                   STATUS    AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos   Ready     13s       v1.7.5
-kube-node-1-kubelet.kubernetes.mesos   Ready     13s       v1.7.5
-kube-node-2-kubelet.kubernetes.mesos   Ready     13s       v1.7.5
+kube-node-0-kubelet.kubernetes.mesos   Ready     13s       v1.7.7
+kube-node-1-kubelet.kubernetes.mesos   Ready     13s       v1.7.7
+kube-node-2-kubelet.kubernetes.mesos   Ready     13s       v1.7.7
 
 make uninstall
 # Uninstalls kubernetes.
@@ -148,9 +148,9 @@ Test access by retrieving the Kubernetes cluster nodes:
 ```bash
 $ kubectl get nodes
 NAME                                   STATUS    AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos   Ready     7m        v1.7.5
-kube-node-1-kubelet.kubernetes.mesos   Ready     7m        v1.7.5
-kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.7.5
+kube-node-0-kubelet.kubernetes.mesos   Ready     7m        v1.7.7
+kube-node-1-kubelet.kubernetes.mesos   Ready     7m        v1.7.7
+kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.7.7
 ```
 
 ## Deploy Kubernetes workloads on DCOS
@@ -159,4 +159,4 @@ To deploy your first Kubernetes workloads on DC/OS, please see the [examples fol
 
 ## Documents
 
-For more details, please see the [docs folder](docs) as well was the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.0-1.7.6-beta)
+For more details, please see the [docs folder](docs) as well was the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.1-1.7.7-beta)
