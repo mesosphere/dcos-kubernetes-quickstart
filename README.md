@@ -16,6 +16,10 @@ Before proceeding, please check the [current package limitations](https://docs.m
 ## Pre-Requisites
 
 * Google Cloud (GCE) credentials ([AWS](docs/aws.md) and [Azure](docs/azure.md) are supported as well) with the necessary [permissions](docs/gce.md)
+First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.1-1.7.7-beta/install/#prerequisites/).
+
+Then, check the requirements for running this quickstart:
+
 * Linux/Mac machine to execute the samples below
 * Docker CE 17+
 
