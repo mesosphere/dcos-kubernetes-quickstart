@@ -9,6 +9,10 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 **But, please try it out! Give us feedback at:**
 **https://github.com/mesosphere/dcos-kubernetes-quickstart/issues**
 
+## Known limitations
+
+Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.1-1.7.7-beta/limitations/).
+
 ## Pre-Requisites
 
 * Google Cloud (GCE) credentials ([AWS](docs/aws.md) and [Azure](docs/azure.md) are supported as well) with the necessary [permissions](docs/gce.md)
