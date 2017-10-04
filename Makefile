@@ -1,4 +1,4 @@
-.PHONY: uninstall install setup-cli get-master-ip launch-dcos detroy-dcos docker-build docker kubectl-tunnel install-kube-dns deploy
+.PHONY: uninstall install setup-cli get-master-ip launch-dcos detroy-dcos docker-build docker kubectl-tunnel deploy
 
 RM := rm -f
 LAUNCH_CONFIG_FILE := launch.yaml
@@ -159,8 +159,3 @@ docker:
 
 
 deploy: launch-dcos setup-cli install
-
-install-kube-dns: kubectl-config
-	kubectl apply -f add-ons/dns/kubedns-cm.yaml
-	kubectl apply -f add-ons/dns/kubedns-svc.yaml
-	kubectl apply -f add-ons/dns/kubedns-deployment.yaml
