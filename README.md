@@ -15,11 +15,12 @@ Before proceeding, please check the [current package limitations](https://docs.m
 
 ## Pre-Requisites
 
-* Google Cloud (GCE) credentials ([AWS](docs/aws.md) and [Azure](docs/azure.md) are supported as well) with the necessary [permissions](docs/gce.md)
 First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.1-1.7.7-beta/install/#prerequisites/).
 
 Then, check the requirements for running this quickstart:
 
+* Google Cloud (GCE) credentials with the necessary [permissions](docs/gce.md)
+* [AWS](docs/aws.md) and [Azure](docs/azure.md) are supported as well
 * Linux/Mac machine to execute the samples below
 * Docker CE 17+
 
@@ -50,7 +51,6 @@ You are now in a container from which you will deploy the cluster and required t
 
 ```
 $ make deploy
-# Installation might take ~ 8minutes.
 
 # Creates a ssh tunnel to a node-agent for APIServer access.
 $ make kubectl-tunnel
@@ -66,6 +66,7 @@ kube-node-2-kubelet.kubernetes.mesos   Ready     13s       v1.7.7
 
 make uninstall
 # Uninstalls kubernetes.
+
 make destroy-dcos
 # Deletes the DC/OS cluster.
 ```
@@ -78,12 +79,11 @@ Installing the DC/OS CLI on [Linux](https://dcos.io/docs/1.10/cli/install/#linux
 
 Installing the DC/OS CLI on [macOS](https://dcos.io/docs/1.10/cli/install/#osx)
 
-
-## Installing Kubectl
+## Installing kubectl
 
 Use the Kubernetes command-line tool, kubectl, to deploy and manage applications on Kubernetes. Using kubectl, you can inspect cluster resources; create, delete, and update components; and look at your new cluster and bring up example apps.
 
-Follow instructions [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/) to download.
+Follow instructions [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/) to download and install.
 
 ## Connecting to Kubernetes APIServer
 
