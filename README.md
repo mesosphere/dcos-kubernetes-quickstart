@@ -83,7 +83,7 @@ In order to access the Kubernetes API from outside the DC/OS cluster, one needs 
 On a terminal window, run:
 
 ```bash
-ssh -N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 <USER>@<HOST>
+ssh -4 -N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 <USER>@<HOST>
 ```
 
 When the Kubernetes API task(s) are healthy, it should be accessible on `http://localhost:9000`. Reaching this endpoint should show something like this:

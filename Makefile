@@ -130,7 +130,7 @@ endef
 
 kubectl-tunnel: $(ID_FILE)
 	$(call get_master_ip)
-	ssh -i $(ID_FILE) -f -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o "ServerAliveInterval=120" \
+	ssh -i $(ID_FILE) -4 -f -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o "ServerAliveInterval=120" \
 		 -N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 \
 		$(SSH_USER)@$(MASTER_IP)
 
