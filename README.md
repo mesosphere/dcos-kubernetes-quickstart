@@ -15,7 +15,7 @@ Before proceeding, please check the [current package limitations](https://docs.m
 
 ## Pre-Requisites
 
-First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.2-1.7.7-beta/install/#prerequisites/).
+First, make sure your cluster fulfil the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.2-1.7.7-beta/install/#prerequisites/).
 
 Then, check the requirements for running this quickstart:
 
@@ -23,6 +23,10 @@ Then, check the requirements for running this quickstart:
 * [AWS](docs/aws.md) and [Azure](docs/azure.md) are supported as well
 * Linux/Mac machine to execute the samples below
 * Docker CE 17+
+
+Note that some default templates are defined to deploy the virtual machines in
+the [resources](resources/) directory. You can customize these templates to your
+needs.
 
 ## Quickstart
 

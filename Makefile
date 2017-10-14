@@ -9,6 +9,9 @@ ID_FILE := .id_key
 SSH_USER := core
 DCOS_INSTALLER_URL := https://downloads.dcos.io/dcos/stable/1.10.0/dcos_generate_config.sh
 
+include ./resources/gce.template.mk
+include ./resources/aws.template.mk
+include ./resources/azure.template.mk
 
 install:
 	dcos package install --yes beta-kubernetes
@@ -35,7 +38,7 @@ get-master-ip:
 
 define get_master_ip
 $(shell test -f $(MASTER_IP_FILE) || \
-	dcos-launch describe | jq '.["masters"] | .[] | .["public_ip"]' | head -1 | sed s/\"//g > $(MASTER_IP_FILE))
+	dcos-launch describe | jq '.["masters"] | .[] | .["public_ip"]' | head -1 | sed s/\"//g | sed s/\:[0-9]*//g > $(MASTER_IP_FILE))
 $(eval MASTER_IP := $(shell cat $(MASTER_IP_FILE)))
 endef
 
@@ -54,6 +57,10 @@ ifeq ($(PLATFORM), aws)
 	$(eval export LAUNCH_CONFIG_AWS)
 	@echo "$$LAUNCH_CONFIG_AWS" > $@
     $(eval SSH_USER := centos)
+else ifeq ($(PLATFORM), azure)
+	$(eval export LAUNCH_CONFIG_AZURE)
+	@echo "$$LAUNCH_CONFIG_AZURE" > $@
+		$(eval SSH_USER := dcos)
 else
 	$(eval export LAUNCH_CONFIG_GCE)
 	@echo "$$LAUNCH_CONFIG_GCE" > $@
@@ -70,63 +77,6 @@ destroy-dcos:
 define rand_name
 $(shell cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
 endef
-
-define LAUNCH_CONFIG_GCE
----
-launch_config_version: 1
-deployment_name: dcos-cluster-$(call rand_name)
-installer_url: $(DCOS_INSTALLER_URL)
-platform: gce
-provider: onprem
-os_name: coreos
-source_image: coreos-stable-1465-6-0-v20170817
-machine_type: n1-standard-8
-dcos_config:
-    cluster_name: k8s-dev
-    resolvers:
-        - 169.254.169.254
-    dns_search: c.massive-bliss-781.internal google.internal
-    master_discovery: static
-    dns_forward_zones:
-    - - "cluster.local"
-      - - - "10.100.0.10"
-          - 53
-num_masters: $(NUM_MASTERS)
-num_private_agents: $(NUM_PRIVATE_AGENTS)
-num_public_agents: $(NUM_PUBLIC_AGENTS)
-ssh_user: core
-key_helper: true
-gce_zone: us-west1-b
-disable_updates: true
-endef
-
-define LAUNCH_CONFIG_AWS
----
-launch_config_version: 1
-deployment_name: dcos-cluster-$(call rand_name)
-installer_url: $(DCOS_INSTALLER_URL)
-provider: onprem
-platform: aws
-key_helper: true
-num_masters: $(NUM_MASTERS)
-num_private_agents: $(NUM_PRIVATE_AGENTS)
-num_public_agents: $(NUM_PUBLIC_AGENTS)
-os_name: cent-os-7-dcos-prereqs
-aws_region: us-west-2
-instance_type: m4.2xlarge
-dcos_config:
-    cluster_name: k8s-dev
-    master_discovery: static
-    rexray_config_preset: aws
-    resolvers:
-        - 8.8.8.8
-        - 8.8.4.4
-    dns_forward_zones:
-    - - "cluster.local"
-      - - - "10.100.0.10"
-          - 53
-endef
-
 
 kubectl-tunnel: $(ID_FILE)
 	$(call get_master_ip)
@@ -150,6 +100,10 @@ define docker_container
 		-e NUM_PRIVATE_AGENTS=${NUM_PRIVATE_AGENTS} \
 		-e NUM_PUBLIC_AGENTS=${NUM_PUBLIC_AGENTS} \
 		-e NUM_MASTERS=${NUM_MASTERS} \
+		-e AZURE_CLIENT_ID=${AZURE_CLIENT_ID} \
+		-e AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET} \
+		-e AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \
+		-e AZURE_TENANT_ID=${AZURE_TENANT_ID} \
 		-v $(PWD):/dcos-kubernetes \
 		$(2) mesosphere/dcos-kubernetes $(1)
 endef
