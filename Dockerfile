@@ -26,7 +26,7 @@ RUN curl -o dcos https://downloads.dcos.io/binaries/cli/linux/x86-64/$DCOS_LAUNC
 RUN curl -o dcos-launch https://downloads.dcos.io/dcos-launch/bin/linux/dcos-launch \
     && chmod +x dcos-launch
 
-ENV KUBERNETES_VERSION v1.7.6
+ENV KUBERNETES_VERSION v1.7.7
 ENV KUBERNETES_DOWNLOAD_URL https://storage.googleapis.com/kubernetes-release/release/$KUBERNETES_VERSION/bin/linux/amd64/kubectl
 RUN curl -fsSL "$KUBERNETES_DOWNLOAD_URL" -o kubectl \
   && chmod +x kubectl

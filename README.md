@@ -9,11 +9,24 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 **But, please try it out! Give us feedback at:**
 **https://github.com/mesosphere/dcos-kubernetes-quickstart/issues**
 
+## Known limitations
+
+Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.2-1.7.7-beta/limitations/).
+
 ## Pre-Requisites
 
-* Google Cloud (GCE) credentials ([AWS](docs/aws.md) and [Azure](docs/azure.md) are supported as well) with the necessary [permissions](docs/gce-service-account.md)
+First, make sure your cluster fulfil the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.2-1.7.7-beta/install/#prerequisites/).
+
+Then, check the requirements for running this quickstart:
+
+* Google Cloud (GCE) credentials with the necessary [permissions](docs/gce.md)
+* [AWS](docs/aws.md) and [Azure](docs/azure.md) are supported as well
 * Linux/Mac machine to execute the samples below
 * Docker CE 17+
+
+Note that some default templates are defined to deploy the virtual machines in
+the [resources](resources/) directory. You can customize these templates to your
+needs.
 
 ## Quickstart
 
@@ -42,7 +55,6 @@ You are now in a container from which you will deploy the cluster and required t
 
 ```
 $ make deploy
-# Installation might take ~ 8minutes.
 
 # Creates a ssh tunnel to a node-agent for APIServer access.
 $ make kubectl-tunnel
@@ -52,12 +64,13 @@ $ kubectl get nodes
 # If you see a result like this, everything is working properly, and you are now running Kubernetes on DC/OS.
 
 NAME                                   STATUS    AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos   Ready     13s       v1.7.5
-kube-node-1-kubelet.kubernetes.mesos   Ready     13s       v1.7.5
-kube-node-2-kubelet.kubernetes.mesos   Ready     13s       v1.7.5
+kube-node-0-kubelet.kubernetes.mesos   Ready     13s       v1.7.7
+kube-node-1-kubelet.kubernetes.mesos   Ready     13s       v1.7.7
+kube-node-2-kubelet.kubernetes.mesos   Ready     13s       v1.7.7
 
 make uninstall
 # Uninstalls kubernetes.
+
 make destroy-dcos
 # Deletes the DC/OS cluster.
 ```
@@ -70,12 +83,11 @@ Installing the DC/OS CLI on [Linux](https://dcos.io/docs/1.10/cli/install/#linux
 
 Installing the DC/OS CLI on [macOS](https://dcos.io/docs/1.10/cli/install/#osx)
 
-
-## Installing Kubectl
+## Installing kubectl
 
 Use the Kubernetes command-line tool, kubectl, to deploy and manage applications on Kubernetes. Using kubectl, you can inspect cluster resources; create, delete, and update components; and look at your new cluster and bring up example apps.
 
-Follow instructions [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/) to download.
+Follow instructions [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/) to download and install.
 
 ## Connecting to Kubernetes APIServer
 
@@ -83,7 +95,7 @@ In order to access the Kubernetes API from outside the DC/OS cluster, one needs 
 On a terminal window, run:
 
 ```bash
-ssh -N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 <USER>@<HOST>
+ssh -4 -N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 <USER>@<HOST>
 ```
 
 When the Kubernetes API task(s) are healthy, it should be accessible on `http://localhost:9000`. Reaching this endpoint should show something like this:
@@ -148,9 +160,9 @@ Test access by retrieving the Kubernetes cluster nodes:
 ```bash
 $ kubectl get nodes
 NAME                                   STATUS    AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos   Ready     7m        v1.7.5
-kube-node-1-kubelet.kubernetes.mesos   Ready     7m        v1.7.5
-kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.7.5
+kube-node-0-kubelet.kubernetes.mesos   Ready     7m        v1.7.7
+kube-node-1-kubelet.kubernetes.mesos   Ready     7m        v1.7.7
+kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.7.7
 ```
 
 ## Deploy Kubernetes workloads on DCOS
@@ -158,8 +170,6 @@ kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.7.5
 To deploy your first Kubernetes workloads on DC/OS, please see the [examples folder](examples/README.md)
 
 ## Documents
-
-For more details, please see the [docs folder](docs) as well was the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.0-1.7.6-beta)
 
 ## Roadmap
 
@@ -170,3 +180,6 @@ Kubernetes on DC/OS is currently in Beta, and not recommended for Production.  F
 - [ ] Robust external ingress for Kubernetes Services
 - [ ] Ability to dynamically expand the Kubernetes nodes
 - [ ] Non-disruptive Kubernetes version upgrades
+
+For more details, please see the [docs folder](docs) as well was the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.2.2-1.7.7-beta)
+
