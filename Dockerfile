@@ -19,7 +19,7 @@ RUN pip3 install awscli
 
 WORKDIR /usr/local/bin
 # Install required binaries: dcos, dcos-launch and kubectl
-ENV DCOS_LAUNCH_VERSION 0.5.5
+ENV DCOS_LAUNCH_VERSION 0.5.6
 RUN curl -o dcos https://downloads.dcos.io/binaries/cli/linux/x86-64/$DCOS_LAUNCH_VERSION/dcos \
     && chmod +x dcos
 
