@@ -15,7 +15,7 @@ Before proceeding, please check the [current package limitations](https://docs.m
 
 ## Pre-Requisites
 
-First, make sure your cluster fulfil the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.0-1.7.10install/#prerequisites/).
+First, make sure your cluster fulfil the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.0-1.7.10-beta/install/#prerequisites/).
 
 Then, check the requirements for running this quickstart:
 
