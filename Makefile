@@ -7,7 +7,7 @@ BUILD_FILE := .output
 MASTER_IP_FILE := .master_ip
 ID_FILE := .id_key
 SSH_USER := core
-DCOS_INSTALLER_URL := https://downloads.dcos.io/dcos/stable/1.10.0/dcos_generate_config.sh
+DCOS_INSTALLER_URL := https://downloads.dcos.io/dcos/stable/1.10.1/dcos_generate_config.sh
 
 include ./resources/gce.template.mk
 include ./resources/aws.template.mk
