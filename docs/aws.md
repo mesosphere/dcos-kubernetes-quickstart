@@ -33,9 +33,9 @@ kubectl get nodes
 # If you see a result like this, everything is working properly, and you are now running Kubernetes on DC/OS.
 
 NAME                                   STATUS    AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos   Ready     2m       v1.7.10
-kube-node-1-kubelet.kubernetes.mesos   Ready     2m       v1.7.10
-kube-node-2-kubelet.kubernetes.mesos   Ready     2m       v1.7.10
+kube-node-0-kubelet.kubernetes.mesos   Ready     2m       v1.7.11
+kube-node-1-kubelet.kubernetes.mesos   Ready     2m       v1.7.11
+kube-node-2-kubelet.kubernetes.mesos   Ready     2m       v1.7.11
 
 # Uninstall kubernetes.
 make uninstall
