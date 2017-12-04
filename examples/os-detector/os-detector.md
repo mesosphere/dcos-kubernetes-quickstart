@@ -20,15 +20,38 @@ We are going to deploy a web application that counts the number of operating sys
 dcos package install cassandra
 ```
 
-We need to set up the Cassandra keyspace and table so let's start the `csql` terminal
+We need to set up the Cassandra keyspace and table so let's start the `csql` terminal.
+Deploy the following marathon app definition (e.g., using `dcos marathon app add https://raw.githubusercontent.com/mesosphere/dcos-kubernetes-quickstart/master/examples/os-detector/cassandra-cql.json`).
 
+```json
+{
+  "id": "/cassandra-cql",
+  "instances": 1,
+  "portDefinitions": [],
+  "container": {
+    "type": "MESOS",
+    "volumes": [],
+    "docker": {
+      "image": "cassandra:3.0.13"
+    }
+  },
+  "cpus": 0.1,
+  "mem": 256,
+  "requirePorts": false,
+  "networks": [],
+  "healthChecks": [],
+  "fetch": [],
+  "constraints": [],
+  "cmd": "while true; do sleep 1000000; done"
+}
 ```
-# Connect to your DC/OS master
-dcos node ssh --master-proxy --leader
 
-# Run a csql terminal on the running Cassandra cluster
+Next, let us connect to that container using the DC/OS CLI and connect to Cassandra:
 
-docker run -it cassandra:3.0.13 cqlsh node-0-server.cassandra.autoip.dcos.thisdcos.directory
+```bash
+dcos task exec -it cassandra-cql bash
+
+cqlsh node-0-server.cassandra.autoip.dcos.thisdcos.directory
 ```
 
 Once connected to Cassandra, create the keyspace and table

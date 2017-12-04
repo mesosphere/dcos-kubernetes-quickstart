@@ -1,0 +1,20 @@
+{
+  "id": "/cassandra-cql",
+  "instances": 1,
+  "portDefinitions": [],
+  "container": {
+    "type": "MESOS",
+    "volumes": [],
+    "docker": {
+      "image": "cassandra:3.0.13"
+    }
+  },
+  "cpus": 0.1,
+  "mem": 256,
+  "requirePorts": false,
+  "networks": [],
+  "healthChecks": [],
+  "fetch": [],
+  "constraints": [],
+  "cmd": "while true; do sleep 1000000; done"
+}
