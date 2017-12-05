@@ -9,7 +9,7 @@ This sample application will walk through
 
 * A DC/OS 1.10+ cluster, with at least 4 private nodes
 * Kubernetes running on DC/OS
-* The Kubernetes DNS service deployed to your cluster
+* [Configured kubectl](https://github.com/mesosphere/dcos-kubernetes-quickstart#installing-kubectl) 
 
 ## OS Detector
 
