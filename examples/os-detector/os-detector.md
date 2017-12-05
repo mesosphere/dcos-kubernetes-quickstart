@@ -69,7 +69,7 @@ CREATE TABLE browsers.browser_counts (
 Now we are ready to deploy our application via Kubernetes.  The example manifest will create a deployment, as well as a `NodePort` service so we can access the application from outside the cluster.
 
 ```
-kubectl create -f os-detector.yaml
+kubectl apply -f https://raw.githubusercontent.com/mesosphere/dcos-kubernetes-quickstart/master/examples/os-detector/os-detector.yaml
 ```
 
 From here, the application is deployed, and available at port `31000` on the nodes which Kubernetes is running.  Ensure your firewall is allowing traffic on that port, and you can navigate to your browser to interact with the app.
