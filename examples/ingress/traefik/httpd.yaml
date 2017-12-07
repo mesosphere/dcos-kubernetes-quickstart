@@ -1,0 +1,32 @@
+---
+# Deployment
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: httpd
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+      - name: httpd
+        image: nlsun/httpd
+        args: ["/start", "80"]
+        ports:
+        - containerPort: 80 
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpd
+spec:
+  selector:
+    app: httpd
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
