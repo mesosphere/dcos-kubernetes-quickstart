@@ -11,11 +11,11 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ## Known limitations
 
-Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.0-1.7.10-beta/limitations/).
+Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.1-1.7.11-beta/limitations/).
 
 ## Pre-Requisites
 
-First, make sure your cluster fulfil the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.0-1.7.10-beta/install/#prerequisites/).
+First, make sure your cluster fulfil the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.1-1.7.11-beta/install/#prerequisites/).
 
 Then, check the requirements for running this quickstart:
 
@@ -64,9 +64,9 @@ $ kubectl get nodes
 # If you see a result like this, everything is working properly, and you are now running Kubernetes on DC/OS.
 
 NAME                                   STATUS    AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos   Ready     3m       v1.7.10
-kube-node-1-kubelet.kubernetes.mesos   Ready     3m       v1.7.10
-kube-node-2-kubelet.kubernetes.mesos   Ready     3m       v1.7.10
+kube-node-0-kubelet.kubernetes.mesos   Ready     3m       v1.7.11
+kube-node-1-kubelet.kubernetes.mesos   Ready     3m       v1.7.11
+kube-node-2-kubelet.kubernetes.mesos   Ready     3m       v1.7.11
 
 make uninstall
 # Uninstalls kubernetes.
@@ -160,9 +160,9 @@ Test access by retrieving the Kubernetes cluster nodes:
 ```bash
 $ kubectl get nodes
 NAME                                   STATUS    AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos   Ready     7m        v1.7.10
-kube-node-1-kubelet.kubernetes.mesos   Ready     7m        v1.7.10
-kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.7.10
+kube-node-0-kubelet.kubernetes.mesos   Ready     7m        v1.7.11
+kube-node-1-kubelet.kubernetes.mesos   Ready     7m        v1.7.11
+kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.7.11
 ```
 
 ## Deploy Kubernetes workloads on DCOS
@@ -171,8 +171,8 @@ To deploy your first Kubernetes workloads on DC/OS, please see the [examples fol
 
 ## Documents
 
-## Community 
-Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel. 
+## Community
+Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.
 
 ## Roadmap
 
@@ -186,5 +186,4 @@ Kubernetes on DC/OS is currently in Beta, and not recommended for Production.  F
 
 In the future, we will be open-sourcing the underlying Kubernetes framework code.  Stay tuned for details.
 
-For more details, please see the [docs folder](docs) as well was the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.0-1.7.10-beta)
-
+For more details, please see the [docs folder](docs) as well was the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.1-1.7.10-beta)
