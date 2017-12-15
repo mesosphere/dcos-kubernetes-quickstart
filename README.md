@@ -11,11 +11,11 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ## Known limitations
 
-Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.0-1.9.0-beta/limitations/).
+Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.4.0-1.9.0-beta/limitations/).
 
 ## Pre-Requisites
 
-First, make sure your cluster fulfil the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.0-1.9.0-beta/install/#prerequisites/).
+First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.4.0-1.9.0-beta/install/#prerequisites/).
 
 Then, check the requirements for running this quickstart:
 
@@ -186,5 +186,5 @@ Kubernetes on DC/OS is currently in Beta, and not recommended for Production.  F
 
 In the future, we will be open-sourcing the underlying Kubernetes framework code.  Stay tuned for details.
 
-For more details, please see the [docs folder](docs) as well was the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.0-1.9.0-beta)
+For more details, please see the [docs folder](docs) as well was the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.4.0-1.9.0-beta)
 
