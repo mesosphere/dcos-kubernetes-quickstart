@@ -37,7 +37,7 @@ export AWS_SECRET_ACCESS_KEY=<YOUR SECRET KEY>
 
 When deploying our cluster, you might experience some issues related to insufficient resource limits. Consequently, we recommend to verify your default limits [here](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html).
 
-# Configure cluster
+## Configure cluster
 
 Set AWS as cloud provider.
 ```
@@ -64,6 +64,6 @@ admin_cidr = "0.0.0.0/0"
 
 For more cluster setup tweaks check out [here](https://github.com/dcos/terraform-dcos/tree/master/aws).
 
-# Cluster install
+## Cluster install
 
 Follow steps from the main [readme](../README.md#install-cluster)
