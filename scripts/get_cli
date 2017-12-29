@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# download dcos and kubectl cli
+
+# check OS version
+unamestr=`uname`
+if [[ "$unamestr" == "Linux" ]]
+then
+  OS="linux"
+else
+  OS="darwin"
+fi
+
+#
+echo "Downloading dcos cli $DCOS_LAUNCH_VERSION for $OS"
+curl -o dcos https://downloads.dcos.io/binaries/cli/$OS/x86-64/$DCOS_LAUNCH_VERSION/dcos
+chmod +x dcos
+echo
+#
+echo "Downloading kubectl $KUBERNETES_VERSION for $OS"
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$KUBERNETES_VERSION/bin/$OS/amd64/kubectl
+chmod +x kubectl
+echo "Download has finished !!!"
+echo

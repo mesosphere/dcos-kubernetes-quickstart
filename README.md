@@ -4,7 +4,7 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ![](docs/assets/ui-install.gif)
 
-**KUBERNETES ON DC/OS  IS BETA, DO NOT USE IT FOR PRODUCTION CLUSTERS!**
+**KUBERNETES ON DC/OS IS BETA, DO NOT USE IT FOR PRODUCTION CLUSTERS!**
 
 **But, please try it out! Give us feedback at:**
 **https://github.com/mesosphere/dcos-kubernetes-quickstart/issues**
@@ -19,10 +19,10 @@ First, make sure your cluster fulfil the [Kubernetes package default requirement
 
 Then, check the requirements for running this quickstart:
 
+* [Terraform 0.11.x](https://www.terraform.io/downloads.html)
 * Google Cloud (GCE) credentials with the necessary [permissions](docs/gce.md)
 * [AWS](docs/aws.md) and [Azure](docs/azure.md) are supported as well
 * Linux/Mac machine to execute the samples below
-* Docker CE 17+
 
 Note that some default templates are defined to deploy the virtual machines in
 the [resources](resources/) directory. You can customize these templates to your
@@ -171,8 +171,10 @@ To deploy your first Kubernetes workloads on DC/OS, please see the [examples fol
 
 ## Documents
 
-## Community 
-Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel. 
+For more details, please see the [docs folder](docs) as well was the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.0-1.7.10-beta)
+
+## Community
+Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.
 
 ## Roadmap
 
@@ -185,6 +187,3 @@ Kubernetes on DC/OS is currently in Beta, and not recommended for Production.  F
 - [ ] Non-disruptive Kubernetes version upgrades
 
 In the future, we will be open-sourcing the underlying Kubernetes framework code.  Stay tuned for details.
-
-For more details, please see the [docs folder](docs) as well was the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.0-1.7.10-beta)
-

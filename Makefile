@@ -1,36 +1,45 @@
 .PHONY: uninstall install setup-cli get-master-ip launch-dcos detroy-dcos docker-build docker kubectl-tunnel deploy
 
 RM := rm -f
-LAUNCH_CONFIG_FILE := launch.yaml
-CLUSTER_INFO_FILE := cluster_info.json
-BUILD_FILE := .output
-MASTER_IP_FILE := .master_ip
-ID_FILE := .id_key
 SSH_USER := core
-DCOS_INSTALLER_URL := https://downloads.dcos.io/dcos/stable/1.10.1/dcos_generate_config.sh
+MASTER_IP_FILE := .master_ip
+DCOS_LAUNCH_VERSION := 0.5.7
+KUBERNETES_VERSION := v1.7.10
 
-include ./resources/gce.template.mk
-include ./resources/aws.template.mk
-include ./resources/azure.template.mk
+azure: clean get-cli
+	mkdir .deploy
+	cd .deploy; \
+	cp ../resources/desired_cluster_profile.azure desired_cluster_profile; \
+	terraform init -from-module github.com/dcos/terraform-dcos//azure
+
+aws: clean get-cli
+	mkdir .deploy
+	cd .deploy; \
+	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
+	terraform init -from-module github.com/dcos/terraform-dcos//aws
+
+gce: clean get-cli
+	$(RM) -r .deploy
+	mkdir .deploy
+	cd .deploy; \
+	cp ../resources/desired_cluster_profile.gce desired_cluster_profile; \
+	terraform init -from-module github.com/dcos/terraform-dcos//gcp; \
+	rm desired_cluster_profile.tfvars.example
+
+get-cli:
+	$(eval export DCOS_LAUNCH_VERSION)
+	$(eval export KUBERNETES_VERSION)
+	scripts/get_cli
 
 install:
 	dcos package install --yes beta-kubernetes
 
-
 uninstall:
 	dcos package uninstall --yes beta-kubernetes
 
-
-DCOS_USERNAME := bootstrapuser
-DCOS_PASSWORD := deleteme
-setup-cli: kubectl-config
+setup-cli:
 	$(call get_master_ip)
 	dcos cluster setup http://$(MASTER_IP)
-
-kubectl-config:
-	kubectl config set-cluster dcos-k8s --server=http://localhost:9000
-	kubectl config set-context dcos-k8s --cluster=dcos-k8s --namespace=default
-	kubectl config use-context dcos-k8s
 
 get-master-ip:
 	$(call get_master_ip)
@@ -38,78 +47,40 @@ get-master-ip:
 
 define get_master_ip
 $(shell test -f $(MASTER_IP_FILE) || \
-	dcos-launch describe | jq '.["masters"] | .[] | .["public_ip"]' | head -1 | sed s/\"//g | sed s/\:[0-9]*//g > $(MASTER_IP_FILE))
+	terraform output -state=.deploy/terraform.tfstate "Mesos Master Public IP" | head -1 > $(MASTER_IP_FILE))
 $(eval MASTER_IP := $(shell cat $(MASTER_IP_FILE)))
 endef
 
-launch-dcos: $(CLUSTER_INFO_FILE)
-	dcos-launch wait
+plan-dcos:
+	cd .deploy; \
+	terraform plan -var-file desired_cluster_profile
 
-$(CLUSTER_INFO_FILE): $(LAUNCH_CONFIG_FILE)
-	dcos-launch create -c $(LAUNCH_CONFIG_FILE)
+launch-dcos:
+	cd .deploy; \
+	terraform apply -var-file desired_cluster_profile
 
-$(ID_FILE): $(CLUSTER_INFO_FILE)
-	cat $(CLUSTER_INFO_FILE) | jq '{ssh_private_key} | .ssh_private_key' | sed 's/\\n/\n/g' | sed 's/"//g' > $(ID_FILE)
-	chmod 400 $(ID_FILE)
+kubectl-config:
+	kubectl config set-cluster dcos-k8s --server=http://localhost:9000
+	kubectl config set-context dcos-k8s --cluster=dcos-k8s --namespace=default
+	kubectl config use-context dcos-k8s
 
-$(LAUNCH_CONFIG_FILE):
-ifeq ($(PLATFORM), aws)
-	$(eval export LAUNCH_CONFIG_AWS)
-	@echo "$$LAUNCH_CONFIG_AWS" > $@
-    $(eval SSH_USER := centos)
-else ifeq ($(PLATFORM), azure)
-	$(eval export LAUNCH_CONFIG_AZURE)
-	@echo "$$LAUNCH_CONFIG_AZURE" > $@
-		$(eval SSH_USER := dcos)
-else
-	$(eval export LAUNCH_CONFIG_GCE)
-	@echo "$$LAUNCH_CONFIG_GCE" > $@
-endif
-
-
-destroy-dcos:
-	dcos-launch delete
-	$(RM) $(CLUSTER_INFO_FILE)
-	$(RM) $(LAUNCH_CONFIG_FILE)
-	$(RM) $(MASTER_IP_FILE)
-	$(RM) $(ID_FILE)
-
-define rand_name
-$(shell cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
-endef
-
-kubectl-tunnel: $(ID_FILE)
+kubectl-tunnel:
 	$(call get_master_ip)
-	ssh -i $(ID_FILE) -4 -f -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o "ServerAliveInterval=120" \
-		 -N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 \
+	ssh -4 -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o "ServerAliveInterval=120" \
+		-N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 \
 		$(SSH_USER)@$(MASTER_IP)
 
-docker-build:
-	docker build -t mesosphere/dcos-kubernetes .
-
-GOOGLE_APPLICATION_CREDS := $(if ${GOOGLE_APPLICATION_CREDENTIALS},${GOOGLE_APPLICATION_CREDENTIALS},credentials.json)
-NUM_PRIVATE_AGENTS := $(if ${NUM_PRIVATE_AGENTS},${NUM_PRIVATE_AGENTS},3)
-NUM_PUBLIC_AGENTS := $(if ${NUM_PUBLIC_AGENTS},${NUM_PUBLIC_AGENTS},1)
-NUM_MASTERS := $(if ${NUM_MASTERS},${NUM_MASTERS},1)
-define docker_container
-	docker run -i \
-		-v $(GOOGLE_APPLICATION_CREDS):/credentials.json \
-		-e GCE_CREDENTIALS_PATH=/credentials.json \
-		-e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
-		-e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
-		-e NUM_PRIVATE_AGENTS=${NUM_PRIVATE_AGENTS} \
-		-e NUM_PUBLIC_AGENTS=${NUM_PUBLIC_AGENTS} \
-		-e NUM_MASTERS=${NUM_MASTERS} \
-		-e AZURE_CLIENT_ID=${AZURE_CLIENT_ID} \
-		-e AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET} \
-		-e AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID} \
-		-e AZURE_TENANT_ID=${AZURE_TENANT_ID} \
-		-v $(PWD):/dcos-kubernetes \
-		$(2) mesosphere/dcos-kubernetes $(1)
-endef
-
-docker:
-	$(call docker_container, /bin/bash, -t)
-
+plan: plan-dcos
 
 deploy: launch-dcos setup-cli install
+	watch ./dcos task
+
+destroy-dcos:
+	$(RM) $(MASTER_IP_FILE)
+	cd .deploy; \
+	terraform destroy -var-file desired_cluster_profile
+
+clean:
+	$(RM) -r .deploy
+	$(RM) dcos
+	$(RM) kubectl
