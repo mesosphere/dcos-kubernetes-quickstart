@@ -2,9 +2,6 @@
 .id_key
 .master_ip
 .master_elb_ip
-cluster_info.json
-launch.yaml
-credentials.json
 
 # cli
 dcos
