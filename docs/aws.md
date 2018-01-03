@@ -45,7 +45,7 @@ make aws
 ```
 The command above will download necessary [Terraform files](https://github.com/dcos/terraform-dcos/tree/master/aws) to `.deploy` folder.
 
-Make updates if you need to (e.g. more private agents) to `.deploy/desired_cluster_profile`, please do not change VMs to lover spec type, as then Kubernetes install will fail.
+Make updates if you need to (e.g. more private agents) to `.deploy/desired_cluster_profile`, please do not change VMs to lower spec type, as then Kubernetes install will fail.
 ```
 vi .deploy/desired_cluster_profile
 dcos_version = "1.10.2"

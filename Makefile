@@ -17,21 +17,20 @@ azure: clean
 	mkdir .deploy
 	cd .deploy; \
 	cp ../resources/desired_cluster_profile.azure desired_cluster_profile; \
-	terraform init -from-module $(TERRAFORM_INSTALLER_URL)//azure
+	terraform init -from-module $(TERRAFORM_INSTALLER_URL)/azure
 
 aws: clean
 	mkdir .deploy
 	cd .deploy; \
 	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
-	terraform init -from-module $(TERRAFORM_INSTALLER_URL)//aws
+	terraform init -from-module $(TERRAFORM_INSTALLER_URL)/aws
 
 gce: clean
 	$(RM) -r .deploy
 	mkdir .deploy
 	cd .deploy; \
 	cp ../resources/desired_cluster_profile.gce desired_cluster_profile; \
-	terraform init -from-module $(TERRAFORM_INSTALLER_URL)//gcp; \
-	rm desired_cluster_profile.tfvars.example
+	terraform init -from-module $(TERRAFORM_INSTALLER_URL)/gcp
 
 install:
 	dcos package install --yes beta-kubernetes
@@ -53,14 +52,14 @@ $(shell test -f $(MASTER_IP_FILE) || \
 $(eval MASTER_IP := $(shell cat $(MASTER_IP_FILE)))
 endef
 
-get-master-elb-ip:
-	$(call get_master_elb_ip)
-	@echo $(MASTER_ELB_IP)
+get-master-lb-ip:
+	$(call get_master_lb_ip)
+	@echo $(MASTER_LB_IP)
 
-define get_master_elb_ip
-$(shell test -f $(MASTER_ELB_IP_FILE) || \
-	terraform output -state=.deploy/terraform.tfstate "Master ELB Address" > $(MASTER_ELB_IP_FILE))
-$(eval MASTER_ELB_IP := $(shell cat $(MASTER_ELB_IP_FILE)))
+define get_master_lb_ip
+$(shell test -f $(MASTER_LB_IP_FILE) || \
+	terraform output -state=.deploy/terraform.tfstate "Master ELB Address" > $(MASTER_LB_IP_FILE))
+$(eval MASTER_LB_IP := $(shell cat $(MASTER_LB_IP_FILE)))
 endef
 
 plan-dcos:
@@ -94,5 +93,3 @@ destroy-dcos:
 
 clean:
 	$(RM) -r .deploy
-	$(RM) dcos
-	$(RM) kubectl

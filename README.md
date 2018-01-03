@@ -51,7 +51,7 @@ make gce
 ```
 The command above will download necessary [Terraform files](https://github.com/dcos/terraform-dcos/tree/master/gcp) to `.deploy` folder.
 
-Make updates to `.deploy/desired_cluster_profile` with your GCP `project-id` and `ssh key`, please do not change VMs to lover spec type, as then Kubernetes install will fail.
+Make updates to `.deploy/desired_cluster_profile` with your GCP `project-id` and `ssh key`, please do not change VMs to lower spec type, as then Kubernetes install will fail.
 ```
 vi .deploy/desired_cluster_profile
 dcos_version = "1.10.2"
@@ -80,7 +80,7 @@ Install DC/OS cli `dcos` and Kubernetes `kubectl`.
 make get-cli
 ```
 
-Files `dcos` and `kubectl` will be downloaded to the current folder, please copy them for example, to `/usr/local/bin/`, or any other folder set in your `path`, so they can be invoked later one by install.
+Files `dcos` and `kubectl` will be downloaded to the current folder, please move them for example, to `/usr/local/bin/`, or any other folder set in your `path`, so they can be invoked later one by install.
 
 ### Install cluster
 
@@ -96,9 +96,9 @@ Install cluster.
 make deploy
 ```
 
-Terraform will be used to set infra on your cloud provider, and then to install DC/OS cluster. When DC/OS is ready Kubernetes cluster will be bootstrapped.
+Terraform will now try and provision the infrastructure on your chosen cloud-provider and then proceed to install DC/OS. When DC/OS is up and running, the Kubernetes package will get installed then.
 
-Then wait till all Kubernetes packages get installed.
+Then wait till Kubernetes package all tasks get installed.
 ```
 watch dcos task
 NAME                                HOST       USER  STATE  ID                                       MESOS ID
@@ -186,7 +186,7 @@ We are now ready to configure `kubectl`, the Kubernetes CLI tool.
 make kubectl-config
 ```
 
-Which will set cluster `context`.
+Which will set cluster context.
 ```
 kubectl config set-cluster dcos-k8s --server=http://localhost:9000
 kubectl config set-context dcos-k8s --cluster=dcos-k8s --namespace=default
