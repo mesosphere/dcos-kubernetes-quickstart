@@ -171,18 +171,23 @@ To deploy your first Kubernetes workloads on DC/OS, please see the [examples fol
 
 ## Documents
 
-## Community 
-Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel. 
+## Community
+Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.
 
 ## Roadmap
 
 Kubernetes on DC/OS is currently in Beta, and not recommended for Production.  For Production certification, we will be delivering incremental functionality:
 
 - [x] Helm Support
-- [ ] Provide better option than SSH tunnel for API server authentication
-- [ ] Robust external ingress for Kubernetes Services
+- [ ] Provide better option than SSH tunnel for API server authentication (needs DC/OS 1.11)
+- [x] Robust external ingress for Kubernetes Services
 - [ ] Ability to dynamically expand the Kubernetes nodes
 - [ ] Non-disruptive Kubernetes version upgrades
+- [x] Disaster Recovery
+- [ ] Cloud-provider integration
+  - [x] AWS
+  - [ ] Google Cloud
+  - [ ] Azure
 
 In the future, we will be open-sourcing the underlying Kubernetes framework code.  Stay tuned for details.
 
