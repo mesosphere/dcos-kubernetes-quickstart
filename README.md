@@ -242,7 +242,7 @@ Clean up.
 make clean
 ```
 
-## Documents
+## Documentation
 
 For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.4.0-1.9.0-beta)
 
