@@ -73,14 +73,14 @@ admin_cidr = "0.0.0.0/0"
 
 For more cluster setup tweaks check out [here](https://github.com/dcos/terraform-dcos/tree/master/gcp).
 
-### Install command-line tools
+### Download command-line tools
 
-Install DC/OS cli `dcos` and Kubernetes `kubectl`.
+Download DC/OS cli `dcos` and Kubernetes `kubectl`.
 ```
 make get-cli
 ```
 
-Files `dcos` and `kubectl` will be downloaded to the current folder, please move them for example, to `/usr/local/bin/`, or any other folder set in your `path`, so they can be invoked later one by install.
+Files `dcos` and `kubectl` will be downloaded to the current folder, please move them for example, to  `/usr/local/bin/`, or any other folder set in your shell's `path`, so they can be invoked later one by install.
 
 ### Install cluster
 
@@ -197,14 +197,32 @@ Test access by retrieving the Kubernetes cluster nodes:
 ```bash
 $ kubectl get nodes
 NAME                                   STATUS    AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos   Ready     7m        v1.7.10
-kube-node-1-kubelet.kubernetes.mesos   Ready     7m        v1.7.10
-kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.7.10
+kube-node-0-kubelet.kubernetes.mesos   Ready     7m        v1.9.0
+kube-node-1-kubelet.kubernetes.mesos   Ready     7m        v1.9.0
+kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.9.0
 ```
 
 ### Deploy Kubernetes workloads on DCOS
 
 To deploy your first Kubernetes workloads on DC/OS, please see the [examples folder](examples/README.md)
+
+### Adding DC/OS agents
+
+If you would like to add more or remove (private) agents or public agents from your cluster, edit `.deploy/desired_cluster_profile` and then run.
+```
+make upgrade-infra
+```
+
+You can read more about adding/removing agents [here](https://github.com/dcos/terraform-dcos/tree/master/gcp#maintenance).
+
+### Upgrading DC/OS
+
+When the new DC/OS version is released edit `.deploy/desired_cluster_profile` and then run.
+```
+make upgrade-dcos
+```
+
+You can read more about DC/OS upgrade [here](https://github.com/dcos/terraform-dcos/tree/master/gcp#upgrading-dcos).
 
 ### Destroy cluster
 
@@ -219,13 +237,14 @@ make destroy-dcos
 ```
 
 Clean up.
+**Note:** Make sure to run `make destroy-dcos` before this, as otherwise you will need to delete all cloud resources manually!.
 ```
 make clean
 ```
 
 ## Documents
 
-For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.3.0-1.7.10-beta)
+For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.4.0-1.9.0-beta)
 
 ## Community
 Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.
@@ -236,7 +255,7 @@ Kubernetes on DC/OS is currently in Beta, and not recommended for Production.  F
 
 - [x] Helm Support
 - [ ] Provide better option than SSH tunnel for API server authentication
-- [ ] Robust external ingress for Kubernetes Services
+- [x] Robust external ingress for Kubernetes Services
 - [ ] Ability to dynamically expand the Kubernetes nodes
 - [ ] Non-disruptive Kubernetes version upgrades
 

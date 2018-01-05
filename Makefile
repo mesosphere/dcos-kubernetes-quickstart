@@ -3,10 +3,10 @@
 RM := rm -f
 SSH_USER := core
 MASTER_IP_FILE := .master_ip
-MASTER_ELB_IP_FILE := .master_elb_ip
+MASTER_LB_IP_FILE := .master_lb_ip
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_CLI_VERSION := 0.5.7
-KUBERNETES_VERSION := v1.7.10
+KUBERNETES_VERSION := v1.9.0
 
 get-cli:
 	$(eval export DCOS_CLI_VERSION)
@@ -17,23 +17,25 @@ azure: clean
 	mkdir .deploy
 	cd .deploy; \
 	cp ../resources/desired_cluster_profile.azure desired_cluster_profile; \
+	cp ../resources/options.json.azure options.json; \
 	terraform init -from-module $(TERRAFORM_INSTALLER_URL)/azure
 
 aws: clean
 	mkdir .deploy
 	cd .deploy; \
 	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
+	cp ../resources/options.json.aws options.json; \
 	terraform init -from-module $(TERRAFORM_INSTALLER_URL)/aws
 
 gce: clean
-	$(RM) -r .deploy
 	mkdir .deploy
 	cd .deploy; \
 	cp ../resources/desired_cluster_profile.gce desired_cluster_profile; \
+	cp ../resources/options.json.gce options.json; \
 	terraform init -from-module $(TERRAFORM_INSTALLER_URL)/gcp
 
 install:
-	dcos package install --yes beta-kubernetes
+	dcos package install --yes beta-kubernetes --options=./.deploy/options.json
 
 uninstall:
 	dcos package uninstall --yes beta-kubernetes
@@ -85,9 +87,16 @@ plan: plan-dcos
 
 deploy: launch-dcos setup-cli install
 
+upgrade-infra: launch-dcos
+
+upgrade-dcos:
+	cd .deploy; \
+	terraform apply -var-file desired_cluster_profile.tfvars -var state=upgrade -target null_resource.bootstrap -target null_resource.master -parallelism=1; \
+	terraform apply -var-file desired_cluster_profile.tfvars -var state=upgrade
+
 destroy-dcos:
 	$(RM) $(MASTER_IP_FILE)
-	$(RM) $(MASTER_ELB_IP_FILE)
+	$(RM) $(MASTER_LB_IP_FILE)
 	cd .deploy; \
 	terraform destroy -var-file desired_cluster_profile
 
