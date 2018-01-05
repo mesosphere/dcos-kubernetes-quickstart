@@ -1,4 +1,21 @@
+.DS_Store
 .id_key
 .master_ip
-cluster_info.json
-launch.yaml
+.master_elb_ip
+
+# cli
+dcos
+kubectl
+
+# terraform
+.deploy
+.terraform
+/*.tf
+/*.tf.disabled
+*.tfstate
+*.tfstate.backup
+terraform.tfvars
+.terraform.tfstate.lock.info
+modules/
+desired_cluster_profile.tfvars.example
+desired_cluster_profile
