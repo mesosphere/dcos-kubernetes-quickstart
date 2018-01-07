@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# download dcos and kubectl cli
+# download dcos and kubectl CLI tools
 
 # check OS version
 unamestr=`uname`

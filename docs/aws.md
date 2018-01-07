@@ -1,53 +1,59 @@
-# AWS Cloud Provider
+# AWS
 
-## Configure Credentials
+**WARNING**: When running this quickstart, you might experience some issues
+with cloud resource limits. Please, verify your [quotas](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html)
+before proceeding.
 
-### Configure your AWS ssh Keys
+## Instal AWS CLI
 
-Set the private key that you will be you will be using to your ssh-agent and set public key in terraform. The default is `default`. You can find aws documentation that talks about this [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws).
+Make sure to have previously installed [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/installing.html).
 
-When you have your key available, you can use ssh-add.
+## Setup access
+
+First, you will need to [retrieve your AWS credentials](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html).
+The default location is `$HOME/.aws/credentials` on Linux and OS X, or `"%USERPROFILE%\.aws\credentials"` for Windows users.
+
+Before proceeding, we recommend you create a file with your AWS credentials,
+exposed as (the commonly) recognized environment variables, so you can [`source`](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x237.html)
+it later, in between shell sessions:
 
 ```bash
-ssh-add ~/.ssh/path_to_you_key.pem
-```
-
-### Configure your IAM AWS Keys
-
-You will need your AWS aws_access_key_id and aws_secret_access_key. If you dont have one yet, you can get them from the AWS documentation [here](
-http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html). When you finally get them, you can install it in your home directory. The default location is `$HOME/.aws/credentials` on Linux and OS X, or `"%USERPROFILE%\.aws\credentials"` for Windows users.
-
-Here is an example of the output when you're done:
-
-```
-$ cat ~/.aws/credentials
-[default]
-aws_access_key_id = ACHEHS71DG712w7EXAMPLE
-aws_secret_access_key = /R8SHF+SHFJaerSKE83awf4ASyrF83sa471DHSEXAMPLE
-```
-
-The easiest way to get started on AWS is by setting environment variables with your access keys.
-
-```
+$ cat << EOF > ~/.aws/my_credentials
 export AWS_ACCESS_KEY_ID=<YOUR ACCESS KEY>
 export AWS_SECRET_ACCESS_KEY=<YOUR SECRET KEY>
+EOF
 ```
 
-## Cloud Provider Resource Quotas
+Last, set-up SSH keys as detailed in [the official documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws).
 
-When deploying our cluster, you might experience some issues related to insufficient resource limits. Consequently, we recommend to verify your default limits [here](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html).
+Don't forget to add your new SSH private key to your session:
 
-## Configure cluster
-
-Set AWS as cloud provider.
+```bash
+$ ssh-add ~/.ssh/path_to_your_new_key.pem
 ```
-make aws
-```
-The command above will download necessary [Terraform files](https://github.com/dcos/terraform-dcos/tree/master/aws) to `.deploy` folder.
 
-Make updates if you need to (e.g. more private agents) to `.deploy/desired_cluster_profile`, please do not change VMs to lower spec type, as then Kubernetes install will fail.
+## Prepare infrastructure configuration
+
+Make sure Terraform knows where to find your AWS credentials:
+
+```bash
+$ source ~/.aws/my_credentials
 ```
-vi .deploy/desired_cluster_profile
+
+Now, let's generate the default infrastructure configuration:
+
+```bash
+$ make aws
+```
+
+This will output sane defaults to `.deploy/desired_cluster_profile`.
+Now, edit said file and set `ssh_pub_key`, the public SSH key you will use to
+log-in into your new VMs later.
+
+**WARNING:** Please, do not set a smaller instance (VM) type on the risk of
+failing to install Kubernetes.
+
+```
 dcos_version = "1.10.2"
 num_of_masters = "1"
 num_of_private_agents = "3"
@@ -62,8 +68,8 @@ aws_public_agent_instance_type = "m3.2xlarge"
 admin_cidr = "0.0.0.0/0"
 ```
 
-For more cluster setup tweaks check out [here](https://github.com/dcos/terraform-dcos/tree/master/aws).
+For more advanced scenarios, please check the [terraform-dcos documentation for AWS](https://github.com/dcos/terraform-dcos/tree/master/aws).
 
-## Cluster install
+## Install
 
-Follow steps from the main [readme](../README.md#install-cluster)
+It's time to [bootstrap your Kubernetes cluster](../README.md#install).

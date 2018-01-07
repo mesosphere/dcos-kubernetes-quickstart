@@ -1,4 +1,4 @@
-.PHONY: azure aws gce uninstall install get-cli setup-cli get-master-ip get-master-elb_ip plan-dcos launch-dcos detroy-dcos kubectl-config kubectl-tunnel plan deploy
+.PHONY: azure aws gcp uninstall install get-cli setup-cli get-master-ip get-master-elb_ip plan-dcos launch-dcos detroy-dcos kubectl-config kubectl-tunnel plan deploy
 
 RM := rm -f
 SSH_USER := core
@@ -27,11 +27,11 @@ aws: clean
 	cp ../resources/options.json.aws options.json; \
 	terraform init -from-module $(TERRAFORM_INSTALLER_URL)/aws
 
-gce: clean
+gcp: clean
 	mkdir .deploy
 	cd .deploy; \
-	cp ../resources/desired_cluster_profile.gce desired_cluster_profile; \
-	cp ../resources/options.json.gce options.json; \
+	cp ../resources/desired_cluster_profile.gcp desired_cluster_profile; \
+	cp ../resources/options.json.gcp options.json; \
 	terraform init -from-module $(TERRAFORM_INSTALLER_URL)/gcp
 
 install:

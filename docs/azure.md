@@ -1,68 +1,71 @@
-# Azure Cloud Provider
+# Azure
 
-## Configure Credentials
+**WARNING**: When running this quickstart, you might experience some issues
+with cloud resource limits. Please, verify your [quotas](https://docs.microsoft.com/en-us/azure/azure-subscription-service-limits)
+before proceeding.
 
-### Configure your Azure ssh Keys
+## Install Azure CLI
 
-Set the private key that you will be you will be using to your ssh-agent and set public key in terraform.
+Make sure to have previously installed [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest).
+
+## Setup access
+
+First, you should be able to list your Azure account:
 
 ```bash
-ssh-add ~/.ssh/your_private_azure_key.pem
+$ az account list
 ```
 
-Add your Azure ssh key to `desired_cluster_profile` file:
-```
-ssh_pub_key = "INSERT_AZURE_PUBLIC_KEY_HERE"
-```
+Next, you need to retrieve the credentials needed for Terraform to manage your
+Azure resources.
+In order to do so, follow the [official Terraform instructions for Azure](https://www.terraform.io/docs/providers/azurerm/#creating-credentials).
 
-### Configure your Azure ID Keys
+Before proceeding, we recommend you create a file with your Azure credentials,
+so you can [`source`](http://tldp.org/HOWTO/Bash-Prompt-HOWTO/x237.html) it later,
+in between shell sessions:
 
-Follow the Terraform instructions [here](https://www.terraform.io/docs/providers/azurerm/#creating-credentials) to setup your Azure credentials to provide to terraform.
-
-When you've successfully retrieved your output of `az account list`, create a source file to easily run your credentials in the future.
-
-```
-$ cat ~/.azure/credentials
-export ARM_TENANT_ID=45ef06c1-a57b-40d5-967f-88cf8example
-export ARM_CLIENT_SECRET=Lqw0kyzWXyEjfha9hfhs8dhasjpJUIGQhNFExAmPLE
-export ARM_CLIENT_ID=80f99c3a-cd7d-4931-9405-8b614example
-export ARM_SUBSCRIPTION_ID=846d9e22-a320-488c-92d5-41112example
+```bash
+$ cat << EOF > ~/.azure/my_credentials
+export ARM_TENANT_ID=45ef06c1-a57b-40d5-967f-12345
+export ARM_CLIENT_SECRET=Lqw0kyzWXyEjfha9hfhs12345jpJUIGQhNFExAmPLE
+export ARM_CLIENT_ID=80f99c3a-cd7d-4931-9405-12345
+export ARM_SUBSCRIPTION_ID=846d9e22-a320-488c-92d5-12345
+EOF
 ```
 
-### Source Credentials
+## Prepare infrastructure configuration
 
-Set your environment variables by sourcing the files before you run any terraform commands.
+Make sure Terraform knows where to find your Azure credentials:
 
-```
-$ source ~/.azure/credentials
-```
-
-## Cloud Provider Resource Quotas
-
-When deploying our cluster, you might experience some issues related to insufficient resource limits. Consequently, we recommend to verify your default limits [here](https://docs.microsoft.com/en-us/azure/azure-subscription-service-limits).
-
-# Configure cluster
-
-Set Azure as cloud provider.
-```
-make azure
+```bash
+$ source ~/.azure/my_credentials
 ```
 
-The command above will download necessary [Terraform files](https://github.com/dcos/terraform-dcos/tree/master/azure) to `.deploy` folder.
+Now, let's generate the default infrastructure configuration:
 
-Make updates if you need to (e.g. more private agents) to `.deploy/desired_cluster_profile`.
+```bash
+$ make azure
 ```
-vi .deploy/desired_cluster_profile
+
+This will output sane defaults to `.deploy/desired_cluster_profile`.
+Now, edit said file and set `ssh_pub_key`, the public SSH key you will use to
+log-in into your new VMs later.
+
+**WARNING:** Please, do not set a smaller instance (VM) type on the risk of
+failing to install Kubernetes.
+
+```
 dcos_version = "1.10.2"
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
 # Inbound Master Access
 admin_cidr = "0.0.0.0/0"
+ssh_pub_key = "INSERT_AZURE_PUBLIC_KEY_HERE"
 ```
 
-For more cluster setup tweaks check out [here](https://github.com/dcos/terraform-dcos/tree/master/azure).
+For more advanced scenarios, please check the [terraform-dcos documentation for Azure](https://github.com/dcos/terraform-dcos/tree/master/azure).
 
-# Cluster install
+## Install
 
-Follow steps from the main [readme](../README.md#install-cluster)
+It's time to [bootstrap your Kubernetes cluster](../README.md#install).

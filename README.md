@@ -19,41 +19,41 @@ First, make sure your cluster fulfils the [Kubernetes package default requiremen
 
 Then, check the requirements for running this quickstart:
 
-* [Terraform 0.11.x](https://www.terraform.io/downloads.html). On MacOS, you can use [brew](https://brew.sh/) for that.
-```
-brew install terraform
-```
-* Google Cloud (GCE) [SDK](docs/gce.md)
-* [AWS](docs/aws.md) and [Azure](docs/azure.md) are supported as well
-* Linux/Mac machine to execute the samples below
-
-Note that default templates are defined to deploy the virtual machines in
-the [resources](resources/) directory. You can customize these templates to your
-needs.
+* Linux or MacOS
+* [Terraform 0.11.x](https://www.terraform.io/downloads.html). On MacOS, you can install with [brew](https://brew.sh/):
+  ```bash
+  $ brew install terraform
+  ```
+* [Google Cloud](docs/gcp.md), [AWS](docs/aws.md) or [Azure](docs/azure.md)
+  account with enough permissions to provide the needed infrastructure
 
 ## Quickstart
 
-Once the above pre-requisites have been met, clone this repo.
+Once the pre-requisites are met, clone this repo:
+
+```bash
+$ git clone git@github.com:mesosphere/dcos-kubernetes-quickstart.git && cd dcos-kubernetes-quickstart
+```
+
+### Prepare infrastructure configuration
+
+**This quickstart defaults to Google Cloud**
+
+First, make sure you have have followed the [Google Cloud setup instructions](docs/gcp.md).
+
+Then, start by generating the default infrastructure configuration:
+
+```bash
+$ make gcp
+```
+
+This will output sane defaults to `.deploy/desired_cluster_profile`.
+Now, edit said file and set your `project-id` and the `gce_ssh_pub_key_file`
+(the SSH public key you will use to log-in into your new VMs later).
+Please, do not set a smaller instance (VM) type on the risk of failing to
+install Kubernetes.
 
 ```
-git clone git@github.com:mesosphere/dcos-kubernetes-quickstart.git && cd dcos-kubernetes-quickstart
-```
-
-**For this Quickstart we are going to use GCE cloud provider**
-
-Install and setup Google Cloud SDK as per [doc](docs/gce.md).
-
-### Configure cluster
-
-Set GCP as cloud provider.
-```
-make gce
-```
-The command above will download necessary [Terraform files](https://github.com/dcos/terraform-dcos/tree/master/gcp) to `.deploy` folder.
-
-Make updates to `.deploy/desired_cluster_profile` with your GCP `project-id` and `ssh key`, please do not change VMs to lower spec type, as then Kubernetes install will fail.
-```
-vi .deploy/desired_cluster_profile
 dcos_version = "1.10.2"
 num_of_masters = "1"
 num_of_private_agents = "3"
@@ -71,36 +71,43 @@ gcp_public_agent_instance_type = "n1-standard-8"
 admin_cidr = "0.0.0.0/0"
 ```
 
-For more cluster setup tweaks check out [here](https://github.com/dcos/terraform-dcos/tree/master/gcp).
+For more advanced scenarios, please check the [terraform-dcos documentation for Google Cloud](https://github.com/dcos/terraform-dcos/tree/master/gcp).
 
 ### Download command-line tools
 
-Download DC/OS cli `dcos` and Kubernetes `kubectl`.
-```
-make get-cli
-```
+If you haven't already, please download DC/OS client, `dcos` and Kubernetes
+client, `kubectl`:
 
-Files `dcos` and `kubectl` will be downloaded to the current folder, please move them for example, to  `/usr/local/bin/`, or any other folder set in your shell's `path`, so they can be invoked later one by install.
-
-### Install cluster
-
-You are now ready to create a DC/OS cluster.
-
-Pre-check install.
-```
-make plan
+```bash
+$ make get-cli
 ```
 
-Install cluster.
-```
-make deploy
+The `dcos` and `kubectl` binaries will be downloaded to the current workdir.
+It's up to you to decided whether or not to copy or move them to another path,
+e.g. a path included in `PATH`.
+
+### Install
+
+You are now ready to provision the DC/OS cluster and install the Kubernetes package.
+
+```bash
+$ make deploy
 ```
 
-Terraform will now try and provision the infrastructure on your chosen cloud-provider and then proceed to install DC/OS. When DC/OS is up and running, the Kubernetes package will get installed then.
+Terraform will now try and provision the infrastructure on your chosen cloud
+provider, and then proceed to install DC/OS.
 
-Then wait till Kubernetes package all tasks get installed.
+When DC/OS is up and running, the Kubernetes package installation will take place.
+
+Wait until all tasks are running before trying to access the Kubernetes API.
+Below is an example of how it looks like when the install ran successfully:
+
+```bash
+$ watch dcos task
 ```
-watch dcos task
+
+After a while, you should see something like:
+```
 NAME                                HOST       USER  STATE  ID                                       MESOS ID
 etcd-0-peer                         10.64.4.2  root    R    etcd-0-peer__xxx                         xxxxx-s2
 etcd-1-peer                         10.64.4.4  root    R    etcd-1-peer__xxx                         xxxxx-S0
@@ -123,14 +130,17 @@ kube-scheduler-2-instance           10.64.4.5  root    R    kube-scheduler-2-ins
 kubernetes                          10.64.4.4  root    R    kubernetes.xxx                           xxxxx-S0
 ```
 
-### Connecting to Kubernetes API Server
+### Accessing the Kubernetes API
 
-In order to access the Kubernetes API from outside the DC/OS cluster, one needs SSH access to a node-agent.
-```
-make  kubectl-tunnel
+In order to access the Kubernetes API from outside the DC/OS cluster, one needs
+to establish a reverse-tunnel through SSH to a DC/OS agent:
+
+```bash
+$ make kubectl-tunnel
 ```
 
-When the Kubernetes API task(s) are healthy, it should be accessible on `http://localhost:9000`. Reaching this endpoint should show something like this:
+When the `kube-apiserver-{}-instance` task(s) are healthy, the Kubernetes API
+should be accessible on `http://localhost:9000`. Reaching this endpoint should show something like this:
 
 ```bash
 $ curl http://localhost:9000
@@ -139,8 +149,17 @@ $ curl http://localhost:9000
     "/api",
     "/api/v1",
     "/apis",
+    "/apis/",
+    "/apis/admissionregistration.k8s.io",
+    "/apis/admissionregistration.k8s.io/v1beta1",
+    "/apis/apiextensions.k8s.io",
+    "/apis/apiextensions.k8s.io/v1beta1",
+    "/apis/apiregistration.k8s.io",
+    "/apis/apiregistration.k8s.io/v1beta1",
     "/apis/apps",
+    "/apis/apps/v1",
     "/apis/apps/v1beta1",
+    "/apis/apps/v1beta2",
     "/apis/authentication.k8s.io",
     "/apis/authentication.k8s.io/v1",
     "/apis/authentication.k8s.io/v1beta1",
@@ -149,95 +168,89 @@ $ curl http://localhost:9000
     "/apis/authorization.k8s.io/v1beta1",
     "/apis/autoscaling",
     "/apis/autoscaling/v1",
-    "/apis/autoscaling/v2alpha1",
+    "/apis/autoscaling/v2beta1",
     "/apis/batch",
     "/apis/batch/v1",
-    "/apis/batch/v2alpha1",
+    "/apis/batch/v1beta1",
     "/apis/certificates.k8s.io",
     "/apis/certificates.k8s.io/v1beta1",
+    "/apis/events.k8s.io",
+    "/apis/events.k8s.io/v1beta1",
     "/apis/extensions",
     "/apis/extensions/v1beta1",
+    "/apis/networking.k8s.io",
+    "/apis/networking.k8s.io/v1",
     "/apis/policy",
     "/apis/policy/v1beta1",
     "/apis/rbac.authorization.k8s.io",
-    "/apis/rbac.authorization.k8s.io/v1alpha1",
+    "/apis/rbac.authorization.k8s.io/v1",
     "/apis/rbac.authorization.k8s.io/v1beta1",
-    "/apis/settings.k8s.io",
-    "/apis/settings.k8s.io/v1alpha1",
     "/apis/storage.k8s.io",
     "/apis/storage.k8s.io/v1",
     "/apis/storage.k8s.io/v1beta1",
     "/healthz",
+    "/healthz/autoregister-completion",
+    "/healthz/etcd",
     "/healthz/ping",
+    "/healthz/poststarthook/apiservice-openapi-controller",
+    "/healthz/poststarthook/apiservice-registration-controller",
+    "/healthz/poststarthook/apiservice-status-available-controller",
     "/healthz/poststarthook/bootstrap-controller",
     "/healthz/poststarthook/ca-registration",
-    "/healthz/poststarthook/extensions/third-party-resources",
+    "/healthz/poststarthook/generic-apiserver-start-informers",
+    "/healthz/poststarthook/kube-apiserver-autoregistration",
+    "/healthz/poststarthook/start-apiextensions-controllers",
+    "/healthz/poststarthook/start-apiextensions-informers",
+    "/healthz/poststarthook/start-kube-aggregator-informers",
+    "/healthz/poststarthook/start-kube-apiserver-informers",
     "/logs",
     "/metrics",
-    "/swaggerapi/",
+    "/swagger-2.0.0.json",
+    "/swagger-2.0.0.pb-v1",
+    "/swagger-2.0.0.pb-v1.gz",
+    "/swagger.json",
+    "/swaggerapi",
+    "/ui",
     "/ui/",
     "/version"
   ]
 }
 ```
 
-We are now ready to configure `kubectl`, the Kubernetes CLI tool.
-```
-make kubectl-config
+You are now ready to configure `kubectl`, the Kubernetes CLI tool.
+
+```bash
+$ make kubectl-config
 ```
 
-Which will set cluster context.
-```
-kubectl config set-cluster dcos-k8s --server=http://localhost:9000
-kubectl config set-context dcos-k8s --cluster=dcos-k8s --namespace=default
-kubectl config use-context dcos-k8s
-```
+Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 
-Test access by retrieving the Kubernetes cluster nodes:
 ```bash
 $ kubectl get nodes
-NAME                                   STATUS    AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos   Ready     7m        v1.9.0
-kube-node-1-kubelet.kubernetes.mesos   Ready     7m        v1.9.0
-kube-node-2-kubelet.kubernetes.mesos   Ready     7m        v1.9.0
+NAME                                          STATUS    ROLES     AGE       VERSION
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.0
+kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.0
+kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.0
+kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9.0
 ```
 
-### Deploy Kubernetes workloads on DCOS
+## Destroy cluster
 
-To deploy your first Kubernetes workloads on DC/OS, please see the [examples folder](examples/README.md)
+First, uninstall Kubernetes:
 
-### Adding DC/OS agents
-
-If you would like to add more or remove (private) agents or public agents from your cluster, edit `.deploy/desired_cluster_profile` and then run.
-```
-make upgrade-infra
+```bash
+$ make uninstall
 ```
 
-You can read more about adding/removing agents [here](https://github.com/dcos/terraform-dcos/tree/master/gcp#maintenance).
+Next, delete the DC/OS cluster.
 
-### Upgrading DC/OS
-
-When the new DC/OS version is released edit `.deploy/desired_cluster_profile` and then run.
-```
-make upgrade-dcos
+```bash
+$ make destroy-dcos
 ```
 
-You can read more about DC/OS upgrade [here](https://github.com/dcos/terraform-dcos/tree/master/gcp#upgrading-dcos).
+**ATTENTION:** Make sure to run `make destroy-dcos` or otherwise you will need to delete all cloud resources manually!
 
-### Destroy cluster
-
-Uninstall Kubernetes.
-```
-make uninstall
-```
-
-Delete the DC/OS cluster.
-```
-make destroy-dcos
-```
-
-Clean up.
-**Note:** Make sure to run `make destroy-dcos` before this, as otherwise you will need to delete all cloud resources manually!.
+Last, clean generated resources:
 ```
 make clean
 ```
