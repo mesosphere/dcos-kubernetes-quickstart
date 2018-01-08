@@ -1,0 +1,75 @@
+---
+# Service Account
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: traefik-ingress-controller
+---
+# Deployment
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: traefik-ingress-controller
+  labels:
+    k8s-app: traefik-ingress-lb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: traefik-ingress-lb
+  template:
+    metadata:
+      labels:
+        k8s-app: traefik-ingress-lb
+        name: traefik-ingress-lb
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 60
+      containers:
+      - image: traefik
+        name: traefik-ingress-lb
+        ports:
+        - name: web
+          containerPort: 80
+          hostPort: 80
+        args:
+        - --web
+        - --kubernetes
+      nodeSelector:
+        kubernetes.io/types: public
+      tolerations:
+      - key: "public"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-ingress-service
+spec:
+  selector:
+    k8s-app: traefik-ingress-lb
+  ports:
+    - protocol: TCP
+      port: 80
+      name: web
+    - protocol: TCP
+      port: 8080
+      name: admin
+  clusterIP: None
+---
+#Ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: httpd
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend: 
+          serviceName: httpd
+          servicePort: 80 
