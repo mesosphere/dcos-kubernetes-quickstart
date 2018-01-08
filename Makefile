@@ -42,7 +42,7 @@ uninstall:
 
 setup-cli:
 	$(call get_master_ip)
-	dcos cluster setup http://$(MASTER_IP)
+	dcos cluster setup https://$(MASTER_IP)
 
 get-master-ip:
 	$(call get_master_ip)
