@@ -1,5 +1,6 @@
 {
   "kubernetes": {
-    "cloud_provider": "aws"
+    "cloud_provider": "aws",
+    "public_node_count": 1
   }
 }
