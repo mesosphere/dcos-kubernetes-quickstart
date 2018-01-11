@@ -13,8 +13,8 @@ gcp_agent_instance_type = "n1-standard-8"
 gcp_public_agent_instance_type = "n1-standard-8"
 #
 # Change public/private subnetworks e.g. "10.65." if you want to run multiple clusters in the same project
-google_compute_subnetwork_public = "10.64.0.0/22"
-google_compute_subnetwork_private = "10.64.4.0/22"
+gcp_compute_subnetwork_public = "10.64.0.0/22"
+gcp_compute_subnetwork_private = "10.64.4.0/22"
 # Inbound Master Access
 admin_cidr = "0.0.0.0/0"
 
