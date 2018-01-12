@@ -41,8 +41,8 @@ uninstall:
 	dcos package uninstall --yes beta-kubernetes
 
 setup-cli:
-	$(call get_master_ip)
-	dcos cluster setup https://$(MASTER_IP)
+	$(call get_master_lb_ip)
+	dcos cluster setup https://$(MASTER_LB_IP)
 
 get-master-ip:
 	$(call get_master_ip)
@@ -82,6 +82,10 @@ kubectl-tunnel:
 	ssh -4 -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o "ServerAliveInterval=120" \
 		-N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 \
 		$(SSH_USER)@$(MASTER_IP)
+
+ui:
+	$(call get_master_lb_ip)
+	open https://$(MASTER_LB_IP)
 
 plan: plan-dcos
 
