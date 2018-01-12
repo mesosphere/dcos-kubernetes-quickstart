@@ -50,7 +50,7 @@ get-master-ip:
 
 define get_master_ip
 $(shell test -f $(MASTER_IP_FILE) || \
-	terraform output -state=.deploy/terraform.tfstate "Mesos Master Public IP" | head -1 > $(MASTER_IP_FILE))
+	terraform output -state=.deploy/terraform.tfstate "Mesos Master Public IP" | head -1 | cut -f 1 -d ',' > $(MASTER_IP_FILE))
 $(eval MASTER_IP := $(shell cat $(MASTER_IP_FILE)))
 endef
 
