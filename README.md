@@ -88,7 +88,7 @@ e.g. a path included in `PATH`.
 
 ### Install
 
-You are now ready to provision the DC/OS cluster and install the Kubernetes package.
+You are now ready to provision the DC/OS cluster and install the Kubernetes package:
 
 ```bash
 $ make deploy
@@ -128,6 +128,14 @@ kube-scheduler-0-instance           10.64.4.4  root    R    kube-scheduler-0-ins
 kube-scheduler-1-instance           10.64.4.2  root    R    kube-scheduler-1-instance__xxx           xxxxx-S1
 kube-scheduler-2-instance           10.64.4.5  root    R    kube-scheduler-2-instance__xxx           xxxxx-S3
 kubernetes                          10.64.4.4  root    R    kubernetes.xxx                           xxxxx-S0
+```
+
+### Accessing the DC/OS Dashboard
+
+You can access DC/OS Dashboard and check Kubernetes package tasks under Services:
+
+```bash
+$ make ui
 ```
 
 ### Accessing the Kubernetes API
@@ -217,7 +225,7 @@ $ curl http://localhost:9000
 }
 ```
 
-You are now ready to configure `kubectl`, the Kubernetes CLI tool.
+You are now ready to configure `kubectl`, the Kubernetes CLI tool:
 
 ```bash
 $ make kubectl-config
@@ -242,7 +250,7 @@ First, uninstall Kubernetes:
 $ make uninstall
 ```
 
-Next, delete the DC/OS cluster.
+Next, delete the DC/OS cluster:
 
 ```bash
 $ make destroy-dcos
