@@ -12,13 +12,13 @@ else
 fi
 
 #
-echo "Downloading dcos cli $DCOS_CLI_VERSION for $OS"
-curl -o dcos https://downloads.dcos.io/binaries/cli/$OS/x86-64/$DCOS_CLI_VERSION/dcos
+echo "Downloading dcos v$DCOS_VERSION cli for $OS"
+curl -o dcos https://downloads.dcos.io/binaries/cli/$OS/x86-64/dcos-$DCOS_VERSION/dcos
 chmod +x dcos
 echo
 #
 echo "Downloading kubectl $KUBERNETES_VERSION for $OS"
-curl -LO https://storage.googleapis.com/kubernetes-release/release/$KUBERNETES_VERSION/bin/$OS/amd64/kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v$KUBERNETES_VERSION/bin/$OS/amd64/kubectl
 chmod +x kubectl
 echo "Download has finished !!!"
 echo

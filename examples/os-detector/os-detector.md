@@ -7,9 +7,9 @@ This sample application will walk through
 
 ## Pre-Requisites
 
-* A DC/OS 1.10+ cluster, with at least 4 private nodes
+* A DC/OS 1.11+ cluster, with at least 4 private nodes
 * Kubernetes running on DC/OS
-* [Configured kubectl](https://github.com/mesosphere/dcos-kubernetes-quickstart#installing-kubectl) 
+* [Configured kubectl](https://github.com/mesosphere/dcos-kubernetes-quickstart#installing-kubectl)
 
 ## OS Detector
 

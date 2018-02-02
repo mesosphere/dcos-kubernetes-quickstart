@@ -1,11 +1,15 @@
-dcos_version = "1.10.2"
+custom_dcos_download_path = "https://downloads.dcos.io/dcos/EarlyAccess/1.11.0-rc1/dcos_generate_config.sh"
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
 #
 gcp_project = "YOUR_GCP_PROJECT"
 gcp_region = "us-central1"
-gcp_ssh_pub_key_file = "PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
+gcp_ssh_pub_key_file = "/PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
+#
+# If you want to use GCP service account key instead of GCP SDK
+# uncomment the line below and update it with the path to the key file
+#gcp_credentials_key_file = "/PATH/YOUR_GCP_SERVICE_ACCOUNT_KEY.json"
 #
 gcp_bootstrap_instance_type = "n1-standard-1"
 gcp_master_instance_type = "n1-standard-8"
