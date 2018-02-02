@@ -61,7 +61,7 @@ num_of_public_agents = "1"
 #
 gcp_project = "YOUR_GCP_PROJECT"
 gcp_region = "us-central1"
-gce_ssh_pub_key_file = "PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
+gce_ssh_pub_key_file = "/PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
 #
 gcp_bootstrap_instance_type = "n1-standard-1"
 gcp_master_instance_type = "n1-standard-8"
@@ -275,7 +275,7 @@ Get help and connect with other users on the [mailing list](https://groups.googl
 Kubernetes on DC/OS is currently in Beta, and not recommended for Production.  For Production certification, we will be delivering incremental functionality:
 
 - [x] Helm Support
-- [ ] Provide better option than SSH tunnel for API server authentication (needs DC/OS 1.11)
+- [ ] Provide better option than SSH tunnel for API server authentication
 - [x] Robust external ingress for Kubernetes Services
 - [ ] Ability to dynamically expand the Kubernetes nodes
 - [ ] Non-disruptive Kubernetes version upgrades

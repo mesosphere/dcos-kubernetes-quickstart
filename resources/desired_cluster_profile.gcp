@@ -5,7 +5,7 @@ num_of_public_agents = "1"
 #
 gcp_project = "YOUR_GCP_PROJECT"
 gcp_region = "us-central1"
-gcp_ssh_pub_key_file = "PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
+gcp_ssh_pub_key_file = "/PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
 #
 # If you want to use GCP service account key instead of GCP SDK
 # uncomment the line below and update it with the path to the key file
