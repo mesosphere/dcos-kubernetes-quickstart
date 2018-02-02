@@ -8,7 +8,7 @@ before proceeding.
 
 Make sure to have previously installed [Google Cloud SDK](https://cloud.google.com/sdk/downloads).
 
-## Setup access
+### Setup access
 
 First, you need to retrieve the credentials needed for Terraform to manage your
 Google Cloud resources:
@@ -18,7 +18,20 @@ $ gcloud auth login
 $ gcloud auth application-default login
 ```
 
-Next, you need to setup SSH as per [official documentation](https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys).
+## Google Cloud Service Account
+
+If you want to use GCP Service Account key instead of GCP SDK, uncomment the line as shown below in `desired_cluster_profile` and update it with the path to the ssh key file:
+
+```
+...
+gcp_credentials_key_file = "/PATH/YOUR_GCP_SERVICE_ACCOUNT_KEY.json"
+...
+
+```
+
+## Setup SSH key
+
+Next, you need to setup SSH as per [official GCP documentation](https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys) if you setup Google Cloud SDK or Google Cloud Service Account.
 
 Add the SSH private key:
 

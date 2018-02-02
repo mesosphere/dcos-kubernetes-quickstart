@@ -5,11 +5,11 @@ SSH_USER := core
 MASTER_IP_FILE := .master_ip
 MASTER_LB_IP_FILE := .master_lb_ip
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
-DCOS_CLI_VERSION := 0.5.7
-KUBERNETES_VERSION := v1.9.0
+DCOS_VERSION := 1.11
+KUBERNETES_VERSION := 1.9.0
 
 get-cli:
-	$(eval export DCOS_CLI_VERSION)
+	$(eval export DCOS_VERSION)
 	$(eval export KUBERNETES_VERSION)
 	scripts/get_cli
 
