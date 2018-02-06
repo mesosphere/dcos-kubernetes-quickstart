@@ -244,13 +244,19 @@ kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9
 
 ## Destroy cluster
 
-First, uninstall Kubernetes:
+To destroy the whole deployment:
+
+```bash
+$ make destroy
+```
+
+Alternatively, you can separately uninstall Kubernetes:
 
 ```bash
 $ make uninstall
 ```
 
-Next, delete the DC/OS cluster:
+And delete the DC/OS cluster:
 
 ```bash
 $ make destroy-dcos
