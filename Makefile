@@ -1,4 +1,4 @@
-.PHONY: azure aws gcp uninstall install get-cli setup-cli get-master-ip get-master-elb_ip plan-dcos launch-dcos detroy-dcos kubectl-config kubectl-tunnel plan deploy check-dcos check-kubectl check-cli check-terraform
+.PHONY: azure aws gcp uninstall install get-cli setup-cli get-master-ip get-master-elb_ip plan-dcos launch-dcos detroy-dcos kubectl-config kubectl-tunnel plan deploy check-dcos check-kubectl check-cli check-terraform destroy
 
 RM := rm -f
 SSH_USER := core
@@ -134,6 +134,8 @@ destroy-dcos:
 	$(RM) $(MASTER_LB_IP_FILE)
 	cd .deploy; \
 	$(TERRAFORM_CMD) destroy -var-file desired_cluster_profile
+
+destroy: uninstall destroy-dcos
 
 clean:
 	$(RM) -r .deploy dcos kubectl
