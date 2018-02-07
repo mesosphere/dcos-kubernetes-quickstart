@@ -100,34 +100,43 @@ provider, and then proceed to install DC/OS.
 When DC/OS is up and running, the Kubernetes package installation will take place.
 
 Wait until all tasks are running before trying to access the Kubernetes API.
-Below is an example of how it looks like when the install ran successfully:
+
+You can watch the progress what was deployed so far with:
 
 ```bash
-$ watch dcos task
+$ watch dcos beta-kubernetes --name=kubernetes plan show deploy
 ```
 
-After a while, you should see something like:
+Below is an example of how it looks like when the install ran successfully:
+
 ```
-NAME                                HOST       USER  STATE  ID                                       MESOS ID
-etcd-0-peer                         10.64.4.2  root    R    etcd-0-peer__xxx                         xxxxx-s2
-etcd-1-peer                         10.64.4.4  root    R    etcd-1-peer__xxx                         xxxxx-S0
-etcd-2-peer                         10.64.4.5  root    R    etcd-2-peer__xxx                         xxxxx-S3
-kube-apiserver-0-instance           10.64.4.2  root    R    kube-apiserver-0-instance__xxx           xxxxx-S1
-kube-apiserver-1-instance           10.64.4.4  root    R    kube-apiserver-1-instance__xxx           xxxxx-S0
-kube-apiserver-2-instance           10.64.4.5  root    R    kube-apiserver-2-instance__xxx           xxxxx-S3
-kube-controller-manager-0-instance  10.64.4.5  root    R    kube-controller-manager-0-instance__xxx  xxxxx-S3
-kube-controller-manager-1-instance  10.64.4.2  root    R    kube-controller-manager-1-instance__xxx  xxxxx-S1
-kube-controller-manager-2-instance  10.64.4.4  root    R    kube-controller-manager-2-instance__xxx  xxxxx-S0
-kube-node-0-kube-proxy              10.64.4.5  root    S    kube-node-0-kube-proxy__xxx              xxxxx-S3
-kube-node-0-kubelet                 10.64.4.5  root    S    kube-node-0-kubelet__xxx                 xxxxx-S3
-kube-node-1-kube-proxy              10.64.4.2  root    S    kube-node-1-kube-proxy__xxx              xxxxx-S1
-kube-node-1-kubelet                 10.64.4.2  root    S    kube-node-1-kubelet__xxx                 xxxxx-S1
-kube-node-2-kube-proxy              10.64.4.4  root    S    kube-node-2-kube-proxy__xxx              xxxxx-S0
-kube-node-2-kubelet                 10.64.4.4  root    S    kube-node-2-kubelet__xxx                 xxxxx-S0
-kube-scheduler-0-instance           10.64.4.4  root    R    kube-scheduler-0-instance__xxx           xxxxx-S0
-kube-scheduler-1-instance           10.64.4.2  root    R    kube-scheduler-1-instance__xxx           xxxxx-S1
-kube-scheduler-2-instance           10.64.4.5  root    R    kube-scheduler-2-instance__xxx           xxxxx-S3
-kubernetes                          10.64.4.4  root    R    kubernetes.xxx                           xxxxx-S0
+deploy (serial strategy) (COMPLETE)
+   etcd (parallel strategy) (COMPLETE)
+      etcd-0:[peer] (COMPLETE)
+      etcd-1:[peer] (COMPLETE)
+      etcd-2:[peer] (COMPLETE)
+   apiserver (parallel strategy) (COMPLETE)
+      kube-apiserver-0:[instance] (COMPLETE)
+      kube-apiserver-1:[instance] (COMPLETE)
+      kube-apiserver-2:[instance] (COMPLETE)
+   controller-manager (parallel strategy) (COMPLETE)
+      kube-controller-manager-0:[instance] (COMPLETE)
+      kube-controller-manager-1:[instance] (COMPLETE)
+      kube-controller-manager-2:[instance] (COMPLETE)
+   scheduler (parallel strategy) (COMPLETE)
+      kube-scheduler-0:[instance] (COMPLETE)
+      kube-scheduler-1:[instance] (COMPLETE)
+      kube-scheduler-2:[instance] (COMPLETE)
+   node (parallel strategy) (COMPLETE)
+      kube-node-0:[kube-proxy, kubelet] (COMPLETE)
+      kube-node-1:[kube-proxy, kubelet] (COMPLETE)
+      kube-node-2:[kube-proxy, kubelet] (COMPLETE)
+   public-node (parallel strategy) (COMPLETE)
+      kube-node-public-0:[kube-proxy, kubelet] (COMPLETE)
+   mandatory-addons (serial strategy) (COMPLETE)
+      mandatory-addons-0:[kube-dns] (COMPLETE)
+      mandatory-addons-0:[heapster] (COMPLETE)
+      mandatory-addons-0:[dashboard] (COMPLETE)
 ```
 
 ### Accessing the DC/OS Dashboard
