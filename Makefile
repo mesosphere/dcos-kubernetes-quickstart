@@ -16,6 +16,13 @@ DCOS_CMD := $(shell PATH=$(PATH) command -v dcos 2> /dev/null)
 KUBECTL_CMD := $(shell PATH=$(PATH) command -v kubectl 2> /dev/null)
 TERRAFORM_CMD := $(shell command -v terraform 2> /dev/null)
 
+UNAME := $(shell uname -s)
+ifeq ($(UNAME),Linux)
+OPEN := xdg-open
+else
+OPEN := open
+endif
+
 # Define a new line character to use in error strings.
 define n
 
@@ -116,7 +123,7 @@ kubectl-tunnel:
 
 ui:
 	$(call get_master_lb_ip)
-	open https://$(MASTER_LB_IP)
+	$(OPEN) https://$(MASTER_LB_IP)
 
 plan: plan-dcos
 
