@@ -51,21 +51,21 @@ ifndef KUBECTL_CMD
 	$(error "$n$nNo kubectl command in $(PATH).$n$nPlease run 'make get-cli' to download required binaries.$n$n")
 endif
 
-azure: clean
+azure: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
 	cp ../resources/desired_cluster_profile.azure desired_cluster_profile; \
 	cp ../resources/options.json.azure options.json; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure
 
-aws: clean
+aws: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
 	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
 	cp ../resources/options.json.aws options.json; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws
 
-gcp: clean
+gcp: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
 	cp ../resources/desired_cluster_profile.gcp desired_cluster_profile; \
@@ -92,7 +92,7 @@ $(shell test -f $(MASTER_IP_FILE) || \
 $(eval MASTER_IP := $(shell cat $(MASTER_IP_FILE)))
 endef
 
-get-master-lb-ip:
+get-master-lb-ip: check-terraform
 	$(call get_master_lb_ip)
 	@echo $(MASTER_LB_IP)
 
@@ -102,11 +102,11 @@ $(shell test -f $(MASTER_LB_IP_FILE) || \
 $(eval MASTER_LB_IP := $(shell cat $(MASTER_LB_IP_FILE)))
 endef
 
-plan-dcos:
+plan-dcos: check-terraform
 	cd .deploy; \
 	$(TERRAFORM_CMD) plan -var-file desired_cluster_profile
 
-launch-dcos:
+launch-dcos: check-terraform
 	cd .deploy; \
 	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile
 
@@ -131,12 +131,12 @@ deploy: check-cli launch-dcos setup-cli install
 
 upgrade-infra: launch-dcos
 
-upgrade-dcos:
+upgrade-dcos: check-terraform
 	cd .deploy; \
 	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile.tfvars -var state=upgrade -target null_resource.bootstrap -target null_resource.master -parallelism=1; \
 	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile.tfvars -var state=upgrade
 
-destroy-dcos:
+destroy-dcos: check-terraform
 	$(RM) $(MASTER_IP_FILE)
 	$(RM) $(MASTER_LB_IP_FILE)
 	cd .deploy; \
