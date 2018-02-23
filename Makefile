@@ -6,7 +6,7 @@ MASTER_IP_FILE := .master_ip
 MASTER_LB_IP_FILE := .master_lb_ip
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.11
-KUBERNETES_VERSION := 1.9.0
+KUBERNETES_VERSION := 1.9.1
 
 # Set PATH to include local dir for locally downloaded binaries.
 export PATH := .:$(PATH)
@@ -111,11 +111,12 @@ launch-dcos: check-terraform
 	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile
 
 kubectl-config: check-kubectl
+	dcos beta-kubernetes kubeconfig
+
+kubectl-tunnel:
 	$(KUBECTL_CMD) config set-cluster dcos-k8s --server=http://localhost:9000
 	$(KUBECTL_CMD) config set-context dcos-k8s --cluster=dcos-k8s --namespace=default
 	$(KUBECTL_CMD) config use-context dcos-k8s
-
-kubectl-tunnel:
 	$(call get_master_ip)
 	ssh -4 -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o "ServerAliveInterval=120" \
 		-N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 \
