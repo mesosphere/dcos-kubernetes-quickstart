@@ -11,11 +11,11 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ## Known limitations
 
-Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.4.0-1.9.0-beta/limitations/).
+Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.6.0-1.9.1-beta/limitations/).
 
 ## Pre-Requisites
 
-First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.4.0-1.9.0-beta/install/#prerequisites/).
+First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.6.0-1.9.1-beta/install/#prerequisites/).
 
 Then, check the requirements for running this quickstart:
 
@@ -150,91 +150,7 @@ $ make ui
 ### Accessing the Kubernetes API
 
 In order to access the Kubernetes API from outside the DC/OS cluster, one needs
-to establish a reverse-tunnel through SSH to a DC/OS agent:
-
-```bash
-$ make kubectl-tunnel
-```
-
-When the `kube-apiserver-{}-instance` task(s) are healthy, the Kubernetes API
-should be accessible on `http://localhost:9000`. Reaching this endpoint should show something like this:
-
-```bash
-$ curl http://localhost:9000
-{
-  "paths": [
-    "/api",
-    "/api/v1",
-    "/apis",
-    "/apis/",
-    "/apis/admissionregistration.k8s.io",
-    "/apis/admissionregistration.k8s.io/v1beta1",
-    "/apis/apiextensions.k8s.io",
-    "/apis/apiextensions.k8s.io/v1beta1",
-    "/apis/apiregistration.k8s.io",
-    "/apis/apiregistration.k8s.io/v1beta1",
-    "/apis/apps",
-    "/apis/apps/v1",
-    "/apis/apps/v1beta1",
-    "/apis/apps/v1beta2",
-    "/apis/authentication.k8s.io",
-    "/apis/authentication.k8s.io/v1",
-    "/apis/authentication.k8s.io/v1beta1",
-    "/apis/authorization.k8s.io",
-    "/apis/authorization.k8s.io/v1",
-    "/apis/authorization.k8s.io/v1beta1",
-    "/apis/autoscaling",
-    "/apis/autoscaling/v1",
-    "/apis/autoscaling/v2beta1",
-    "/apis/batch",
-    "/apis/batch/v1",
-    "/apis/batch/v1beta1",
-    "/apis/certificates.k8s.io",
-    "/apis/certificates.k8s.io/v1beta1",
-    "/apis/events.k8s.io",
-    "/apis/events.k8s.io/v1beta1",
-    "/apis/extensions",
-    "/apis/extensions/v1beta1",
-    "/apis/networking.k8s.io",
-    "/apis/networking.k8s.io/v1",
-    "/apis/policy",
-    "/apis/policy/v1beta1",
-    "/apis/rbac.authorization.k8s.io",
-    "/apis/rbac.authorization.k8s.io/v1",
-    "/apis/rbac.authorization.k8s.io/v1beta1",
-    "/apis/storage.k8s.io",
-    "/apis/storage.k8s.io/v1",
-    "/apis/storage.k8s.io/v1beta1",
-    "/healthz",
-    "/healthz/autoregister-completion",
-    "/healthz/etcd",
-    "/healthz/ping",
-    "/healthz/poststarthook/apiservice-openapi-controller",
-    "/healthz/poststarthook/apiservice-registration-controller",
-    "/healthz/poststarthook/apiservice-status-available-controller",
-    "/healthz/poststarthook/bootstrap-controller",
-    "/healthz/poststarthook/ca-registration",
-    "/healthz/poststarthook/generic-apiserver-start-informers",
-    "/healthz/poststarthook/kube-apiserver-autoregistration",
-    "/healthz/poststarthook/start-apiextensions-controllers",
-    "/healthz/poststarthook/start-apiextensions-informers",
-    "/healthz/poststarthook/start-kube-aggregator-informers",
-    "/healthz/poststarthook/start-kube-apiserver-informers",
-    "/logs",
-    "/metrics",
-    "/swagger-2.0.0.json",
-    "/swagger-2.0.0.pb-v1",
-    "/swagger-2.0.0.pb-v1.gz",
-    "/swagger.json",
-    "/swaggerapi",
-    "/ui",
-    "/ui/",
-    "/version"
-  ]
-}
-```
-
-You are now ready to configure `kubectl`, the Kubernetes CLI tool:
+to configure `kubectl`, the Kubernetes CLI tool:
 
 ```bash
 $ make kubectl-config
@@ -245,11 +161,22 @@ Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 ```bash
 $ kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.0
-kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.0
-kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.0
-kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9.0
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.1
+kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.1
+kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.1
+kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9.1
 ```
+
+### Using kubectl proxy
+
+For running more advanced commands such as `kubectl proxy`, an SSH tunnel is still required.
+To create the tunnel, run:
+
+```bash
+$ make kubectl-tunnel
+```
+
+If `kubectl` is properly configured and the tunnel established successfully, in another terminal you should now be able to run `kubectl proxy` as well as any other command.
 
 ## Destroy cluster
 
@@ -280,7 +207,7 @@ make clean
 
 ## Documentation
 
-For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.4.0-1.9.0-beta)
+For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.6.0-1.9.1-beta)
 
 ## Community
 Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.
@@ -290,10 +217,10 @@ Get help and connect with other users on the [mailing list](https://groups.googl
 Kubernetes on DC/OS is currently in Beta, and not recommended for Production.  For Production certification, we will be delivering incremental functionality:
 
 - [x] Helm Support
-- [ ] Provide better option than SSH tunnel for API server authentication
+- [x] Provide better option than SSH tunnel for API server authentication
 - [x] Robust external ingress for Kubernetes Services
-- [ ] Ability to dynamically expand the Kubernetes nodes
-- [ ] Non-disruptive Kubernetes version upgrades
+- [x] Ability to dynamically expand the Kubernetes nodes
+- [x] Non-disruptive Kubernetes version upgrades
 - [x] Disaster Recovery
 - [ ] Cloud-provider integration
   - [x] AWS
