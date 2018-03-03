@@ -6,7 +6,7 @@ MASTER_IP_FILE := .master_ip
 MASTER_LB_IP_FILE := .master_lb_ip
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.11
-KUBERNETES_VERSION := 1.9.1
+KUBERNETES_VERSION := 1.9.3
 
 # Set PATH to include local dir for locally downloaded binaries.
 export PATH := .:$(PATH)
