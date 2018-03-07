@@ -19,3 +19,5 @@ terraform.tfvars
 modules/
 desired_cluster_profile.tfvars.example
 desired_cluster_profile
+
+options.json
