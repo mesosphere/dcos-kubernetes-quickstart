@@ -15,6 +15,8 @@ export PATH := .:$(PATH)
 DCOS_CMD := $(shell PATH=$(PATH) command -v dcos 2> /dev/null)
 KUBECTL_CMD := $(shell PATH=$(PATH) command -v kubectl 2> /dev/null)
 TERRAFORM_CMD := $(shell command -v terraform 2> /dev/null)
+TERRAFORM_APPLY_ARGS ?=
+TERRAFORM_DESTROY_ARGS ?=
 
 UNAME := $(shell uname -s)
 ifeq ($(UNAME),Linux)
@@ -108,7 +110,7 @@ plan-dcos: check-terraform
 
 launch-dcos: check-terraform
 	cd .deploy; \
-	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile
+	$(TERRAFORM_CMD) apply $(TERRAFORM_APPLY_ARGS) -var-file desired_cluster_profile
 
 kubectl-config: check-kubectl
 	dcos beta-kubernetes kubeconfig
@@ -141,7 +143,7 @@ destroy-dcos: check-terraform
 	$(RM) $(MASTER_IP_FILE)
 	$(RM) $(MASTER_LB_IP_FILE)
 	cd .deploy; \
-	$(TERRAFORM_CMD) destroy -var-file desired_cluster_profile
+	$(TERRAFORM_CMD) destroy $(TERRAFORM_DESTROY_ARGS) -var-file desired_cluster_profile
 
 destroy: uninstall destroy-dcos
 
