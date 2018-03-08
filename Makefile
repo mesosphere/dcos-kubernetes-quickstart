@@ -113,7 +113,7 @@ launch-dcos: check-terraform
 	$(TERRAFORM_CMD) apply $(TERRAFORM_APPLY_ARGS) -var-file desired_cluster_profile
 
 kubectl-config: check-kubectl
-	dcos kubernetes kubeconfig
+	$(DCOS_CMD) kubernetes kubeconfig
 
 kubectl-tunnel:
 	$(KUBECTL_CMD) config set-cluster dcos-k8s --server=http://localhost:9000
