@@ -1,28 +1,34 @@
 # CNCF Conformance
 
-## Pre-Requisites
+## Prerequisites
 
-To follow these instructions you should meet the following pre-requisites:
+The following prerequisites apply to follow these instructions. You will need:
 
 * A Linux or MacOS machine with
   [Terraform 0.11.x](https://www.terraform.io/downloads.html) installed.
 * A [Google Cloud](docs/gcp.md), [AWS](docs/aws.md) or [Azure](docs/azure.md)
   account with enough permissions to provide the needed infrastructure
 
-## Preparing the infrastructure
+## Preparation
 
-**NOTE:** These instructions are targeted at a Google Cloud Platform deployment.
+**NOTE:** These instructions are targeted at a
+[Google Cloud Platform](docs/gcp.md) deployment. To deploy in [AWS](docs/aws.md)
+or [Azure](docs/azure.md), please run `make aws` or `make azure` instead of
+`make gcp` in the step below, and edit the resulting file accordingly.
 
-Start by cloning this repo:
+**NOTE:** To install `dcos-kubernetes` in an existing cluster, please follow
+[these instructions](docs/existing_cluster.md).
 
-```
+First, clone this repository:
+
+```shell
 $ git clone git@github.com:mesosphere/dcos-kubernetes-quickstart.git
 $ cd dcos-kubernetes-quickstart
 ```
 
 Then generate the default infrastructure configuration:
 
-```
+```shell
 $ make gcp
 ```
 
@@ -30,7 +36,7 @@ This will output sane defaults to `.deploy/desired_cluster_profile`. Now, edit
 said file and set the `gcp_project` and the `gce_ssh_pub_key_file` variables.
 Please, do not set a smaller instance (VM) type on the risk of failing to
 install Kubernetes. In the end, the `.deploy/desired_cluster_profile` file
-should look like this:
+should look something like this:
 
 ```
 custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.0/dcos_generate_config.sh"
@@ -63,7 +69,7 @@ admin_cidr = "0.0.0.0/0"
 
 Now, launch the DC/OS cluster by running
 
-```
+```shell
 $ make get-cli launch-dcos setup-cli
 ```
 
@@ -81,14 +87,14 @@ OpenID token to the shell where you ran the abovementioned command.
 
 To install `dcos-kubernetes` in the newly created DC/OS cluster run
 
-```
+```shell
 $ dcos package install --yes --options=./resources/options-ha.json kubernetes
 ```
 
 Wait until all tasks are running before proceeding. You can track installation
 progress using
 
-```
+```shell
 $ watch dcos kubernetes plan show deploy
 ```
 
@@ -136,14 +142,15 @@ deploy (serial strategy) (COMPLETE)
 
 In order to access the Kubernetes API from outside the DC/OS cluster, run
 
-```
+```shell
 $ make kubectl-tunnel
 ```
 
-Now, in a different shell, run `kubectl get nodes`. The output should be similar
-to this:
+In a different shell, check that `kubectl` is properly configured to communicate
+with your new cluster by running `kubectl get nodes`. The output should look
+something like:
 
-```
+```shell
 $ kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
 kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.3
@@ -158,9 +165,9 @@ To run the test suite and grab the results, follow the
 
 ## Destroy the infrastructure
 
-When you are finished, run
+When you are finished, run:
 
-```
+```shell
 $ make destroy
 ```
 
