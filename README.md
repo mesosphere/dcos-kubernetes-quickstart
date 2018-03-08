@@ -178,20 +178,6 @@ To destroy the whole deployment:
 $ make destroy
 ```
 
-Alternatively, you can separately uninstall Kubernetes:
-
-```bash
-$ make uninstall
-```
-
-And delete the DC/OS cluster:
-
-```bash
-$ make destroy-dcos
-```
-
-**ATTENTION:** Make sure to run `make destroy-dcos` or otherwise you will need to delete all cloud resources manually!
-
 Last, clean generated resources:
 ```
 make clean
