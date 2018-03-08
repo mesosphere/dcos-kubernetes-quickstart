@@ -1,0 +1,6 @@
+{
+  "kubernetes": {
+    "high_availability": true,
+    "node_count": 3
+  }
+}
