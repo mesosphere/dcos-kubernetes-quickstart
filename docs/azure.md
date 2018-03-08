@@ -55,7 +55,7 @@ log-in into your new VMs later.
 failing to install Kubernetes.
 
 ```
-custom_dcos_download_path = "https://downloads.dcos.io/dcos/EarlyAccess/1.11.0-rc4/dcos_generate_config.sh"
+custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.0/dcos_generate_config.sh"
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
