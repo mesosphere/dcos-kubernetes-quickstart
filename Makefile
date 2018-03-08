@@ -75,10 +75,10 @@ gcp: clean check-terraform
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp
 
 install: check-dcos
-	$(DCOS_CMD) package install --yes beta-kubernetes --options=./.deploy/options.json
+	$(DCOS_CMD) package install --yes kubernetes --options=./.deploy/options.json
 
 uninstall: check-dcos
-	$(DCOS_CMD) package uninstall --yes beta-kubernetes
+	$(DCOS_CMD) package uninstall --yes kubernetes
 
 setup-cli: check-dcos
 	$(call get_master_lb_ip)
@@ -113,7 +113,7 @@ launch-dcos: check-terraform
 	$(TERRAFORM_CMD) apply $(TERRAFORM_APPLY_ARGS) -var-file desired_cluster_profile
 
 kubectl-config: check-kubectl
-	dcos beta-kubernetes kubeconfig
+	dcos kubernetes kubeconfig
 
 kubectl-tunnel:
 	$(KUBECTL_CMD) config set-cluster dcos-k8s --server=http://localhost:9000

@@ -4,18 +4,13 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ![](docs/assets/ui-install.gif)
 
-**KUBERNETES ON DC/OS IS BETA, DO NOT USE IT FOR PRODUCTION CLUSTERS!**
-
-**But, please try it out! Give us feedback at:**
-**https://github.com/mesosphere/dcos-kubernetes-quickstart/issues**
-
 ## Known limitations
 
-Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.6.1-1.9.3-beta/limitations/).
+Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.0.0-1.9.3/limitations/).
 
 ## Pre-Requisites
 
-First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.6.1-1.9.3-beta/install/#prerequisites/).
+First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.0.0-1.9.3/install/#prerequisites/).
 
 Then, check the requirements for running this quickstart:
 
@@ -104,35 +99,31 @@ Wait until all tasks are running before trying to access the Kubernetes API.
 You can watch the progress what was deployed so far with:
 
 ```bash
-$ watch dcos beta-kubernetes --name=kubernetes plan show deploy
+$ watch dcos kubernetes plan show deploy
 ```
 
 Below is an example of how it looks like when the install ran successfully:
 
 ```
 deploy (serial strategy) (COMPLETE)
-   etcd (parallel strategy) (COMPLETE)
+   etcd (serial strategy) (COMPLETE)
       etcd-0:[peer] (COMPLETE)
-      etcd-1:[peer] (COMPLETE)
-      etcd-2:[peer] (COMPLETE)
    apiserver (parallel strategy) (COMPLETE)
       kube-apiserver-0:[instance] (COMPLETE)
-      kube-apiserver-1:[instance] (COMPLETE)
-      kube-apiserver-2:[instance] (COMPLETE)
+   kubernetes-api-proxy (parallel strategy) (COMPLETE)
+      kubernetes-api-proxy-0:[install] (COMPLETE)
    controller-manager (parallel strategy) (COMPLETE)
       kube-controller-manager-0:[instance] (COMPLETE)
-      kube-controller-manager-1:[instance] (COMPLETE)
-      kube-controller-manager-2:[instance] (COMPLETE)
    scheduler (parallel strategy) (COMPLETE)
       kube-scheduler-0:[instance] (COMPLETE)
-      kube-scheduler-1:[instance] (COMPLETE)
-      kube-scheduler-2:[instance] (COMPLETE)
    node (parallel strategy) (COMPLETE)
-      kube-node-0:[kube-proxy, coredns, kubelet] (COMPLETE)
-      kube-node-1:[kube-proxy, coredns, kubelet] (COMPLETE)
-      kube-node-2:[kube-proxy, coredns, kubelet] (COMPLETE)
+      kube-node-0:[kube-proxy] (COMPLETE)
+      kube-node-0:[coredns] (COMPLETE)
+      kube-node-0:[kubelet] (COMPLETE)
    public-node (parallel strategy) (COMPLETE)
-      kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
+      kube-node-public-0:[kube-proxy] (COMPLETE)
+      kube-node-public-0:[coredns] (COMPLETE)
+      kube-node-public-0:[kubelet] (COMPLETE)
    mandatory-addons (serial strategy) (COMPLETE)
       mandatory-addons-0:[kube-dns] (COMPLETE)
       mandatory-addons-0:[metrics-server] (COMPLETE)
@@ -208,24 +199,7 @@ make clean
 
 ## Documentation
 
-For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/beta-kubernetes/0.6.1-1.9.3-beta)
+For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/1.0.0-1.9.3)
 
 ## Community
 Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.
-
-## Roadmap
-
-Kubernetes on DC/OS is currently in Beta, and not recommended for Production.  For Production certification, we will be delivering incremental functionality:
-
-- [x] Helm Support
-- [x] Provide better option than SSH tunnel for API server authentication
-- [x] Robust external ingress for Kubernetes Services
-- [x] Ability to dynamically expand the Kubernetes nodes
-- [x] Non-disruptive Kubernetes version upgrades
-- [x] Disaster Recovery
-- [ ] Cloud-provider integration
-  - [x] AWS
-  - [ ] Google Cloud
-  - [ ] Azure
-
-In the future, we will be open-sourcing the underlying Kubernetes framework code.  Stay tuned for details.
