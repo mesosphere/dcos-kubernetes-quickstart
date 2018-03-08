@@ -170,6 +170,19 @@ $ make kubectl-tunnel
 
 If `kubectl` is properly configured and the tunnel established successfully, in another terminal you should now be able to run `kubectl proxy` as well as any other command.
 
+## Uninstall Kubernetes
+
+To uninstall the DC/OS Kubernetes package while leaving your DC/OS cluster up,
+run:
+
+```bash
+$ make uninstall
+```
+
+**NOTE:** This will only uninstall Kubernetes. Make sure you destroy your DC/OS
+cluster using the instructions below when you finish testing, or otherwise you
+will need to delete all cloud resources manually!
+
 ## Destroy cluster
 
 To destroy the whole deployment:
