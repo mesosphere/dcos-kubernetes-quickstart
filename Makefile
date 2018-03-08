@@ -139,13 +139,11 @@ upgrade-dcos: check-terraform
 	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile.tfvars -var state=upgrade -target null_resource.bootstrap -target null_resource.master -parallelism=1; \
 	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile.tfvars -var state=upgrade
 
-destroy-dcos: check-terraform
+destroy: check-terraform
 	$(RM) $(MASTER_IP_FILE)
 	$(RM) $(MASTER_LB_IP_FILE)
 	cd .deploy; \
 	$(TERRAFORM_CMD) destroy $(TERRAFORM_DESTROY_ARGS) -var-file desired_cluster_profile
-
-destroy: uninstall destroy-dcos
 
 clean:
 	$(RM) -r .deploy dcos kubectl
