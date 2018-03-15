@@ -6,11 +6,11 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ## Known limitations
 
-Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.0.0-1.9.3/limitations/).
+Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.0.1-1.9.4/limitations/).
 
 ## Pre-Requisites
 
-First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.0.0-1.9.3/install/#prerequisites/).
+First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.0.1-1.9.4/install/#prerequisites/).
 
 Then, check the requirements for running this quickstart:
 
@@ -153,10 +153,10 @@ Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 ```bash
 $ kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.3
-kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.3
-kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.3
-kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9.3
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.4
+kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.4
+kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.4
+kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9.4
 ```
 
 ### Using kubectl proxy
@@ -198,7 +198,7 @@ make clean
 
 ## Documentation
 
-For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/1.0.0-1.9.3)
+For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/1.0.1-1.9.4)
 
 ## Community
 Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.

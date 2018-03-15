@@ -6,18 +6,18 @@ The following prerequisites apply to follow these instructions. You will need:
 
 * A Linux or MacOS machine with
   [Terraform 0.11.x](https://www.terraform.io/downloads.html) installed.
-* A [Google Cloud](docs/gcp.md), [AWS](docs/aws.md) or [Azure](docs/azure.md)
+* A [Google Cloud](gcp.md), [AWS](aws.md) or [Azure](azure.md)
   account with enough permissions to provide the needed infrastructure
 
 ## Preparation
 
 **NOTE:** These instructions are targeted at a
-[Google Cloud Platform](docs/gcp.md) deployment. To deploy in [AWS](docs/aws.md)
-or [Azure](docs/azure.md), please run `make aws` or `make azure` instead of
+[Google Cloud Platform](gcp.md) deployment. To deploy in [AWS](aws.md)
+or [Azure](azure.md), please run `make aws` or `make azure` instead of
 `make gcp` in the step below, and edit the resulting file accordingly.
 
 **NOTE:** To install `dcos-kubernetes` in an existing cluster, please follow
-[these instructions](docs/existing_cluster.md).
+[these instructions](existing_cluster.md).
 
 First, clone this repository:
 
@@ -153,9 +153,9 @@ something like:
 ```shell
 $ kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.3
-kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.3
-kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.3
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.4
+kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.4
+kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.4
 ```
 
 ## Running the test suite
