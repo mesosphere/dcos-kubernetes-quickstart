@@ -157,6 +157,14 @@ kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9
 kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9.6
 ```
 
+### Accessing the Kubernetes Dashboard
+
+You can access Kubernetes Dashboard:
+
+```bash
+$ make kubernetes-ui
+```
+
 ### Using kubectl proxy
 
 For running more advanced commands such as `kubectl proxy`, an SSH tunnel is still required.

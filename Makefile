@@ -128,6 +128,10 @@ ui:
 	$(call get_master_lb_ip)
 	$(OPEN) https://$(MASTER_LB_IP)
 
+kubernetes-ui:
+	$(call get_master_lb_ip)
+	$(OPEN) https://$(MASTER_LB_IP)/service/kubernetes-proxy/
+
 plan: plan-dcos
 
 deploy: check-cli launch-dcos setup-cli install
