@@ -153,9 +153,9 @@ something like:
 ```shell
 $ kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.4
-kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.4
-kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.4
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.6
+kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.6
+kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.6
 ```
 
 ## Running the test suite
