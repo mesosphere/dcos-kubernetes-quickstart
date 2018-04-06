@@ -89,8 +89,7 @@ get-master-ip:
 	@echo $(MASTER_IP)
 
 define get_master_ip
-$(shell test -f $(MASTER_IP_FILE) || \
-	$(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Mesos Master Public IP" | head -1 | cut -f 1 -d ',' > $(MASTER_IP_FILE))
+$(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master Public IPs" | head -1 | cut -f 1 -d ',' > $(MASTER_IP_FILE)
 $(eval MASTER_IP := $(shell cat $(MASTER_IP_FILE)))
 endef
 
@@ -99,8 +98,7 @@ get-master-lb-ip: check-terraform
 	@echo $(MASTER_LB_IP)
 
 define get_master_lb_ip
-$(shell test -f $(MASTER_LB_IP_FILE) || \
-	$(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master ELB Address" > $(MASTER_LB_IP_FILE))
+$(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master ELB Public IP" > $(MASTER_LB_IP_FILE)
 $(eval MASTER_LB_IP := $(shell cat $(MASTER_LB_IP_FILE)))
 endef
 
