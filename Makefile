@@ -94,8 +94,8 @@ setup-cli: check-dcos
 	$(call get_master_lb_ip)
 	$(DCOS_CMD) cluster setup https://$(MASTER_LB_IP)
 
-.PHONY: wait_for_lb
-wait_for_lb:
+.PHONY: wait-for-lb
+wait-for-lb:
 	@echo "Sleep for 20 sec to give time for LoadBalancer to come up!"
 	@sleep 20
 
