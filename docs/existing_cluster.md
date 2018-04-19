@@ -10,9 +10,12 @@ Then, install is as easy as:
 $ dcos package install kubernetes
 ```
 
-By default, it will provision a Kubernetes cluster with one (1) worker node, and
-a single instance of every control plane component. To deploy a highly-available
-cluster and three (3) worker nodes, run:
+## Kubernetes configuration
+
+**NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
+a single instance of every control plane component.
+
+To deploy a **highly-available** cluster with three (3) private and one (1) public workers node update, run:
 
 ```shell
 $ dcos package install --options=./resources/options-ha.json kubernetes

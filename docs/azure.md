@@ -1,6 +1,6 @@
 # Azure
 
-**WARNING**: When running this quickstart, you might experience some issues
+**WARNING:** When running this quickstart, you might experience some issues
 with cloud resource limits. Please, verify your [quotas](https://docs.microsoft.com/en-us/azure/azure-subscription-service-limits)
 before proceeding.
 
@@ -55,7 +55,7 @@ log-in into your new VMs later.
 failing to install Kubernetes.
 
 ```
-custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.0/dcos_generate_config.sh"
+custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.1/dcos_generate_config.sh"
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
@@ -65,6 +65,23 @@ ssh_pub_key = "INSERT_AZURE_PUBLIC_KEY_HERE"
 ```
 
 For more advanced scenarios, please check the [terraform-dcos documentation for Azure](https://github.com/dcos/terraform-dcos/tree/master/azure).
+
+### Kubernetes configuration
+
+**NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
+a single instance of every control plane component.
+
+To deploy a **highly-available** cluster with three (3) private and one (1) public workers node update `.deploy/options.json`:
+
+```
+{
+  "kubernetes": {
+    "high_availability": true,
+    "node_count": 3,
+    "public_node_count": 1
+  }
+}
+```
 
 ## Install
 

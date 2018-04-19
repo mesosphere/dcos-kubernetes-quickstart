@@ -49,7 +49,7 @@ Please, do not set a smaller instance (VM) type on the risk of failing to
 install Kubernetes.
 
 ```
-custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.0/dcos_generate_config.sh"
+custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.1/dcos_generate_config.sh"
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
@@ -67,6 +67,23 @@ admin_cidr = "0.0.0.0/0"
 ```
 
 For more advanced scenarios, please check the [terraform-dcos documentation for Google Cloud](https://github.com/dcos/terraform-dcos/tree/master/gcp).
+
+### Kubernetes configuration
+
+**NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
+a single instance of every control plane component.
+
+To deploy a **highly-available** cluster with three (3) private and one (1) public workers node update `.deploy/options.json`:
+
+```
+{
+  "kubernetes": {
+    "high_availability": true,
+    "node_count": 3,
+    "public_node_count": 1
+  }
+}
+```
 
 ### Download command-line tools
 
@@ -145,7 +162,7 @@ In order to access the Kubernetes API from outside the DC/OS cluster, one needs
 to configure `kubectl`, the Kubernetes CLI tool:
 
 ```bash
-$ make kubectl-config
+$ dcos kubernetes kubeconfig
 ```
 
 Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
@@ -162,7 +179,7 @@ kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9
 You can access Kubernetes Dashboard:
 
 ```bash
-$ make kubernetes-ui
+$ make kube-ui
 ```
 
 ### Using kubectl proxy

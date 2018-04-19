@@ -1,4 +1,3 @@
-.PHONY: azure aws gcp uninstall install get-cli setup-cli get-master-ip get-master-elb_ip plan-dcos launch-dcos detroy-dcos kubectl-config kubectl-tunnel plan deploy check-dcos check-kubectl check-cli check-terraform destroy
 
 RM := rm -f
 SSH_USER := core
@@ -31,28 +30,34 @@ define n
 
 endef
 
+.PHONY: get-cli
 get-cli:
 	$(eval export DCOS_VERSION)
 	$(eval export KUBERNETES_VERSION)
 	scripts/get_cli
 
+.PHONY: check-cli
 check-cli: check-terraform check-dcos check-kubectl
 
+.PHONY: check-terraform
 check-terraform:
 ifndef TERRAFORM_CMD
 	$(error "$n$nNo terraform command in $(PATH).$n$nPlease install via 'brew install terraform' on MacOS, or download from https://www.terraform.io/downloads.html.$n$n")
 endif
 
+.PHONY: check-dcos
 check-dcos:
 ifndef DCOS_CMD
 	$(error "$n$nNo dcos command in $(PATH).$n$nPlease run 'make get-cli' to download required binaries.$n$n")
 endif
 
+.PHONY: check-kubectl
 check-kubectl:
 ifndef KUBECTL_CMD
 	$(error "$n$nNo kubectl command in $(PATH).$n$nPlease run 'make get-cli' to download required binaries.$n$n")
 endif
 
+.PHONY: azure
 azure: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
@@ -60,6 +65,7 @@ azure: clean check-terraform
 	cp ../resources/options.json.azure options.json; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure
 
+.PHONY: aws
 aws: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
@@ -67,6 +73,7 @@ aws: clean check-terraform
 	cp ../resources/options.json.aws options.json; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws
 
+.PHONY: gpc
 gcp: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
@@ -74,16 +81,25 @@ gcp: clean check-terraform
 	cp ../resources/options.json.gcp options.json; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp
 
+.PHONY: install
 install: check-dcos
 	$(DCOS_CMD) package install --yes kubernetes --options=./.deploy/options.json
 
+.PHONY: uninstall
 uninstall: check-dcos
 	$(DCOS_CMD) package uninstall --yes kubernetes
 
+.PHONY: setup-cli
 setup-cli: check-dcos
 	$(call get_master_lb_ip)
 	$(DCOS_CMD) cluster setup https://$(MASTER_LB_IP)
 
+.PHONY: wait_for_lb
+wait_for_lb:
+	@echo "Sleep for 20 sec to give time for LoadBalancer to come up!"
+	@sleep 20
+
+.PHONY: get-master-ip
 get-master-ip:
 	$(call get_master_ip)
 	@echo $(MASTER_IP)
@@ -93,6 +109,7 @@ $(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master Public IPs" | h
 $(eval MASTER_IP := $(shell cat $(MASTER_IP_FILE)))
 endef
 
+.PHONY: get-master-lb-ip
 get-master-lb-ip: check-terraform
 	$(call get_master_lb_ip)
 	@echo $(MASTER_LB_IP)
@@ -102,17 +119,17 @@ $(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master ELB Public IP" 
 $(eval MASTER_LB_IP := $(shell cat $(MASTER_LB_IP_FILE)))
 endef
 
+.PHONY: plan-dcos
 plan-dcos: check-terraform
 	cd .deploy; \
 	$(TERRAFORM_CMD) plan -var-file desired_cluster_profile
 
+.PHONY: launch-dcos
 launch-dcos: check-terraform
 	cd .deploy; \
 	$(TERRAFORM_CMD) apply $(TERRAFORM_APPLY_ARGS) -var-file desired_cluster_profile
 
-kubectl-config: check-kubectl
-	$(DCOS_CMD) kubernetes kubeconfig
-
+.PHONY: kubectl-tunnel
 kubectl-tunnel:
 	$(KUBECTL_CMD) config set-cluster dcos-k8s --server=http://localhost:9000
 	$(KUBECTL_CMD) config set-context dcos-k8s --cluster=dcos-k8s --namespace=default
@@ -122,30 +139,38 @@ kubectl-tunnel:
 		-N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 \
 		$(SSH_USER)@$(MASTER_IP)
 
+.PHONY: ui
 ui:
 	$(call get_master_lb_ip)
 	$(OPEN) https://$(MASTER_LB_IP)
 
-kubernetes-ui:
+.PHONY: kube-ui
+kube-ui:
 	$(call get_master_lb_ip)
 	$(OPEN) https://$(MASTER_LB_IP)/service/kubernetes-proxy/
 
+.PHONY: plan
 plan: plan-dcos
 
-deploy: check-cli launch-dcos setup-cli install
+.PHONY: deploy
+deploy: check-cli launch-dcos wait_for_lb setup-cli install
 
+.PHONY: upgrade-infra
 upgrade-infra: launch-dcos
 
+.PHONY: upgrade-dcos
 upgrade-dcos: check-terraform
 	cd .deploy; \
 	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile.tfvars -var state=upgrade -target null_resource.bootstrap -target null_resource.master -parallelism=1; \
 	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile.tfvars -var state=upgrade
 
+.PHONY: destroy
 destroy: check-terraform
 	$(RM) $(MASTER_IP_FILE)
 	$(RM) $(MASTER_LB_IP_FILE)
 	cd .deploy; \
 	$(TERRAFORM_CMD) destroy $(TERRAFORM_DESTROY_ARGS) -var-file desired_cluster_profile
 
+.PHONY: clean
 clean:
 	$(RM) -r .deploy dcos kubectl
