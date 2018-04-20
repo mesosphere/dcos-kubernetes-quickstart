@@ -153,7 +153,7 @@ kube-ui:
 plan: plan-dcos
 
 .PHONY: deploy
-deploy: check-cli launch-dcos wait_for_lb setup-cli install
+deploy: check-cli launch-dcos wait-for-lb setup-cli install
 
 .PHONY: upgrade-infra
 upgrade-infra: launch-dcos
