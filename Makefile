@@ -1,8 +1,6 @@
 
 RM := rm -f
 SSH_USER := core
-MASTER_IP_FILE := .master_ip
-MASTER_LB_IP_FILE := .master_lb_ip
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.11
 KUBERNETES_VERSION := 1.9.6
@@ -100,8 +98,7 @@ get-master-ip:
 	@echo $(MASTER_IP)
 
 define get_master_ip
-$(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master Public IPs" | head -1 | cut -f 1 -d ',' > $(MASTER_IP_FILE)
-$(eval MASTER_IP := $(shell cat $(MASTER_IP_FILE)))
+$(eval MASTER_IP := $(shell $(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master Public IPs" | head -1 | cut -f 1 -d ','))
 endef
 
 .PHONY: get-master-lb-ip
@@ -110,8 +107,7 @@ get-master-lb-ip: check-terraform
 	@echo $(MASTER_LB_IP)
 
 define get_master_lb_ip
-$(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master ELB Public IP" > $(MASTER_LB_IP_FILE)
-$(eval MASTER_LB_IP := $(shell cat $(MASTER_LB_IP_FILE)))
+$(eval MASTER_LB_IP := $(shell $(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master ELB Public IP"))
 endef
 
 .PHONY: plan-dcos
@@ -121,8 +117,6 @@ plan-dcos: check-terraform
 
 .PHONY: launch-dcos
 launch-dcos: check-terraform
-	touch $(MASTER_LB_IP_FILE)
-	touch $(MASTER_IP_FILE)
 	cd .deploy; \
 	$(TERRAFORM_CMD) apply $(TERRAFORM_APPLY_ARGS) -var-file desired_cluster_profile
 
@@ -163,8 +157,6 @@ upgrade-dcos: check-terraform
 
 .PHONY: destroy
 destroy: check-terraform
-	$(RM) $(MASTER_IP_FILE)
-	$(RM) $(MASTER_LB_IP_FILE)
 	cd .deploy; \
 	$(TERRAFORM_CMD) destroy $(TERRAFORM_DESTROY_ARGS) -var-file desired_cluster_profile
 
