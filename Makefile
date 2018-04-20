@@ -94,11 +94,6 @@ setup-cli: check-dcos
 	$(call get_master_lb_ip)
 	$(DCOS_CMD) cluster setup https://$(MASTER_LB_IP)
 
-.PHONY: wait-for-lb
-wait-for-lb:
-	@echo "Sleep for 20 sec to give time for LoadBalancer to come up!"
-	@sleep 20
-
 .PHONY: get-master-ip
 get-master-ip:
 	$(call get_master_ip)
@@ -126,6 +121,8 @@ plan-dcos: check-terraform
 
 .PHONY: launch-dcos
 launch-dcos: check-terraform
+	touch $(MASTER_LB_IP_FILE)
+	touch $(MASTER_IP_FILE)
 	cd .deploy; \
 	$(TERRAFORM_CMD) apply $(TERRAFORM_APPLY_ARGS) -var-file desired_cluster_profile
 
@@ -153,7 +150,7 @@ kube-ui:
 plan: plan-dcos
 
 .PHONY: deploy
-deploy: check-cli launch-dcos wait-for-lb setup-cli install
+deploy: check-cli launch-dcos setup-cli install
 
 .PHONY: upgrade-infra
 upgrade-infra: launch-dcos
