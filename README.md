@@ -49,7 +49,7 @@ Please, do not set a smaller instance (VM) type on the risk of failing to
 install Kubernetes.
 
 ```
-custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.1/dcos_generate_config.sh"
+custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.2/dcos_generate_config.sh"
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
