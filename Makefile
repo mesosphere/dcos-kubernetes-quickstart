@@ -3,7 +3,7 @@ RM := rm -f
 SSH_USER := core
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.11
-KUBERNETES_VERSION := 1.9.6
+KUBERNETES_VERSION := 1.9.7
 
 # Set PATH to include local dir for locally downloaded binaries.
 export PATH := .:$(PATH)
