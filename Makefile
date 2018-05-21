@@ -147,8 +147,7 @@ kube-ui:
 plan: plan-dcos
 
 .PHONY: deploy
-deploy: check-cli launch-dcos setup-cli
-	#install
+deploy: check-cli launch-dcos setup-cli install
 
 .PHONY: upgrade-infra
 upgrade-infra: launch-dcos
