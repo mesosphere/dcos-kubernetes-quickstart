@@ -8,7 +8,7 @@ KUBERNETES_VERSION := 1.9.7
 # Set PATH to include local dir for locally downloaded binaries.
 export PATH := .:$(PATH)
 
-# Get the path to relvant binaries.
+# Get the path to relevant binaries.
 DCOS_CMD := $(shell PATH=$(PATH) command -v dcos 2> /dev/null)
 KUBECTL_CMD := $(shell PATH=$(PATH) command -v kubectl 2> /dev/null)
 TERRAFORM_CMD := $(shell command -v terraform 2> /dev/null)
@@ -59,25 +59,28 @@ endif
 azure: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
+	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure; \
 	cp ../resources/desired_cluster_profile.azure desired_cluster_profile; \
 	cp ../resources/options.json.azure options.json; \
-	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure
+	cp ../resources/override.azure.tf override.tf
 
 .PHONY: aws
 aws: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
+	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws; \
 	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
 	cp ../resources/options.json.aws options.json; \
-	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws
+	cp ../resources/override.aws.tf override.tf
 
 .PHONY: gpc
 gcp: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
+	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp; \
 	cp ../resources/desired_cluster_profile.gcp desired_cluster_profile; \
 	cp ../resources/options.json.gcp options.json; \
-	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp
+	cp ../resources/override.gcp.tf override.tf
 
 .PHONY: install
 install: check-dcos
@@ -144,7 +147,8 @@ kube-ui:
 plan: plan-dcos
 
 .PHONY: deploy
-deploy: check-cli launch-dcos setup-cli install
+deploy: check-cli launch-dcos setup-cli
+	#install
 
 .PHONY: upgrade-infra
 upgrade-infra: launch-dcos
