@@ -4,6 +4,7 @@ SSH_USER := core
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.11
 KUBERNETES_VERSION := 1.9.7
+KUBERNETES_FRAMEWORK_VERSION := 1.0.3-1.9.7
 
 # Set PATH to include local dir for locally downloaded binaries.
 export PATH := .:$(PATH)
@@ -84,7 +85,7 @@ gcp: clean check-terraform
 
 .PHONY: install
 install: check-dcos
-	$(DCOS_CMD) package install --yes kubernetes --options=./.deploy/options.json
+	$(DCOS_CMD) package install --yes kubernetes --package-version=$(KUBERNETES_FRAMEWORK_VERSION) --options=./.deploy/options.json
 
 .PHONY: uninstall
 uninstall: check-dcos
