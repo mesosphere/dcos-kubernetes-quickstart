@@ -4,7 +4,7 @@
 with cloud resource limits. Please, verify your [quotas](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html)
 before proceeding.
 
-## Instal AWS CLI
+## Install AWS CLI
 
 Make sure to have previously installed [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/installing.html).
 
