@@ -3,8 +3,8 @@ RM := rm -f
 SSH_USER := core
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.11
-KUBERNETES_VERSION := 1.9.7
-KUBERNETES_FRAMEWORK_VERSION := 1.0.3-1.9.7
+KUBERNETES_VERSION ?= 1.9.7
+KUBERNETES_FRAMEWORK_VERSION ?= 1.0.3-1.9.7
 
 # Set PATH to include local dir for locally downloaded binaries.
 export PATH := .:$(PATH)
@@ -74,7 +74,7 @@ aws: clean check-terraform
 	cp ../resources/options.json.aws options.json; \
 	cp ../resources/override.aws.tf override.tf
 
-.PHONY: gpc
+.PHONY: gcp
 gcp: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
