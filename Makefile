@@ -74,7 +74,7 @@ aws: clean check-terraform
 	cp ../resources/options.json.aws options.json; \
 	cp ../resources/override.aws.tf override.tf
 
-.PHONY: gpc
+.PHONY: gcp
 gcp: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
