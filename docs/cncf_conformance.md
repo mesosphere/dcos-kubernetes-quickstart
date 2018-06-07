@@ -70,7 +70,7 @@ admin_cidr = "0.0.0.0/0"
 Now, launch the DC/OS cluster by running
 
 ```shell
-$ make get-cli launch-dcos setup-cli
+$ KUBERNETES_VERSION=1.10.3 make get-cli launch-dcos setup-cli
 ```
 
 This command will:
@@ -88,74 +88,72 @@ OpenID token to the shell where you ran the abovementioned command.
 To install `dcos-kubernetes` in the newly created DC/OS cluster run
 
 ```shell
-$ dcos package install --yes --options=./resources/options-ha.json kubernetes
+$ KUBERNETES_FRAMEWORK_VERSION=1.1.0-1.10.3 ./dcos package install --yes --options=./resources/options-ha.json kubernetes
 ```
 
 Wait until all tasks are running before proceeding. You can track installation
 progress using
 
 ```shell
-$ watch dcos kubernetes plan show deploy
+$ watch ./dcos kubernetes plan show deploy
 ```
 
 When installation is successful you will see the following output:
 
 ```
 deploy (serial strategy) (COMPLETE)
-├─ etcd (serial strategy) (COMPLETE)
-│  ├─ etcd-0:[peer] (COMPLETE)
-│  ├─ etcd-1:[peer] (COMPLETE)
-│  └─ etcd-2:[peer] (COMPLETE)
-├─ apiserver (parallel strategy) (COMPLETE)
-│  ├─ kube-apiserver-0:[instance] (COMPLETE)
-│  ├─ kube-apiserver-1:[instance] (COMPLETE)
-│  └─ kube-apiserver-2:[instance] (COMPLETE)
-├─ kubernetes-api-proxy (parallel strategy) (COMPLETE)
-│  └─ kubernetes-api-proxy-0:[install] (COMPLETE)
-├─ controller-manager (parallel strategy) (COMPLETE)
-│  ├─ kube-controller-manager-0:[instance] (COMPLETE)
-│  ├─ kube-controller-manager-1:[instance] (COMPLETE)
-│  └─ kube-controller-manager-2:[instance] (COMPLETE)
-├─ scheduler (parallel strategy) (COMPLETE)
-│  ├─ kube-scheduler-0:[instance] (COMPLETE)
-│  ├─ kube-scheduler-1:[instance] (COMPLETE)
-│  └─ kube-scheduler-2:[instance] (COMPLETE)
-├─ node (parallel strategy) (COMPLETE)
-│  ├─ kube-node-0:[kube-proxy] (COMPLETE)
-│  ├─ kube-node-0:[coredns] (COMPLETE)
-│  ├─ kube-node-0:[kubelet] (COMPLETE)
-│  ├─ kube-node-1:[kube-proxy] (COMPLETE)
-│  ├─ kube-node-1:[coredns] (COMPLETE)
-│  ├─ kube-node-1:[kubelet] (COMPLETE)
-│  ├─ kube-node-2:[kube-proxy] (COMPLETE)
-│  ├─ kube-node-2:[coredns] (COMPLETE)
-│  └─ kube-node-2:[kubelet] (COMPLETE)
-├─ public-node (parallel strategy) (COMPLETE)
-└─ mandatory-addons (serial strategy) (COMPLETE)
-   ├─ mandatory-addons-0:[kube-dns] (COMPLETE)
-   ├─ mandatory-addons-0:[metrics-server] (COMPLETE)
-   ├─ mandatory-addons-0:[dashboard] (COMPLETE)
-   └─ mandatory-addons-0:[ark] (COMPLETE)
+   etcd (serial strategy) (COMPLETE)
+      etcd-0:[peer] (COMPLETE)
+      etcd-1:[peer] (COMPLETE)
+      etcd-2:[peer] (COMPLETE)
+   apiserver (parallel strategy) (COMPLETE)
+      kube-apiserver-0:[instance] (COMPLETE)
+      kube-apiserver-1:[instance] (COMPLETE)
+      kube-apiserver-2:[instance] (COMPLETE)
+   mandatory-addons (serial strategy) (COMPLETE)
+      mandatory-addons-0:[additional-cluster-role-bindings] (COMPLETE)
+      mandatory-addons-0:[kube-dns] (COMPLETE)
+      mandatory-addons-0:[metrics-server] (COMPLETE)
+      mandatory-addons-0:[dashboard] (COMPLETE)
+      mandatory-addons-0:[ark] (COMPLETE)
+   kubernetes-api-proxy (parallel strategy) (COMPLETE)
+      kubernetes-api-proxy-0:[install] (COMPLETE)
+   controller-manager (parallel strategy) (COMPLETE)
+      kube-controller-manager-0:[instance] (COMPLETE)
+      kube-controller-manager-1:[instance] (COMPLETE)
+      kube-controller-manager-2:[instance] (COMPLETE)
+   scheduler (parallel strategy) (COMPLETE)
+      kube-scheduler-0:[instance] (COMPLETE)
+      kube-scheduler-1:[instance] (COMPLETE)
+      kube-scheduler-2:[instance] (COMPLETE)
+   node (parallel strategy) (COMPLETE)
+      kube-node-0:[kube-proxy, coredns, kubelet] (COMPLETE)
+      kube-node-1:[kube-proxy, coredns, kubelet] (COMPLETE)
+      kube-node-2:[kube-proxy, coredns, kubelet] (COMPLETE)
+   public-node (parallel strategy) (COMPLETE)
+      kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
 ```
 
 ## Accessing the Kubernetes API
 
-In order to access the Kubernetes API from outside the DC/OS cluster, run
+In order to access the Kubernetes API from outside the DC/OS cluster, run:
 
 ```shell
 $ make kubectl-tunnel
 ```
 
-In a different shell, check that `kubectl` is properly configured to communicate
-with your new cluster by running `kubectl get nodes`. The output should look
-something like:
+In a different shell, but on the same pathas above, check that `kubectl` is
+properly configured to communicate with your new cluster by running
+`kubectl get nodes`.
+The output should look like:
 
 ```shell
-$ kubectl get nodes
+$ ./kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.6
-kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.6
-kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    1m        v1.9.6
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.3
+kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.3
+kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.3
+kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    4m        v1.10.3
 ```
 
 ## Running the test suite
@@ -165,10 +163,8 @@ To run the test suite and grab the results, follow the
 
 ## Destroy the infrastructure
 
-When you are finished, run:
+In order to delete the DC/OS cluster created above, run:
 
 ```shell
 $ make destroy
 ```
-
-to delete the DC/OS cluster created above.
