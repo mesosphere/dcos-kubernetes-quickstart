@@ -72,7 +72,7 @@ For more advanced scenarios, please check the [terraform-dcos documentation for 
 
 #### RBAC
 
-**NOTE:** By default, it will provision a Kubernetes cluster without [RBAC](https://docs.mesosphere.com/services/kubernetes/1.1.1-1.10.4/authn-and-authz/#rbac) support.
+**NOTE:** By default, it will provision a Kubernetes cluster without `RBAC` support.
 
 To deploy a cluster with enabled RBAC update `.deploy/options.json`:
 
@@ -105,8 +105,6 @@ To deploy a **highly-available** cluster with three (3) private and one (1) publ
   }
 }
 ```
-
-**NOTE:** The **highly-available** mode for a cluster must be chosen when installing the package. Changing the highly-available mode after installing the package is not supported.
 
 ### Download command-line tools
 

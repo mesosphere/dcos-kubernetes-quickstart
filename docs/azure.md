@@ -104,8 +104,6 @@ To deploy a **highly-available** cluster with three (3) private and one (1) publ
 }
 ```
 
-**NOTE:** The **highly-available** mode for a cluster must be chosen when installing the package. Changing the highly-available mode after installing the package is not supported.
-
 ## Install
 
 It's time to [bootstrap your Kubernetes cluster](../README.md#install).
