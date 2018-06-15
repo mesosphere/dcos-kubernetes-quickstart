@@ -70,7 +70,7 @@ For more advanced scenarios, please check the [terraform-dcos documentation for 
 
 ### Kubernetes configuration
 
-## RBAC
+#### RBAC
 
 **NOTE:** By default, it will provision a Kubernetes cluster without [RBAC](https://docs.mesosphere.com/services/kubernetes/1.1.1-1.10.4/authn-and-authz/#rbac) support.
 
@@ -89,7 +89,7 @@ To deploy a cluster with enabled RBAC update `.deploy/options.json`:
 
 If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/1.1.1-1.10.4/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
 
-## Highly Available cluster
+#### Highly Available cluster
 
 **NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
 a single instance of every control plane component.
@@ -167,8 +167,6 @@ deploy (serial strategy) (COMPLETE)
 └─ public-node (parallel strategy) (COMPLETE)
    └─ kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
 ```
-
-### Accessing the DC/OS Dashboard
 
 You can access DC/OS Dashboard and check Kubernetes package tasks under Services:
 
