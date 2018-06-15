@@ -88,7 +88,7 @@ OpenID token to the shell where you ran the abovementioned command.
 To install `dcos-kubernetes` in the newly created DC/OS cluster run
 
 ```shell
-$ KUBERNETES_FRAMEWORK_VERSION=1.1.0-1.10.3 ./dcos package install --yes --options=./resources/options-ha.json kubernetes
+$ KUBERNETES_FRAMEWORK_VERSION=1.1.1-1.10.4 ./dcos package install --yes --options=./resources/options-ha.json kubernetes
 ```
 
 Wait until all tasks are running before proceeding. You can track installation
@@ -150,10 +150,10 @@ The output should look like:
 ```shell
 $ ./kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.3
-kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.3
-kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.3
-kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    4m        v1.10.3
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.4
+kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.4
+kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.4
+kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    4m        v1.10.4
 ```
 
 ## Running the test suite

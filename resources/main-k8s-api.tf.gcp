@@ -1,0 +1,14 @@
+
+
+# Allow access to Kubernetes API from the outside world specified by the user source range
+resource "google_compute_firewall" "kubeapi-proxy" {
+    name = "${data.template_file.cluster-name.rendered}-kubeapi-proxy"
+    network = "${google_compute_network.default.name}"
+    allow {
+        protocol = "tcp"
+        ports = ["6443"]
+    }
+
+    source_ranges = ["${var.admin_cidr}"]
+    description   = "Used to allow access to Kubernetes API from the outside world specified by the user source range."
+}

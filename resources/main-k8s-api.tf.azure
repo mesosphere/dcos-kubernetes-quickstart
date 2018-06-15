@@ -1,0 +1,17 @@
+
+
+# Allow access to Kubernetes API from the outside world
+# Public Subnet NSG Rule
+resource "azurerm_network_security_rule" "public-subnet-kubeapiRule" {
+    name                        = "HTTPSKUBEAPI"
+    priority                    = 120
+    direction                   = "Inbound"
+    access                      = "Allow"
+    protocol                    = "Tcp"
+    source_port_range           = "6443"
+    destination_port_range      = "6443"
+    source_address_prefix       = "*"
+    destination_address_prefix  = "*"
+    resource_group_name         = "${azurerm_resource_group.dcos.name}"
+    network_security_group_name = "${azurerm_network_security_group.public_subnet_security_group.name}"
+}
