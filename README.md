@@ -6,11 +6,11 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ## Known limitations
 
-Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.0.3-1.9.7/limitations/).
+Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.1.1-1.10.4/limitations/).
 
 ## Pre-Requisites
 
-First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.0.3-1.9.7/install/#prerequisites/).
+First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.1.1-1.10.4/install/#prerequisites/).
 
 Then, check the requirements for running this quickstart:
 
@@ -45,7 +45,8 @@ $ make gcp
 This will output sane defaults to `.deploy/desired_cluster_profile`.
 Now, edit said file and set your `project-id` and the `gce_ssh_pub_key_file`
 (the SSH public key you will use to log-in into your new VMs later).
-Please, do not set a smaller instance (VM) type on the risk of failing to
+
+**WARNING:** Please, do not set a smaller instance (VM) type on the risk of failing to
 install Kubernetes.
 
 ```
@@ -69,6 +70,27 @@ admin_cidr = "0.0.0.0/0"
 For more advanced scenarios, please check the [terraform-dcos documentation for Google Cloud](https://github.com/dcos/terraform-dcos/tree/master/gcp).
 
 ### Kubernetes configuration
+
+#### RBAC
+
+**NOTE:** This `quickstart` will provision a Kubernetes cluster without `RBAC` support.
+
+To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kubernetes/1.1.1-1.10.4/authn-and-authz/#rbac) update `.deploy/options.json`:
+
+```
+{
+  "kubernetes": {
+    "authorization_mode": "RBAC",
+    "public_node_count": 1
+  }
+}
+```
+
+If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/1.1.1-1.10.4/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
+
+**NOTE:** The authorization mode for a cluster must be chosen when installing the package. Changing the authorization mode after installing the package is not supported.
+
+#### HA Cluster
 
 **NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
 a single instance of every control plane component.
@@ -123,32 +145,27 @@ Below is an example of how it looks like when the install ran successfully:
 
 ```
 deploy (serial strategy) (COMPLETE)
-   etcd (serial strategy) (COMPLETE)
-      etcd-0:[peer] (COMPLETE)
-   apiserver (parallel strategy) (COMPLETE)
-      kube-apiserver-0:[instance] (COMPLETE)
-   kubernetes-api-proxy (parallel strategy) (COMPLETE)
-      kubernetes-api-proxy-0:[install] (COMPLETE)
-   controller-manager (parallel strategy) (COMPLETE)
-      kube-controller-manager-0:[instance] (COMPLETE)
-   scheduler (parallel strategy) (COMPLETE)
-      kube-scheduler-0:[instance] (COMPLETE)
-   node (parallel strategy) (COMPLETE)
-      kube-node-0:[kube-proxy] (COMPLETE)
-      kube-node-0:[coredns] (COMPLETE)
-      kube-node-0:[kubelet] (COMPLETE)
-   public-node (parallel strategy) (COMPLETE)
-      kube-node-public-0:[kube-proxy] (COMPLETE)
-      kube-node-public-0:[coredns] (COMPLETE)
-      kube-node-public-0:[kubelet] (COMPLETE)
-   mandatory-addons (serial strategy) (COMPLETE)
-      mandatory-addons-0:[kube-dns] (COMPLETE)
-      mandatory-addons-0:[metrics-server] (COMPLETE)
-      mandatory-addons-0:[dashboard] (COMPLETE)
-      mandatory-addons-0:[ark] (COMPLETE)
+├─ etcd (serial strategy) (COMPLETE)
+│  └─ etcd-0:[peer] (COMPLETE)
+├─ apiserver (parallel strategy) (COMPLETE)
+│  └─ kube-apiserver-0:[instance] (COMPLETE)
+├─ mandatory-addons (serial strategy) (COMPLETE)
+│  ├─ mandatory-addons-0:[additional-cluster-role-bindings] (COMPLETE)
+│  ├─ mandatory-addons-0:[kube-dns] (COMPLETE)
+│  ├─ mandatory-addons-0:[metrics-server] (COMPLETE)
+│  ├─ mandatory-addons-0:[dashboard] (COMPLETE)
+│  └─ mandatory-addons-0:[ark] (COMPLETE)
+├─ kubernetes-api-proxy (parallel strategy) (COMPLETE)
+│  └─ kubernetes-api-proxy-0:[install] (COMPLETE)
+├─ controller-manager (parallel strategy) (COMPLETE)
+│  └─ kube-controller-manager-0:[instance] (COMPLETE)
+├─ scheduler (parallel strategy) (COMPLETE)
+│  └─ kube-scheduler-0:[instance] (COMPLETE)
+├─ node (parallel strategy) (COMPLETE)
+│  └─ kube-node-0:[kube-proxy, coredns, kubelet] (COMPLETE)
+└─ public-node (parallel strategy) (COMPLETE)
+   └─ kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
 ```
-
-### Accessing the DC/OS Dashboard
 
 You can access DC/OS Dashboard and check Kubernetes package tasks under Services:
 
@@ -156,13 +173,22 @@ You can access DC/OS Dashboard and check Kubernetes package tasks under Services
 $ make ui
 ```
 
+### Exposing the Kubernetes API
+
+Check the [exposing Kubernetes API doc](docs/exposing_kubernetes_api.md) to understand how
+the Kubernetes API gets exposed.
+
+**NOTE:** If you have changed in `.deploy/desired_cluster_profile` file the number of
+`num_of_public_agents` to more than `1`, please scale `marathon-lb` service to the same number,
+so you can access Kubernetes API from any DC/OS public agent.
+
 ### Accessing the Kubernetes API
 
 In order to access the Kubernetes API from outside the DC/OS cluster, one needs
 to configure `kubectl`, the Kubernetes CLI tool:
 
 ```bash
-$ dcos kubernetes kubeconfig
+$ make kubeconfig
 ```
 
 Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
@@ -170,28 +196,23 @@ Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 ```bash
 $ kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.6
-kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9.6
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.10.4
+kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.10.4
 ```
 
 ### Accessing the Kubernetes Dashboard
 
-You can access Kubernetes Dashboard:
+You will be able to access the Kubernetes Dashboard by running:
 
 ```bash
-$ make kube-ui
+$ kubectl proxy
 ```
 
-### Using kubectl proxy
+Then pointing your browser at:
 
-For running more advanced commands such as `kubectl proxy`, an SSH tunnel is still required.
-To create the tunnel, run:
-
-```bash
-$ make kubectl-tunnel
 ```
-
-If `kubectl` is properly configured and the tunnel established successfully, in another terminal you should now be able to run `kubectl proxy` as well as any other command.
+http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy/
+```
 
 ## Uninstall Kubernetes
 
@@ -221,7 +242,7 @@ $ make clean
 
 ## Documentation
 
-For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/1.0.3-1.9.7)
+For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/1.1.1-1.10.4)
 
 ## Community
 Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.

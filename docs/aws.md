@@ -73,6 +73,8 @@ For more advanced scenarios, please check the [terraform-dcos documentation for 
 
 ### Kubernetes configuration
 
+#### Highly Available cluster
+
 **NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
 a single instance of every control plane component.
 
@@ -89,6 +91,4 @@ To deploy a **highly-available** cluster with three (3) private and one (1) publ
 }
 ```
 
-## Install
-
-It's time to [bootstrap your Kubernetes cluster](../README.md#install).
+Let's continue with [Kubernetes cluster configuration](../README.md#kubernetes-configuration).

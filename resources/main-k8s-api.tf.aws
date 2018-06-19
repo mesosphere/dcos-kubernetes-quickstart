@@ -1,0 +1,8 @@
+
+  # https on port 6443 access from anywhere
+  ingress {
+    from_port   = 6443
+    to_port     = 6443
+    protocol    = "tcp"
+    cidr_blocks = ["${var.admin_cidr}"]
+  }

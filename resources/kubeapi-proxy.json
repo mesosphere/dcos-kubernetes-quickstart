@@ -1,0 +1,23 @@
+{
+  "id": "/kubeapi-proxy",
+  "instances": 1,
+  "cpus": 0.001,
+  "mem": 16,
+  "cmd": "tail -F /dev/null",
+  "container": {
+    "type": "MESOS"
+  },
+  "portDefinitions": [
+    {
+      "protocol": "tcp",
+      "port": 0
+    }
+  ],
+  "labels": {
+    "HAPROXY_0_MODE": "http",
+    "HAPROXY_GROUP": "external",
+    "HAPROXY_0_SSL_CERT": "/etc/ssl/cert.pem",
+    "HAPROXY_0_PORT": "6443",
+    "HAPROXY_0_BACKEND_SERVER_OPTIONS": "  server kube-apiserver apiserver.kubernetes.l4lb.thisdcos.directory:6443 ssl verify none\n"
+  }
+}
