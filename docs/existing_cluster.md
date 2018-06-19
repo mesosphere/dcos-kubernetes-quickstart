@@ -2,7 +2,7 @@
 
 If you already have a DC/OS 1.11+ cluster, Kubernetes is publicly available in the Catalog.
 
-Before proceeding, please ensure your cluster satisfies the minimum [resource requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.1.1-1.10.4/install/#prerequisites/)
+Before proceeding, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.1.1-1.10.4/install/#prerequisites/).
 
 Then, install is as easy as:
 
@@ -12,7 +12,7 @@ $ dcos package install kubernetes
 
 ## Kubernetes configuration
 
-**NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
+**NOTE:** By default, it will provision a Kubernetes cluster with one (1) private worker node, and
 a single instance of every control plane component.
 
 To deploy a **highly-available** cluster with three (3) private and one (1) public workers node update, run:

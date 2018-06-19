@@ -45,7 +45,8 @@ $ make gcp
 This will output sane defaults to `.deploy/desired_cluster_profile`.
 Now, edit said file and set your `project-id` and the `gce_ssh_pub_key_file`
 (the SSH public key you will use to log-in into your new VMs later).
-Please, do not set a smaller instance (VM) type on the risk of failing to
+
+**WARNING:** Please, do not set a smaller instance (VM) type on the risk of failing to
 install Kubernetes.
 
 ```
@@ -72,9 +73,9 @@ For more advanced scenarios, please check the [terraform-dcos documentation for 
 
 #### RBAC
 
-**NOTE:** By default, it will provision a Kubernetes cluster without `RBAC` support.
+**NOTE:** This `quickstart` will provision a Kubernetes cluster without `RBAC` support.
 
-To deploy a cluster with enabled RBAC update `.deploy/options.json`:
+To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kubernetes/1.1.1-1.10.4/authn-and-authz/#rbac) update `.deploy/options.json`:
 
 ```
 {
@@ -173,6 +174,11 @@ $ make ui
 ```
 
 ### Accessing the Kubernetes API
+
+**NOTE:** If you have changed in `.deploy/desired_cluster_profile` the number of
+`num_of_public_agents` to more than `1` please scale `marathon-lb` service
+(which gets install as part of Kubernetes framework install) to the same number,
+so you can access Kubernetes API from any DC/OS public agent.
 
 In order to access the Kubernetes API from outside the DC/OS cluster, one needs
 to configure `kubectl`, the Kubernetes CLI tool:

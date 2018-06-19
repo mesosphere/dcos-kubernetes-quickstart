@@ -89,15 +89,6 @@ gcp: clean check-terraform
 	cp ../resources/kubeapi-proxy.json .; \
 	../scripts/kubeapi-proxy-gcp.sh
 
-.PHONY: get-master-ip
-get-master-ip:
-	$(call get_master_ip)
-	@echo $(MASTER_IP)
-
-define get_master_ip
-$(eval MASTER_IP := $(shell $(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master Public IPs" | head -1 | cut -f 1 -d ','))
-endef
-
 .PHONY: get-master-lb-ip
 get-master-lb-ip: check-terraform
 	$(call get_master_lb_ip)
@@ -134,10 +125,9 @@ deploy: check-cli launch-dcos setup-cli install
 
 .PHONY: setup-cli
 setup-cli: check-dcos
-	@echo "Sleep for 15 seconds ..."
-	@sleep 15
 	$(call get_master_lb_ip)
 	$(DCOS_CMD) cluster setup https://$(MASTER_LB_IP)
+	@scripts/poll_api.sh "DC/OS Master" $(MASTER_LB_IP) 443
 
 .PHONY: ui
 ui:
@@ -158,8 +148,7 @@ watch:
 kubeconfig:
 	$(call get_public_agent_ip)
 	$(DCOS_CMD) kubernetes kubeconfig --apiserver-url https://$(PUBLIC_AGENT_IP):6443 --insecure-skip-tls-verify
-	@echo "Sleep for 25 seconds ..."
-	@sleep 25
+	@scripts/poll_api.sh "Kubernetes API" $(PUBLIC_AGENT_IP) 6443
 
 .PHONY: upgrade-infra
 upgrade-infra: launch-dcos

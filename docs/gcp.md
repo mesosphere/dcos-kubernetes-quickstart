@@ -41,6 +41,6 @@ $ ssh-add ~/.ssh/google_compute_engine
 
 Later, you will be asked to add the SSH public key to the Terraform cluster profile.
 
-## Install
+## Infrastructure configuration
 
-It's time to [bootstrap your Kubernetes cluster](../README.md#install).
+Let's  move on to [infrastructure configuration](../README.md#prepare-infrastructure-configuration).

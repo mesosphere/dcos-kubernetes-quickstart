@@ -66,44 +66,6 @@ ssh_pub_key = "INSERT_AZURE_PUBLIC_KEY_HERE"
 
 For more advanced scenarios, please check the [terraform-dcos documentation for Azure](https://github.com/dcos/terraform-dcos/tree/master/azure).
 
-### Kubernetes configuration
+## Kubernetes configuration
 
-#### RBAC
-
-**NOTE:** By default, it will provision a Kubernetes cluster without [RBAC](https://docs.mesosphere.com/services/kubernetes/1.1.1-1.10.4/authn-and-authz/#rbac) support.
-
-To deploy a cluster with enabled RBAC update `.deploy/options.json`:
-
-```
-{
-  "kubernetes": {
-    "authorization_mode": "RBAC",
-    "public_node_count": 1
-  }
-}
-```
-
-**NOTE:** The authorization mode for a cluster must be chosen when installing the package. Changing the authorization mode after installing the package is not supported.
-
-If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/1.1.1-1.10.4/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
-
-#### Highly Available cluster
-
-**NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
-a single instance of every control plane component.
-
-To deploy a **highly-available** cluster with three (3) private and one (1) public workers node update `.deploy/options.json`:
-
-```
-{
-  "kubernetes": {
-    "high_availability": true,
-    "node_count": 3,
-    "public_node_count": 1
-  }
-}
-```
-
-## Install
-
-It's time to [bootstrap your Kubernetes cluster](../README.md#install).
+Let's move on to [Kubernetes cluster configuration](../README.md#kubernetes-configuration).
