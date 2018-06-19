@@ -173,12 +173,16 @@ You can access DC/OS Dashboard and check Kubernetes package tasks under Services
 $ make ui
 ```
 
-### Accessing the Kubernetes API
+### Exposing the Kubernetes API
 
-**NOTE:** If you have changed in `.deploy/desired_cluster_profile` the number of
-`num_of_public_agents` to more than `1` please scale `marathon-lb` service
-(which gets install as part of Kubernetes framework install) to the same number,
+Check the [exposing Kubernetes API doc](docs/exposing_kubernetes_api.md) to understand how
+the Kubernetes API gets exposed.
+
+**NOTE:** If you have changed in `.deploy/desired_cluster_profile` file the number of
+`num_of_public_agents` to more than `1`, please scale `marathon-lb` service to the same number,
 so you can access Kubernetes API from any DC/OS public agent.
+
+### Accessing the Kubernetes API
 
 In order to access the Kubernetes API from outside the DC/OS cluster, one needs
 to configure `kubectl`, the Kubernetes CLI tool:
