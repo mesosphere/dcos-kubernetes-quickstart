@@ -4,6 +4,9 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ![](docs/assets/ui-install.gif)
 
+**NOTE:** The latest `dcos-kubernetes-quickstart` doesn't support any Kubernetes framework version before
+`1.1.1-1.10.4` due the changes how the Kubernetes API is exposed.
+
 ## Known limitations
 
 Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.1.1-1.10.4/limitations/).

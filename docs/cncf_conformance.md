@@ -67,10 +67,10 @@ admin_cidr = "0.0.0.0/0"
 #gcp_scheduling_preemptible = "true"
 ```
 
-Now, launch the DC/OS cluster by running
+Now, launch the DC/OS cluster by running:
 
 ```shell
-$ KUBERNETES_VERSION=1.10.3 make get-cli launch-dcos setup-cli
+$ KUBERNETES_VERSION=1.10.4 make get-cli launch-dcos setup-cli
 ```
 
 This command will:
@@ -81,18 +81,18 @@ This command will:
 
 As part of the last step, your browser will open and ask you to login with
 a Google, GitHub or Microsoft account. Choose an option and copy the resulting
-OpenID token to the shell where you ran the abovementioned command.
+OpenID token to the shell where you ran the above mentioned command.
 
 ## Installing `dcos-kubernetes`
 
-To install `dcos-kubernetes` in the newly created DC/OS cluster run
+To install `dcos-kubernetes` in the newly created DC/OS cluster run:
 
 ```shell
 $ KUBERNETES_FRAMEWORK_VERSION=1.1.1-1.10.4 ./dcos package install --yes --options=./resources/options-ha.json kubernetes
 ```
 
 Wait until all tasks are running before proceeding. You can track installation
-progress using
+progress using:
 
 ```shell
 $ watch ./dcos kubernetes plan show deploy
@@ -136,16 +136,15 @@ deploy (serial strategy) (COMPLETE)
 
 ## Accessing the Kubernetes API
 
-In order to access the Kubernetes API from outside the DC/OS cluster, run:
+In order to access the Kubernetes API from outside the DC/OS cluster, `kubectl`
+needs to be configured:
 
 ```shell
-$ make kubectl-tunnel
+$ make kubeconfig
 ```
 
-In a different shell, but on the same pathas above, check that `kubectl` is
-properly configured to communicate with your new cluster by running
-`kubectl get nodes`.
-The output should look like:
+Check that `kubectl` can communicate with your new cluster by accessing the
+Kubernetes API and listing the Kubernetes cluster nodes:
 
 ```shell
 $ ./kubectl get nodes
