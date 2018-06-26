@@ -93,6 +93,8 @@ $ KUBERNETES_FRAMEWORK_VERSION=1.1.1-1.10.4 ./dcos package install --yes --optio
 
 Wait until all tasks are running before proceeding. You can track installation
 progress using:
+Now, wait until all tasks are running before proceeding.
+You can track installation progress as follows:
 
 ```shell
 $ watch ./dcos kubernetes plan show deploy
@@ -134,17 +136,21 @@ deploy (serial strategy) (COMPLETE)
       kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
 ```
 
+When all tasks are in state `COMPLETE`, press `Ctrl-C` to terminate the `watch`
+process and proceed to access your Kubernetes cluster.
+
 ## Accessing the Kubernetes API
 
-In order to access the Kubernetes API from outside the DC/OS cluster, `kubectl`
-needs to be configured:
+In order to access the Kubernetes API from outside the DC/OS cluster, we must
+first be able to access it. For now, we can achieve this through an SSH tunnel:
 
 ```shell
-$ make kubeconfig
+$ make kubectl-tunnel
 ```
 
-Check that `kubectl` can communicate with your new cluster by accessing the
-Kubernetes API and listing the Kubernetes cluster nodes:
+The command above will block your terminal session, so you will need a new one
+to check that `kubectl` can communicate with your new cluster. Let's try and
+list the Kubernetes cluster nodes:
 
 ```shell
 $ ./kubectl get nodes
@@ -154,6 +160,9 @@ kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.1
 kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.4
 kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    4m        v1.10.4
 ```
+
+If the output is similar to what is shown above, you're good to go and run the
+conformance test suite.
 
 ## Running the test suite
 

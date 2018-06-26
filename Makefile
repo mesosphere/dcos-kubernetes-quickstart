@@ -173,3 +173,13 @@ destroy: check-terraform
 .PHONY: clean
 clean:
 	$(RM) -r .deploy dcos kubectl
+
+.PHONY: kubectl-tunnel
+kubectl-tunnel:
+	$(KUBECTL_CMD) config set-cluster dcos-k8s --server=http://localhost:9000
+	$(KUBECTL_CMD) config set-context dcos-k8s --cluster=dcos-k8s --namespace=default
+	$(KUBECTL_CMD) config use-context dcos-k8s
+	$(call get_public_agent_ip)
+	ssh -4 -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o "ServerAliveInterval=120" \
+		-N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 \
+		$(SSH_USER)@$(PUBLIC_AGENT_IP)
