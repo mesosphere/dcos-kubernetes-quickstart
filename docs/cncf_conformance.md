@@ -88,7 +88,8 @@ OpenID token to the shell where you ran the above mentioned command.
 To install `dcos-kubernetes` in the newly created DC/OS cluster run:
 
 ```shell
-$ KUBERNETES_FRAMEWORK_VERSION=1.1.1-1.10.4 ./dcos package install --yes --options=./resources/options-ha.json kubernetes
+$ KUBERNETES_FRAMEWORK_VERSION=1.1.1-1.10.4 \
+  PATH_TO_PACKAGE_OPTIONS=./resources/options-ha.json make install
 ```
 
 Wait until all tasks are running before proceeding. You can track installation
@@ -142,15 +143,15 @@ process and proceed to access your Kubernetes cluster.
 ## Accessing the Kubernetes API
 
 In order to access the Kubernetes API from outside the DC/OS cluster, we must
-first be able to access it. For now, we can achieve this through an SSH tunnel:
+first be able to access it. This can be achieved by running the following
+command:
 
 ```shell
-$ make kubectl-tunnel
+$ make kubeconfig
 ```
 
-The command above will block your terminal session, so you will need a new one
-to check that `kubectl` can communicate with your new cluster. Let's try and
-list the Kubernetes cluster nodes:
+This command will configure `kubectl` to access our DC/OS Kubernetes cluster.
+Let's try and list this cluster's nodes:
 
 ```shell
 $ ./kubectl get nodes
