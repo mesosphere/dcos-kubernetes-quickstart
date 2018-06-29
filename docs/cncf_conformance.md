@@ -41,7 +41,7 @@ should look something like this:
 ```
 custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.2/dcos_generate_config.sh"
 num_of_masters = "1"
-num_of_private_agents = "5"
+num_of_private_agents = "3"
 num_of_public_agents = "1"
 #
 gcp_project = "<project-id>"
