@@ -18,6 +18,6 @@
     "HAPROXY_GROUP": "external",
     "HAPROXY_0_SSL_CERT": "/etc/ssl/cert.pem",
     "HAPROXY_0_PORT": "6443",
-    "HAPROXY_0_BACKEND_SERVER_OPTIONS": "  server kube-apiserver apiserver.kubernetes.l4lb.thisdcos.directory:6443 ssl verify none\n"
+    "HAPROXY_0_BACKEND_SERVER_OPTIONS": "  timeout connect 10s\n  timeout client 86400s\n  timeout server 86400s\n  timeout tunnel 86400s\n  server kube-apiserver apiserver.kubernetes.l4lb.thisdcos.directory:6443 ssl verify none\n"
   }
 }

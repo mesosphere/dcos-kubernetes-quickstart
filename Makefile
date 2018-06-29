@@ -5,14 +5,17 @@ TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.11
 KUBERNETES_VERSION ?= 1.10.4
 KUBERNETES_FRAMEWORK_VERSION ?= 1.1.1-1.10.4
+# PATH_TO_PACKAGE_OPTIONS holds the path to the package options file to be used
+# when installing DC/OS Kubernetes.
+PATH_TO_PACKAGE_OPTIONS ?= "$(PWD)/.deploy/options.json"
 
-# Set PATH to include local dir for locally downloaded binaries.
-export PATH := .:$(PATH)
+# Set PATH (locally) to include local dir for locally downloaded binaries.
+FAKEPATH := "$(PWD):$(PATH)"
 
 # Get the path to relevant binaries.
-DCOS_CMD := $(shell PATH=$(PATH) command -v dcos 2> /dev/null)
-KUBECTL_CMD := $(shell PATH=$(PATH) command -v kubectl 2> /dev/null)
-TERRAFORM_CMD := $(shell command -v terraform 2> /dev/null)
+DCOS_CMD := $(shell PATH=$(FAKEPATH) command -v dcos 2> /dev/null)
+KUBECTL_CMD := $(shell PATH=$(FAKEPATH) command -v kubectl 2> /dev/null)
+TERRAFORM_CMD := $(shell PATH=$(FAKEPATH) command -v terraform 2> /dev/null)
 TERRAFORM_APPLY_ARGS ?=
 TERRAFORM_DESTROY_ARGS ?=
 
@@ -41,19 +44,19 @@ check-cli: check-terraform check-dcos check-kubectl
 .PHONY: check-terraform
 check-terraform:
 ifndef TERRAFORM_CMD
-	$(error "$n$nNo terraform command in $(PATH).$n$nPlease install via 'brew install terraform' on MacOS, or download from https://www.terraform.io/downloads.html.$n$n")
+	$(error "$n$nNo terraform command in $(FAKEPATH).$n$nPlease install via 'brew install terraform' on MacOS, or download from https://www.terraform.io/downloads.html.$n$n")
 endif
 
 .PHONY: check-dcos
 check-dcos:
 ifndef DCOS_CMD
-	$(error "$n$nNo dcos command in $(PATH).$n$nPlease run 'make get-cli' to download required binaries.$n$n")
+	$(error "$n$nNo dcos command in $(FAKEPATH).$n$nPlease run 'make get-cli' to download required binaries.$n$n")
 endif
 
 .PHONY: check-kubectl
 check-kubectl:
 ifndef KUBECTL_CMD
-	$(error "$n$nNo kubectl command in $(PATH).$n$nPlease run 'make get-cli' to download required binaries.$n$n")
+	$(error "$n$nNo kubectl command in $(FAKEPATH).$n$nPlease run 'make get-cli' to download required binaries.$n$n")
 endif
 
 .PHONY: azure
@@ -137,8 +140,8 @@ ui:
 .PHONY: install
 install: check-dcos
 	$(DCOS_CMD) package install --yes marathon-lb;\
-	$(DCOS_CMD) package install --yes kubernetes --package-version=$(KUBERNETES_FRAMEWORK_VERSION) --options=./.deploy/options.json;\
-	$(DCOS_CMD) marathon app add ./.deploy/kubeapi-proxy.json
+	$(DCOS_CMD) package install --yes kubernetes --package-version=$(KUBERNETES_FRAMEWORK_VERSION) --options="$(PATH_TO_PACKAGE_OPTIONS)";\
+	$(DCOS_CMD) marathon app add "$(PWD)/.deploy/kubeapi-proxy.json"
 
 .PHONY: watch
 watch:
