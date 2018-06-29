@@ -41,7 +41,7 @@ should look something like this:
 ```
 custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.2/dcos_generate_config.sh"
 num_of_masters = "1"
-num_of_private_agents = "3"
+num_of_private_agents = "5"
 num_of_public_agents = "1"
 #
 gcp_project = "<project-id>"
@@ -92,9 +92,7 @@ $ KUBERNETES_FRAMEWORK_VERSION=1.1.1-1.10.4 \
   PATH_TO_PACKAGE_OPTIONS=./resources/options-ha.json make install
 ```
 
-Wait until all tasks are running before proceeding. You can track installation
-progress using:
-Now, wait until all tasks are running before proceeding.
+Wait until all tasks are running before proceeding.
 You can track installation progress as follows:
 
 ```shell
