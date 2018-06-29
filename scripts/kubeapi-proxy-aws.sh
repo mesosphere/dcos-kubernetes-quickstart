@@ -12,4 +12,4 @@ else
 fi
 
 # Update main.tf file
-${SED} -i "" '/http-https-security-group/!{p;d;};n;n;r ../resources/main-k8s-api.tf.azure' ../.deploy/main.tf
+${SED} -i "" '/http-https-security-group/!{p;d;};n;n;r ../resources/main-k8s-api.tf.aws' ../.deploy/main.tf
