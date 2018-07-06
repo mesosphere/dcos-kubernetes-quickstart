@@ -98,7 +98,7 @@ get-master-lb-ip: check-terraform
 	@echo $(MASTER_LB_IP)
 
 define get_master_lb_ip
-$(eval MASTER_LB_IP := $(shell $(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master ELB Public IP"))
+$(eval MASTER_LB_IP := $(shell $(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master Load Balancer Public IP"))
 endef
 
 .PHONY: get-public-agent-ip
