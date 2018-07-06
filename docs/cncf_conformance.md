@@ -92,9 +92,7 @@ $ KUBERNETES_FRAMEWORK_VERSION=1.1.1-1.10.4 \
   PATH_TO_PACKAGE_OPTIONS=./resources/options-ha.json make install
 ```
 
-Wait until all tasks are running before proceeding. You can track installation
-progress using:
-Now, wait until all tasks are running before proceeding.
+Wait until all tasks are running before proceeding.
 You can track installation progress as follows:
 
 ```shell
