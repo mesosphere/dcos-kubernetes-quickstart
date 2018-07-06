@@ -250,3 +250,13 @@ For more details, please see the [docs folder](docs) and as well check the offic
 
 ## Community
 Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.
+
+## Roadmap for Kubernetes on DC/OS
+
+- [ ] High Density Multiple Kubernetes - Multiple Kubernetes clusters and multiple Kubernetes nodes per DC/OS agent
+- [ ] DC/OS as a Kubernetes Cloud Provider - Storage using CSI plugins and load-balancing 
+- [ ] Kubernetes Node Pools with Taints and Tolerations 
+- [ ] Integration with DC/OS authentication and authorization 
+- [ ] Outer-Kubernetes L4 - for DC/OS task accessing a Kubernetes Services and for any Kubernetes Service configured with internet access
+- [ ] Outer-Kubernetes L7 - for DC/OS task accessing a Kubernetes Ingress and for any Kubernetes Ingress configured with internet access
+
