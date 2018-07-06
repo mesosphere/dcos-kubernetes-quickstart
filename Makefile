@@ -3,8 +3,8 @@ RM := rm -f
 SSH_USER := core
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.11
-KUBERNETES_VERSION ?= 1.10.4
-KUBERNETES_FRAMEWORK_VERSION ?= 1.1.1-1.10.4
+KUBERNETES_VERSION ?= 1.10.5
+KUBERNETES_FRAMEWORK_VERSION ?= 1.2.0-1.10.5
 # PATH_TO_PACKAGE_OPTIONS holds the path to the package options file to be used
 # when installing DC/OS Kubernetes.
 PATH_TO_PACKAGE_OPTIONS ?= "$(PWD)/.deploy/options.json"

@@ -39,7 +39,7 @@ install Kubernetes. In the end, the `.deploy/desired_cluster_profile` file
 should look something like this:
 
 ```
-custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.2/dcos_generate_config.sh"
+custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.3/dcos_generate_config.sh"
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
@@ -70,7 +70,7 @@ admin_cidr = "0.0.0.0/0"
 Now, launch the DC/OS cluster by running:
 
 ```shell
-$ KUBERNETES_VERSION=1.10.4 make get-cli launch-dcos setup-cli
+$ KUBERNETES_VERSION=1.10.5 make get-cli launch-dcos setup-cli
 ```
 
 This command will:
@@ -88,13 +88,11 @@ OpenID token to the shell where you ran the above mentioned command.
 To install `dcos-kubernetes` in the newly created DC/OS cluster run:
 
 ```shell
-$ KUBERNETES_FRAMEWORK_VERSION=1.1.1-1.10.4 \
+$ KUBERNETES_FRAMEWORK_VERSION=1.2.0-1.10.5 \
   PATH_TO_PACKAGE_OPTIONS=./resources/options-ha.json make install
 ```
 
-Wait until all tasks are running before proceeding. You can track installation
-progress using:
-Now, wait until all tasks are running before proceeding.
+Wait until all tasks are running before proceeding.
 You can track installation progress as follows:
 
 ```shell
@@ -109,31 +107,32 @@ deploy (serial strategy) (COMPLETE)
       etcd-0:[peer] (COMPLETE)
       etcd-1:[peer] (COMPLETE)
       etcd-2:[peer] (COMPLETE)
-   apiserver (parallel strategy) (COMPLETE)
+   apiserver (dependency strategy) (COMPLETE)
       kube-apiserver-0:[instance] (COMPLETE)
       kube-apiserver-1:[instance] (COMPLETE)
       kube-apiserver-2:[instance] (COMPLETE)
    mandatory-addons (serial strategy) (COMPLETE)
       mandatory-addons-0:[additional-cluster-role-bindings] (COMPLETE)
+      mandatory-addons-0:[kubelet-tls-bootstrapping] (COMPLETE)
       mandatory-addons-0:[kube-dns] (COMPLETE)
       mandatory-addons-0:[metrics-server] (COMPLETE)
       mandatory-addons-0:[dashboard] (COMPLETE)
       mandatory-addons-0:[ark] (COMPLETE)
-   kubernetes-api-proxy (parallel strategy) (COMPLETE)
+   kubernetes-api-proxy (dependency strategy) (COMPLETE)
       kubernetes-api-proxy-0:[install] (COMPLETE)
-   controller-manager (parallel strategy) (COMPLETE)
+   controller-manager (dependency strategy) (COMPLETE)
       kube-controller-manager-0:[instance] (COMPLETE)
       kube-controller-manager-1:[instance] (COMPLETE)
       kube-controller-manager-2:[instance] (COMPLETE)
-   scheduler (parallel strategy) (COMPLETE)
+   scheduler (dependency strategy) (COMPLETE)
       kube-scheduler-0:[instance] (COMPLETE)
       kube-scheduler-1:[instance] (COMPLETE)
       kube-scheduler-2:[instance] (COMPLETE)
-   node (parallel strategy) (COMPLETE)
+   node (dependency strategy) (COMPLETE)
       kube-node-0:[kube-proxy, coredns, kubelet] (COMPLETE)
       kube-node-1:[kube-proxy, coredns, kubelet] (COMPLETE)
       kube-node-2:[kube-proxy, coredns, kubelet] (COMPLETE)
-   public-node (parallel strategy) (COMPLETE)
+   public-node (dependency strategy) (COMPLETE)
       kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
 ```
 
@@ -156,10 +155,10 @@ Let's try and list this cluster's nodes:
 ```shell
 $ ./kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.4
-kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.4
-kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    5m        v1.10.4
-kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    4m        v1.10.4
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.10.5
+kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.10.5
+kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.10.5
+kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    1m        v1.10.5
 ```
 
 If the output is similar to what is shown above, you're good to go and run the

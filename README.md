@@ -5,15 +5,15 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 ![](docs/assets/ui-install.gif)
 
 **NOTE:** The latest `dcos-kubernetes-quickstart` doesn't support any Kubernetes framework version before
-`1.1.1-1.10.4` due the changes how the Kubernetes API is exposed.
+`1.2.0-1.10.5` due the changes how the Kubernetes API is exposed.
 
 ## Known limitations
 
-Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.1.1-1.10.4/limitations/).
+Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.2.0-1.10.5/limitations/).
 
 ## Pre-Requisites
 
-First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.1.1-1.10.4/install/#prerequisites/).
+First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.2.0-1.10.5/install/#prerequisites/).
 
 Then, check the requirements for running this quickstart:
 
@@ -53,7 +53,7 @@ Now, edit said file and set your `project-id` and the `gce_ssh_pub_key_file`
 install Kubernetes.
 
 ```
-custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.2/dcos_generate_config.sh"
+custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.3/dcos_generate_config.sh"
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
@@ -78,7 +78,7 @@ For more advanced scenarios, please check the [terraform-dcos documentation for 
 
 **NOTE:** This `quickstart` will provision a Kubernetes cluster without `RBAC` support.
 
-To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kubernetes/1.1.1-1.10.4/authn-and-authz/#rbac) update `.deploy/options.json`:
+To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kubernetes/1.2.0-1.10.5/authn-and-authz/#rbac) update `.deploy/options.json`:
 
 ```
 {
@@ -89,7 +89,7 @@ To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kub
 }
 ```
 
-If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/1.1.1-1.10.4/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
+If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/1.2.0-1.10.5/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
 
 **NOTE:** The authorization mode for a cluster must be chosen when installing the package. Changing the authorization mode after installing the package is not supported.
 
@@ -148,26 +148,27 @@ Below is an example of how it looks like when the install ran successfully:
 
 ```
 deploy (serial strategy) (COMPLETE)
-├─ etcd (serial strategy) (COMPLETE)
-│  └─ etcd-0:[peer] (COMPLETE)
-├─ apiserver (parallel strategy) (COMPLETE)
-│  └─ kube-apiserver-0:[instance] (COMPLETE)
-├─ mandatory-addons (serial strategy) (COMPLETE)
-│  ├─ mandatory-addons-0:[additional-cluster-role-bindings] (COMPLETE)
-│  ├─ mandatory-addons-0:[kube-dns] (COMPLETE)
-│  ├─ mandatory-addons-0:[metrics-server] (COMPLETE)
-│  ├─ mandatory-addons-0:[dashboard] (COMPLETE)
-│  └─ mandatory-addons-0:[ark] (COMPLETE)
-├─ kubernetes-api-proxy (parallel strategy) (COMPLETE)
-│  └─ kubernetes-api-proxy-0:[install] (COMPLETE)
-├─ controller-manager (parallel strategy) (COMPLETE)
-│  └─ kube-controller-manager-0:[instance] (COMPLETE)
-├─ scheduler (parallel strategy) (COMPLETE)
-│  └─ kube-scheduler-0:[instance] (COMPLETE)
-├─ node (parallel strategy) (COMPLETE)
-│  └─ kube-node-0:[kube-proxy, coredns, kubelet] (COMPLETE)
-└─ public-node (parallel strategy) (COMPLETE)
-   └─ kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
+   etcd (serial strategy) (COMPLETE)
+      etcd-0:[peer] (COMPLETE)
+   apiserver (dependency strategy) (COMPLETE)
+      kube-apiserver-0:[instance] (COMPLETE)
+   mandatory-addons (serial strategy) (COMPLETE)
+      mandatory-addons-0:[additional-cluster-role-bindings] (COMPLETE)
+      mandatory-addons-0:[kubelet-tls-bootstrapping] (COMPLETE)
+      mandatory-addons-0:[kube-dns] (COMPLETE)
+      mandatory-addons-0:[metrics-server] (COMPLETE)
+      mandatory-addons-0:[dashboard] (COMPLETE)
+      mandatory-addons-0:[ark] (COMPLETE)
+   kubernetes-api-proxy (dependency strategy) (COMPLETE)
+      kubernetes-api-proxy-0:[install] (COMPLETE)
+   controller-manager (dependency strategy) (COMPLETE)
+      kube-controller-manager-0:[instance] (COMPLETE)
+   scheduler (dependency strategy) (COMPLETE)
+      kube-scheduler-0:[instance] (COMPLETE)
+   node (dependency strategy) (COMPLETE)
+      kube-node-0:[kube-proxy, coredns, kubelet] (COMPLETE)
+   public-node (dependency strategy) (COMPLETE)
+      kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
 ```
 
 You can access DC/OS Dashboard and check Kubernetes package tasks under Services:
@@ -199,8 +200,8 @@ Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 ```bash
 $ kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.10.4
-kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.10.4
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    3m        v1.10.5
+kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    2m        v1.10.5
 ```
 
 ### Accessing the Kubernetes Dashboard
@@ -245,7 +246,7 @@ $ make clean
 
 ## Documentation
 
-For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/1.1.1-1.10.4)
+For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/1.2.0-1.10.5)
 
 ## Community
 Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.
