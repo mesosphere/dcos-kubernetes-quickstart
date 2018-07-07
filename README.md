@@ -253,10 +253,9 @@ Get help and connect with other users on the [mailing list](https://groups.googl
 
 ## Roadmap for Kubernetes on DC/OS
 
-- [ ] High Density Multiple Kubernetes - Multiple Kubernetes clusters and multiple Kubernetes nodes per DC/OS agent
-- [ ] DC/OS as a Kubernetes Cloud Provider - Storage using CSI plugins and load-balancing 
-- [ ] Kubernetes Node Pools with Taints and Tolerations 
-- [ ] Integration with DC/OS authentication and authorization 
-- [ ] Outer-Kubernetes L4 - for DC/OS task accessing a Kubernetes Services and for any Kubernetes Service configured with internet access
-- [ ] Outer-Kubernetes L7 - for DC/OS task accessing a Kubernetes Ingress and for any Kubernetes Ingress configured with internet access
-
+* [ ] Automatic, and secure exposure of the Kubernetes API
+* [ ] Allow multiple Kubernetes nodes per DC/OS agent
+* [ ] Manage multiple Kubernetes clusters
+* [ ] DC/OS as the cloud provider - fully integrated with DC/OS authentication, storage (CSI), and load-balancing (Service and Ingress)
+* [ ] Node Pools - each pool has its own configuration, including placement constraints, taints and tolerations, etc.
+* [ ] Support network policies
