@@ -2,7 +2,7 @@
 
 If you already have a DC/OS 1.11+ cluster, Kubernetes is publicly available in the Catalog.
 
-Before proceeding, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.2.0-1.10.5/install/#prerequisites/).
+Before proceeding, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.2.2-1.10.7/install/#prerequisites/).
 
 Then, install is as easy as:
 
