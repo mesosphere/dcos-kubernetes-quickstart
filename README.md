@@ -141,7 +141,7 @@ Wait until all tasks are running before trying to access the Kubernetes API.
 You can watch the progress what was deployed so far with:
 
 ```bash
-$ watch dcos kubernetes plan show deploy
+$ watch ./dcos kubernetes plan show deploy
 ```
 
 Below is an example of how it looks like when the install ran successfully:
@@ -198,7 +198,7 @@ $ make kubeconfig
 Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 
 ```bash
-$ kubectl get nodes
+$ ./kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
 kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    3m        v1.10.7
 kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    2m        v1.10.7
