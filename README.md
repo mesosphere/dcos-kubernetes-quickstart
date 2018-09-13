@@ -204,6 +204,16 @@ kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    3m        v1.1
 kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    2m        v1.10.7
 ```
 
+And now, let's check how the system Kubernetes pods are doing:
+
+```bash
+$ ./kubectl -n kube-system get pods
+NAME                                    READY     STATUS    RESTARTS   AGE
+kube-dns-797d4bd8dd-g4cd7               3/3       Running   0          10m
+kubernetes-dashboard-5c469b58b8-wxss9   1/1       Running   0          10m
+metrics-server-77c969f8c-ssbf8          1/1       Running   0          10m
+```
+
 ### Accessing the Kubernetes Dashboard
 
 You will be able to access the Kubernetes Dashboard by running:
