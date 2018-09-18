@@ -2,7 +2,7 @@
 RM := rm -f
 SSH_USER := core
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
-DCOS_VERSION := 1.11
+DCOS_VERSION := 1.12
 KUBERNETES_VERSION ?= 1.10.7
 KUBERNETES_FRAMEWORK_VERSION ?= 1.2.2-1.10.7
 # PATH_TO_PACKAGE_OPTIONS holds the path to the package options file to be used

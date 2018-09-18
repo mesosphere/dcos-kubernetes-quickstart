@@ -39,7 +39,7 @@ install Kubernetes. In the end, the `.deploy/desired_cluster_profile` file
 should look something like this:
 
 ```
-custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.5/dcos_generate_config.sh"
+custom_dcos_download_path = "https://downloads.dcos.io/dcos/testing/1.12.0-beta1/dcos_generate_config.sh"
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
