@@ -46,7 +46,7 @@ $ make gcp
 ```
 
 This will output sane defaults to `.deploy/desired_cluster_profile`.
-Now, edit said file and set your `project-id` and the `gce_ssh_pub_key_file`
+Now, edit said file and set the value `gcp_project` with your `project-id` and add your ssh file path to `gcp_ssh_pub_key_file`
 (the SSH public key you will use to log-in into your new VMs later).
 
 **WARNING:** Please, do not set a smaller instance (VM) type on the risk of failing to
@@ -60,7 +60,7 @@ num_of_public_agents = "1"
 #
 gcp_project = "YOUR_GCP_PROJECT"
 gcp_region = "us-central1"
-gce_ssh_pub_key_file = "/PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
+gcp_ssh_pub_key_file = "/PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
 #
 gcp_bootstrap_instance_type = "n1-standard-1"
 gcp_master_instance_type = "n1-standard-8"
