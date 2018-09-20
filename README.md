@@ -47,7 +47,7 @@ $ make gcp
 
 This will output sane defaults to `.deploy/desired_cluster_profile`.
 Now, edit said file and set the value `gcp_project` with your `project-id` and add your ssh file path to `gcp_ssh_pub_key_file`
-(the SSH public key you will use to log-in into your new VMs later).
+(the SSH public key, [`~/.ssh/google_compute_engine`](docs/gcp.md), you will use to log-in into your new VMs later with the username `core`).
 
 **WARNING:** Please, do not set a smaller instance (VM) type on the risk of failing to
 install Kubernetes.
