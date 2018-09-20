@@ -3,6 +3,7 @@ RM := rm -f
 SSH_USER := core
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.12
+CUSTOM_DCOS_DOWNLOAD_PATH := https://downloads.dcos.io/dcos/testing/1.12.0-beta1/dcos_generate_config.sh
 KUBERNETES_VERSION ?= 1.10.7
 KUBERNETES_FRAMEWORK_VERSION ?= 1.2.2-1.10.7
 # PATH_TO_PACKAGE_OPTIONS holds the path to the package options file to be used
@@ -64,7 +65,7 @@ azure: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure; \
-	cp ../resources/desired_cluster_profile.azure desired_cluster_profile; \
+	sed 's@CUSTOM_DCOS_DOWNLOAD_PATH@'"$(CUSTOM_DCOS_DOWNLOAD_PATH)"'@g' ../resources/desired_cluster_profile.azure > desired_cluster_profile; \
 	cp ../resources/options.json.azure options.json; \
 	cp ../resources/override.azure.tf override.tf; \
 	cp ../resources/kubeapi-proxy.json .;\
@@ -75,7 +76,7 @@ aws: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws; \
-	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
+	sed 's@CUSTOM_DCOS_DOWNLOAD_PATH@'"$(CUSTOM_DCOS_DOWNLOAD_PATH)"'@g' ../resources/desired_cluster_profile.aws > desired_cluster_profile; \
 	cp ../resources/options.json.aws options.json; \
 	cp ../resources/override.aws.tf override.tf; \
 	cp ../resources/kubeapi-proxy.json .;\
@@ -86,7 +87,7 @@ gcp: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp; \
-	cp ../resources/desired_cluster_profile.gcp desired_cluster_profile; \
+	sed 's@CUSTOM_DCOS_DOWNLOAD_PATH@'"$(CUSTOM_DCOS_DOWNLOAD_PATH)"'@g' ../resources/desired_cluster_profile.gcp > desired_cluster_profile; \
 	cp ../resources/options.json.gcp options.json; \
 	cp ../resources/override.gcp.tf override.tf; \
 	cp ../resources/kubeapi-proxy.json .; \
