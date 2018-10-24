@@ -194,5 +194,5 @@ kubectl-tunnel:
 	$(KUBECTL_CMD) config use-context dcos-k8s
 	$(call get_public_agent_ip)
 	ssh -4 -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o "ServerAliveInterval=120" \
-		-N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 \
+		-N -L 9000:apiserver-insecure.devkubernetes01.l4lb.thisdcos.directory:9000 \
 		$(SSH_USER)@$(PUBLIC_AGENT_IP)

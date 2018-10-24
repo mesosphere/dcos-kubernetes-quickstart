@@ -31,7 +31,7 @@ The dummy Marathon application `kubeapi-proxy` definition:
     "HAPROXY_0_MODE": "http",
     "HAPROXY_0_PORT": "6443",
     "HAPROXY_0_SSL_CERT": "/etc/ssl/cert.pem",
-    "HAPROXY_0_BACKEND_SERVER_OPTIONS": "  timeout connect 10s\n  timeout client 86400s\n  timeout server 86400s\n  timeout tunnel 86400s\n  server kube-apiserver apiserver.kubernetes.l4lb.thisdcos.directory:6443 ssl verify none\n"   
+    "HAPROXY_0_BACKEND_SERVER_OPTIONS": "  timeout connect 10s\n  timeout client 86400s\n  timeout server 86400s\n  timeout tunnel 86400s\n  server kube-apiserver apiserver.devkubernetes01.l4lb.thisdcos.directory:6443 ssl verify none\n"   
   }
 }
 ```
@@ -45,4 +45,4 @@ Here is how this works:
 1. `"HAPROXY_0_SSL_CERT": "/etc/ssl/cert.pem"` tells Marathon-LB to expose the service with the self-signed Marathon-LB certificate (which has **no CN**)
 1. The last label `HAPROXY_0_BACKEND_SERVER_OPTIONS` indicates that Marathon-LB should forward traffic to the endpoint `apiserver.kubernetes.l4lb.thisdcos.directory:6443` rather than to the dummy application, and that the connection should be made using TLS without verification.
 
-For more options of exposing Kubernetes API, please check the [documentation](https://docs.mesosphere.com/services/kubernetes/1.2.2-1.10.7/exposing-the-kubernetes-api/).
+For more options of exposing Kubernetes API, please check the [documentation](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/operations/exposing-the-kubernetes-api/).

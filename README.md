@@ -4,18 +4,15 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ![](docs/assets/ui-install.gif)
 
-**NOTE:** The latest `dcos-kubernetes-quickstart` doesn't support any Kubernetes framework version before
-`1.2.0-1.10.5` due the changes how the Kubernetes API is exposed.
+**NOTE:** The latest `dcos-kubernetes-quickstart` doesn't support any Kubernetes framework version before `2.0.0-1.12.1`. The reason is that now creating Kubernetes clusters requires installation of the Kubernetes Manager, package: `Kubernetes`.
 
 ## Known limitations
 
-Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.2.2-1.10.7/limitations/).
+Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/2.0.0-1.12.1/limitations/).
 
 ## Pre-Requisites
 
-First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.2.2-1.10.7/install/#prerequisites/).
-
-Then, check the requirements for running this quickstart:
+Check the requirements for running this quickstart:
 
 * Linux or MacOS
 * [Terraform 0.11.x](https://www.terraform.io/downloads.html). On MacOS, you can install with [brew](https://brew.sh/):
@@ -53,7 +50,7 @@ Now, edit said file and set your `project-id` and the `gce_ssh_pub_key_file`
 install Kubernetes.
 
 ```
-custom_dcos_download_path = "https://downloads.dcos.io/dcos/testing/1.12.0-beta1/dcos_generate_config.sh"
+custom_dcos_download_path = "https://downloads.dcos.io/dcos/testing/1.12.0-rc2/dcos_generate_config.sh"
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
@@ -78,10 +75,13 @@ For more advanced scenarios, please check the [terraform-dcos documentation for 
 
 **NOTE:** This `quickstart` will provision a Kubernetes cluster without `RBAC` support.
 
-To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kubernetes/1.2.2-1.10.7/authn-and-authz/#rbac) update `.deploy/options.json`:
+To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/authn-and-authz/#rbac) update `.deploy/options.json`:
 
 ```
 {
+  "service": {
+    "name": "dev/kubernetes01"
+  },
   "kubernetes": {
     "authorization_mode": "RBAC",
     "public_node_count": 1
@@ -89,7 +89,7 @@ To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kub
 }
 ```
 
-If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/1.2.2-1.10.7/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
+If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
 
 **NOTE:** The authorization mode for a cluster must be chosen when installing the package. Changing the authorization mode after installing the package is not supported.
 
@@ -102,9 +102,12 @@ To deploy a **highly-available** cluster with three (3) private and one (1) publ
 
 ```
 {
+  "service": {
+    "name": "dev/kubernetes01"
+  },
   "kubernetes": {
     "high_availability": true,
-    "node_count": 3,
+    "private_node_count": 3,
     "public_node_count": 1
   }
 }
@@ -141,34 +144,27 @@ Wait until all tasks are running before trying to access the Kubernetes API.
 You can watch the progress what was deployed so far with:
 
 ```bash
-$ watch ./dcos kubernetes plan show deploy
+$ make watch
 ```
 
 Below is an example of how it looks like when the install ran successfully:
 
 ```
+Using Kubernetes cluster: dev/kubernetes01
 deploy (serial strategy) (COMPLETE)
    etcd (serial strategy) (COMPLETE)
       etcd-0:[peer] (COMPLETE)
-   apiserver (dependency strategy) (COMPLETE)
-      kube-apiserver-0:[instance] (COMPLETE)
+   control-plane (dependency strategy) (COMPLETE)
+      kube-control-plane-0:[instance] (COMPLETE)
    mandatory-addons (serial strategy) (COMPLETE)
-      mandatory-addons-0:[additional-cluster-role-bindings] (COMPLETE)
-      mandatory-addons-0:[kubelet-tls-bootstrapping] (COMPLETE)
-      mandatory-addons-0:[kube-dns] (COMPLETE)
-      mandatory-addons-0:[metrics-server] (COMPLETE)
-      mandatory-addons-0:[dashboard] (COMPLETE)
-      mandatory-addons-0:[ark] (COMPLETE)
-   kubernetes-api-proxy (dependency strategy) (COMPLETE)
-      kubernetes-api-proxy-0:[install] (COMPLETE)
-   controller-manager (dependency strategy) (COMPLETE)
-      kube-controller-manager-0:[instance] (COMPLETE)
-   scheduler (dependency strategy) (COMPLETE)
-      kube-scheduler-0:[instance] (COMPLETE)
+      mandatory-addons-0:[instance] (COMPLETE)
    node (dependency strategy) (COMPLETE)
-      kube-node-0:[kube-proxy, coredns, kubelet] (COMPLETE)
+      kube-node-0:[kubelet] (COMPLETE)
    public-node (dependency strategy) (COMPLETE)
-      kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
+      kube-node-public-0:[kubelet] (COMPLETE)
+	Documentation: https://docs.mesosphere.com/service-docs/kubernetes-cluster
+	Issues: https://github.com/mesosphere/dcos-kubernetes-quickstart/issues
+
 ```
 
 You can access DC/OS Dashboard and check Kubernetes package tasks under Services:
@@ -198,16 +194,16 @@ $ make kubeconfig
 Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 
 ```bash
-$ ./kubectl get nodes
+$ ./kubectl --context devkubernetes01 get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    3m        v1.10.7
-kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    2m        v1.10.7
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    3m        v1.12.1
+kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    2m        v1.12.1
 ```
 
 And now, let's check how the system Kubernetes pods are doing:
 
 ```bash
-$ ./kubectl -n kube-system get pods
+$ ./kubectl --context devkubernetes01 -n kube-system get pods
 NAME                                    READY     STATUS    RESTARTS   AGE
 kube-dns-797d4bd8dd-g4cd7               3/3       Running   0          10m
 kubernetes-dashboard-5c469b58b8-wxss9   1/1       Running   0          10m
@@ -225,7 +221,7 @@ $ kubectl proxy
 Then pointing your browser at:
 
 ```
-http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy/
+http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 ```
 
 ## Uninstall Kubernetes
@@ -256,7 +252,7 @@ $ make clean
 
 ## Documentation
 
-For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/1.2.2-1.10.7)
+For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/2.0.0-1.12.1)
 
 ## Community
 Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.
@@ -264,8 +260,5 @@ Get help and connect with other users on the [mailing list](https://groups.googl
 ## Roadmap for Kubernetes on DC/OS
 
 * [ ] Automatic, and secure exposure of the Kubernetes API
-* [ ] Allow multiple Kubernetes nodes per DC/OS agent
-* [ ] Manage multiple Kubernetes clusters
 * [ ] DC/OS as the cloud provider - fully integrated with DC/OS authentication, storage (CSI), and load-balancing (Service and Ingress)
 * [ ] Node Pools - each pool has its own configuration, including placement constraints, taints and tolerations, etc.
-* [ ] Support network policies

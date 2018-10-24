@@ -70,7 +70,7 @@ admin_cidr = "0.0.0.0/0"
 Now, launch the DC/OS cluster by running:
 
 ```shell
-$ KUBERNETES_VERSION=1.10.7 make get-cli launch-dcos setup-cli
+$ KUBERNETES_VERSION=1.12.1 make get-cli launch-dcos setup-cli
 ```
 
 This command will:
@@ -88,7 +88,7 @@ OpenID token to the shell where you ran the above mentioned command.
 To install `dcos-kubernetes` in the newly created DC/OS cluster run:
 
 ```shell
-$ KUBERNETES_FRAMEWORK_VERSION=1.2.2-1.10.7 \
+$ KUBERNETES_FRAMEWORK_VERSION=2.0.0-1.12.1 \
   PATH_TO_PACKAGE_OPTIONS=./resources/options-ha.json make install
 ```
 
@@ -155,10 +155,10 @@ Let's try and list this cluster's nodes:
 ```shell
 $ ./kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.10.7
-kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.10.7
-kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.10.7
-kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    1m        v1.10.7
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.12.1
+kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.12.1
+kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.12.1
+kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    1m        v1.12.1
 ```
 
 If the output is similar to what is shown above, you're good to go and run the
