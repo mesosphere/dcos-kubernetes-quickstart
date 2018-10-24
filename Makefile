@@ -3,9 +3,9 @@ RM := rm -f
 SSH_USER := core
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.12
-CUSTOM_DCOS_DOWNLOAD_PATH := https://downloads.dcos.io/dcos/testing/1.12.0-beta1/dcos_generate_config.sh
-KUBERNETES_VERSION ?= 1.10.7
-KUBERNETES_FRAMEWORK_VERSION ?= 1.2.2-1.10.7
+CUSTOM_DCOS_DOWNLOAD_PATH := https://downloads.dcos.io/dcos/testing/1.12.0-rc2/dcos_generate_config.sh
+KUBERNETES_VERSION ?= 1.12.1
+KUBERNETES_FRAMEWORK_VERSION ?= 2.0.0-1.12.1
 # PATH_TO_PACKAGE_OPTIONS holds the path to the package options file to be used
 # when installing DC/OS Kubernetes.
 PATH_TO_PACKAGE_OPTIONS ?= "$(PWD)/.deploy/options.json"
@@ -113,12 +113,12 @@ endef
 
 .PHONY: plan-dcos
 plan-dcos: check-terraform
-	cd .deploy; \
+	@cd .deploy; \
 	$(TERRAFORM_CMD) plan -var-file desired_cluster_profile
 
 .PHONY: launch-dcos
 launch-dcos: check-terraform
-	cd .deploy; \
+	@cd .deploy; \
 	$(TERRAFORM_CMD) apply $(TERRAFORM_APPLY_ARGS) -var-file desired_cluster_profile
 
 .PHONY: plan
@@ -130,7 +130,7 @@ deploy: check-cli launch-dcos setup-cli install
 .PHONY: setup-cli
 setup-cli: check-dcos
 	$(call get_master_lb_ip)
-	$(DCOS_CMD) cluster setup https://$(MASTER_LB_IP)
+	$(DCOS_CMD) cluster setup https://$(MASTER_LB_IP) --insecure
 	@scripts/poll_api.sh "DC/OS Master" $(MASTER_LB_IP) 443
 
 .PHONY: ui
@@ -141,17 +141,25 @@ ui:
 .PHONY: install
 install: check-dcos
 	$(DCOS_CMD) package install --yes marathon-lb;\
-	$(DCOS_CMD) package install --yes kubernetes --package-version=$(KUBERNETES_FRAMEWORK_VERSION) --options="$(PATH_TO_PACKAGE_OPTIONS)";\
-	$(DCOS_CMD) marathon app add "$(PWD)/.deploy/kubeapi-proxy.json"
+	$(DCOS_CMD) marathon app add "$(PWD)/.deploy/kubeapi-proxy.json" || true
+	$(DCOS_CMD) package install --yes kubernetes --package-version="$(KUBERNETES_FRAMEWORK_VERSION)";\
+	sleep 30
+	$(DCOS_CMD) kubernetes cluster create --yes --options="$(PATH_TO_PACKAGE_OPTIONS)";\
+
 
 .PHONY: watch
 watch:
-	watch dcos kubernetes plan show deploy
+	watch dcos kubernetes cluster debug --cluster-name=dev/kubernetes01 plan show deploy
+
+.PHONY: watch-kubernetes
+watch-kubernetes:
+	watch dcos kubernetes manager plan show deploy
+
 
 .PHONY: kubeconfig
 kubeconfig:
 	$(call get_public_agent_ip)
-	$(DCOS_CMD) kubernetes kubeconfig --apiserver-url https://$(PUBLIC_AGENT_IP):6443 --insecure-skip-tls-verify
+	$(DCOS_CMD) kubernetes cluster kubeconfig --cluster-name dev/kubernetes01 --apiserver-url https://$(PUBLIC_AGENT_IP):6443 --context-name devkubernetes01 --insecure-skip-tls-verify
 	@scripts/poll_api.sh "Kubernetes API" $(PUBLIC_AGENT_IP) 6443
 
 .PHONY: upgrade-infra
@@ -165,9 +173,10 @@ upgrade-dcos: check-terraform
 
 .PHONY: uninstall
 uninstall: check-dcos
-	$(DCOS_CMD) package uninstall --yes marathon-lb; \
-	$(DCOS_CMD) package uninstall --yes kubernetes; \
-	$(DCOS_CMD) marathon app remove kubeapi-proxy
+	$(DCOS_CMD) marathon app remove kubeapi-proxy || true
+	$(DCOS_CMD) package uninstall marathon-lb --yes ; \
+	$(DCOS_CMD) kubernetes cluster delete --cluster-name dev/kubernetes01 --yes
+	$(DCOS_CMD) package uninstall kubernetes --yes ; \
 
 .PHONY: destroy
 destroy: check-terraform

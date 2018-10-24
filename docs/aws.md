@@ -82,10 +82,12 @@ To deploy a **highly-available** cluster with three (3) private and one (1) publ
 
 ```
 {
+  "service": {
+    "name": "dev/kubernetes01"
+  },
   "kubernetes": {
-    "cloud_provider": "aws",
     "high_availability": true,
-    "node_count": 3,
+    "private_node_count": 3,
     "public_node_count": 1
   }
 }
