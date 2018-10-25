@@ -1,6 +1,8 @@
 {
+  "service": {
+    "name": "dev/kubernetes01"
+  },
   "kubernetes": {
-    "cloud_provider": "aws",
-    "public_node_count": 1
+    "authorization_mode": "RBAC"
   }
 }

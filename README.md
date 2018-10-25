@@ -4,18 +4,15 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ![](docs/assets/ui-install.gif)
 
-**NOTE:** The latest `dcos-kubernetes-quickstart` doesn't support any Kubernetes framework version before
-`1.2.0-1.10.5` due the changes how the Kubernetes API is exposed.
+**NOTE:** The latest `dcos-kubernetes-quickstart` doesn't support any Kubernetes framework version before `2.0.0-1.12.1`. The reason is that now creating Kubernetes clusters requires the installation of the [Mesosphere Kubernetes Engine](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/overview/#cluster-manager).
 
 ## Known limitations
 
-Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.2.2-1.10.7/limitations/).
+Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/2.0.0-1.12.1/limitations/).
 
 ## Pre-Requisites
 
-First, make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.2.2-1.10.7/install/#prerequisites/).
-
-Then, check the requirements for running this quickstart:
+Check the requirements for running this quickstart:
 
 * Linux or MacOS
 * [Terraform 0.11.x](https://www.terraform.io/downloads.html). On MacOS, you can install with [brew](https://brew.sh/):
@@ -53,9 +50,9 @@ Now, edit said file and set your `project-id` and the `gce_ssh_pub_key_file`
 install Kubernetes.
 
 ```
-custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.5/dcos_generate_config.sh"
+custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.12.0/dcos_generate_config.sh"
 num_of_masters = "1"
-num_of_private_agents = "3"
+num_of_private_agents = "4"
 num_of_public_agents = "1"
 #
 gcp_project = "YOUR_GCP_PROJECT"
@@ -78,18 +75,20 @@ For more advanced scenarios, please check the [terraform-dcos documentation for 
 
 **NOTE:** This `quickstart` will provision a Kubernetes cluster without `RBAC` support.
 
-To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kubernetes/1.2.2-1.10.7/authn-and-authz/#rbac) update `.deploy/options.json`:
+To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/operations/authn-and-authz/#rbac) update `.deploy/options.json`:
 
 ```
 {
+  "service": {
+    "name": "dev/kubernetes01"
+  },
   "kubernetes": {
-    "authorization_mode": "RBAC",
-    "public_node_count": 1
+    "authorization_mode": "RBAC"
   }
 }
 ```
 
-If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/1.2.2-1.10.7/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
+If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/operations/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
 
 **NOTE:** The authorization mode for a cluster must be chosen when installing the package. Changing the authorization mode after installing the package is not supported.
 
@@ -98,14 +97,16 @@ If you want to give users access to the Kubernetes API check [documentation](htt
 **NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
 a single instance of every control plane component.
 
-To deploy a **highly-available** cluster with three (3) private and one (1) public workers node update `.deploy/options.json`:
+To deploy a **highly-available** cluster with three (3) private Kubernetes nodes update `.deploy/options.json`:
 
 ```
 {
+  "service": {
+    "name": "dev/kubernetes01"
+  },
   "kubernetes": {
     "high_availability": true,
-    "node_count": 3,
-    "public_node_count": 1
+    "private_node_count": 3
   }
 }
 ```
@@ -141,34 +142,23 @@ Wait until all tasks are running before trying to access the Kubernetes API.
 You can watch the progress what was deployed so far with:
 
 ```bash
-$ watch ./dcos kubernetes plan show deploy
+$ make watch-kubernetes-cluster
 ```
 
 Below is an example of how it looks like when the install ran successfully:
 
 ```
+Using Kubernetes cluster: dev/kubernetes01
 deploy (serial strategy) (COMPLETE)
    etcd (serial strategy) (COMPLETE)
       etcd-0:[peer] (COMPLETE)
-   apiserver (dependency strategy) (COMPLETE)
-      kube-apiserver-0:[instance] (COMPLETE)
+   control-plane (dependency strategy) (COMPLETE)
+      kube-control-plane-0:[instance] (COMPLETE)
    mandatory-addons (serial strategy) (COMPLETE)
-      mandatory-addons-0:[additional-cluster-role-bindings] (COMPLETE)
-      mandatory-addons-0:[kubelet-tls-bootstrapping] (COMPLETE)
-      mandatory-addons-0:[kube-dns] (COMPLETE)
-      mandatory-addons-0:[metrics-server] (COMPLETE)
-      mandatory-addons-0:[dashboard] (COMPLETE)
-      mandatory-addons-0:[ark] (COMPLETE)
-   kubernetes-api-proxy (dependency strategy) (COMPLETE)
-      kubernetes-api-proxy-0:[install] (COMPLETE)
-   controller-manager (dependency strategy) (COMPLETE)
-      kube-controller-manager-0:[instance] (COMPLETE)
-   scheduler (dependency strategy) (COMPLETE)
-      kube-scheduler-0:[instance] (COMPLETE)
+      mandatory-addons-0:[instance] (COMPLETE)
    node (dependency strategy) (COMPLETE)
-      kube-node-0:[kube-proxy, coredns, kubelet] (COMPLETE)
+      kube-node-0:[kubelet] (COMPLETE)
    public-node (dependency strategy) (COMPLETE)
-      kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
 ```
 
 You can access DC/OS Dashboard and check Kubernetes package tasks under Services:
@@ -181,6 +171,11 @@ $ make ui
 
 Check the [exposing Kubernetes API doc](docs/exposing_kubernetes_api.md) to understand how
 the Kubernetes API gets exposed.
+To actually expose the Kubernetes API for the new Kubernetes cluster using Marathon-LB, run:
+
+```bash
+$ make marathon-lb
+```
 
 **NOTE:** If you have changed in `.deploy/desired_cluster_profile` file the number of
 `num_of_public_agents` to more than `1`, please scale `marathon-lb` service to the same number,
@@ -198,20 +193,28 @@ $ make kubeconfig
 Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 
 ```bash
-$ ./kubectl get nodes
-NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    3m        v1.10.7
-kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    2m        v1.10.7
+$ ./kubectl --context devkubernetes01 get nodes
+NAME                                                  STATUS   ROLES    AGE     VERSION
+kube-control-plane-0-instance.devkubernetes01.mesos   Ready    master   5m18s   v1.12.1
+kube-node-0-kubelet.devkubernetes01.mesos             Ready    <none>   2m58s   v1.12.1
 ```
 
 And now, let's check how the system Kubernetes pods are doing:
 
 ```bash
-$ ./kubectl -n kube-system get pods
-NAME                                    READY     STATUS    RESTARTS   AGE
-kube-dns-797d4bd8dd-g4cd7               3/3       Running   0          10m
-kubernetes-dashboard-5c469b58b8-wxss9   1/1       Running   0          10m
-metrics-server-77c969f8c-ssbf8          1/1       Running   0          10m
+$ ./kubectl --context devkubernetes01 -n kube-system get pods
+NAME                                                                          READY   STATUS    RESTARTS   AGE
+calico-node-s9828                                                             2/2     Running   0          3m21s
+calico-node-zc8qw                                                             2/2     Running   0          3m38s
+coredns-6c7669957f-rvz85                                                      1/1     Running   0          3m38s
+kube-apiserver-kube-control-plane-0-instance.devkubernetes01.mesos            1/1     Running   0          4m43s
+kube-controller-manager-kube-control-plane-0-instance.devkubernetes01.mesos   1/1     Running   0          4m42s
+kube-proxy-kube-control-plane-0-instance.devkubernetes01.mesos                1/1     Running   0          4m48s
+kube-proxy-kube-node-0-kubelet.devkubernetes01.mesos                          1/1     Running   0          3m21s
+kube-scheduler-kube-control-plane-0-instance.devkubernetes01.mesos            1/1     Running   0          4m26s
+kubernetes-dashboard-5cbf45898-nkjsm                                          1/1     Running   0          3m37s
+local-dns-dispatcher-kube-node-0-kubelet.devkubernetes01.mesos                1/1     Running   0          3m21s
+metrics-server-594576c7d8-cb4pj                                               1/1     Running   0          3m35s
 ```
 
 ### Accessing the Kubernetes Dashboard
@@ -219,14 +222,16 @@ metrics-server-77c969f8c-ssbf8          1/1       Running   0          10m
 You will be able to access the Kubernetes Dashboard by running:
 
 ```bash
-$ kubectl proxy
+$ kubectl --context devkubernetes01 proxy
 ```
 
 Then pointing your browser at:
 
 ```
-http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy/
+http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 ```
+
+Please note that you will have to sign-in into the [Kubernetes Dashboard](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/operations/kubernetes-dashboard/#login-view-and-authorization) before being able to perform any action.
 
 ## Uninstall Kubernetes
 
@@ -256,7 +261,7 @@ $ make clean
 
 ## Documentation
 
-For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/1.2.2-1.10.7)
+For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/2.0.0-1.12.1)
 
 ## Community
 Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.
@@ -264,8 +269,5 @@ Get help and connect with other users on the [mailing list](https://groups.googl
 ## Roadmap for Kubernetes on DC/OS
 
 * [ ] Automatic, and secure exposure of the Kubernetes API
-* [ ] Allow multiple Kubernetes nodes per DC/OS agent
-* [ ] Manage multiple Kubernetes clusters
 * [ ] DC/OS as the cloud provider - fully integrated with DC/OS authentication, storage (CSI), and load-balancing (Service and Ingress)
 * [ ] Node Pools - each pool has its own configuration, including placement constraints, taints and tolerations, etc.
-* [ ] Support network policies

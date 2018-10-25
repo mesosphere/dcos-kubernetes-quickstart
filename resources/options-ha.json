@@ -1,8 +1,10 @@
 {
+  "service": {
+    "name": "dev/kubernetes01"
+  },
   "kubernetes": {
     "authorization_mode": "RBAC",
     "high_availability": true,
-    "node_count": 3,
-    "public_node_count": 1
+    "private_node_count": 3
   }
 }

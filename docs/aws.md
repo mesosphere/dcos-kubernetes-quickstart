@@ -54,9 +54,9 @@ log-in into your new VMs later.
 failing to install Kubernetes.
 
 ```
-custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.11.5/dcos_generate_config.sh"
+custom_dcos_download_path = "CUSTOM_DCOS_DOWNLOAD_PATH"
 num_of_masters = "1"
-num_of_private_agents = "3"
+num_of_private_agents = "4"
 num_of_public_agents = "1"
 #
 aws_region = "us-west-1"
@@ -78,15 +78,16 @@ For more advanced scenarios, please check the [terraform-dcos documentation for 
 **NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
 a single instance of every control plane component.
 
-To deploy a **highly-available** cluster with three (3) private and one (1) public workers node update `.deploy/options.json`:
+To deploy a **highly-available** cluster with three (3) private Kubernetes nodes update `.deploy/options.json`:
 
 ```
 {
+  "service": {
+    "name": "dev/kubernetes01"
+  },
   "kubernetes": {
-    "cloud_provider": "aws",
     "high_availability": true,
-    "node_count": 3,
-    "public_node_count": 1
+    "private_node_count": 3
   }
 }
 ```
