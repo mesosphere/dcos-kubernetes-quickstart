@@ -83,8 +83,7 @@ To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kub
     "name": "dev/kubernetes01"
   },
   "kubernetes": {
-    "authorization_mode": "RBAC",
-    "public_node_count": 1
+    "authorization_mode": "RBAC"
   }
 }
 ```
@@ -98,7 +97,7 @@ If you want to give users access to the Kubernetes API check [documentation](htt
 **NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
 a single instance of every control plane component.
 
-To deploy a **highly-available** cluster with three (3) private and one (1) public workers node update `.deploy/options.json`:
+To deploy a **highly-available** cluster with three (3) private Kubernetes nodes update `.deploy/options.json`:
 
 ```
 {
@@ -107,8 +106,7 @@ To deploy a **highly-available** cluster with three (3) private and one (1) publ
   },
   "kubernetes": {
     "high_availability": true,
-    "private_node_count": 3,
-    "public_node_count": 1
+    "private_node_count": 3
   }
 }
 ```
@@ -161,8 +159,6 @@ deploy (serial strategy) (COMPLETE)
    node (dependency strategy) (COMPLETE)
       kube-node-0:[kubelet] (COMPLETE)
    public-node (dependency strategy) (COMPLETE)
-      kube-node-public-0:[kubelet] (COMPLETE)
-
 ```
 
 You can access DC/OS Dashboard and check Kubernetes package tasks under Services:
@@ -175,6 +171,11 @@ $ make ui
 
 Check the [exposing Kubernetes API doc](docs/exposing_kubernetes_api.md) to understand how
 the Kubernetes API gets exposed.
+To actually expose the Kubernetes API for the new Kubernetes cluster using Marathon-LB, run:
+
+```bash
+$ make marathon-lb
+```
 
 **NOTE:** If you have changed in `.deploy/desired_cluster_profile` file the number of
 `num_of_public_agents` to more than `1`, please scale `marathon-lb` service to the same number,

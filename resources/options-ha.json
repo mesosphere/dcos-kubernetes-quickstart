@@ -5,7 +5,6 @@
   "kubernetes": {
     "authorization_mode": "RBAC",
     "high_availability": true,
-    "private_node_count": 3,
-    "public_node_count": 1
+    "private_node_count": 3
   }
 }

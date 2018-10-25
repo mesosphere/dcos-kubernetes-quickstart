@@ -140,11 +140,20 @@ ui:
 
 .PHONY: install
 install: check-dcos
-	$(DCOS_CMD) package install --yes marathon-lb
-	$(DCOS_CMD) marathon app add "$(PWD)/.deploy/kubeapi-proxy.json"
+	@echo "Installing Mesosphere Kubernetes Engine..."
 	$(DCOS_CMD) package install --yes kubernetes --package-version="$(KUBERNETES_FRAMEWORK_VERSION)"
-	sleep 60
+	@echo "Waiting for Mesosphere Kubernetes Engine to be up..."
+	@while [[ ! $$($(DCOS_CMD) kubernetes manager plan show deploy 2> /dev/null | head -n1 | grep COMPLETE ) ]]; do \
+		sleep 1; \
+	done
+	@echo "Creating a Kubernetes cluster..."
 	$(DCOS_CMD) kubernetes cluster create --yes --options="$(PATH_TO_PACKAGE_OPTIONS)"
+
+.PHONY: marathon-lb
+marathon-lb:
+	$(DCOS_CMD) package install --yes marathon-lb
+	@sleep 30
+	$(DCOS_CMD) marathon app add "$(PWD)/.deploy/kubeapi-proxy.json"
 
 .PHONY: watch-kubernetes-cluster
 watch-kubernetes-cluster:
@@ -153,7 +162,6 @@ watch-kubernetes-cluster:
 .PHONY: watch-kubernetes
 watch-kubernetes:
 	watch dcos kubernetes manager plan show deploy
-
 
 .PHONY: kubeconfig
 kubeconfig:

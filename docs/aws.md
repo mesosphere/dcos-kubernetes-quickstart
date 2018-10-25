@@ -78,7 +78,7 @@ For more advanced scenarios, please check the [terraform-dcos documentation for 
 **NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
 a single instance of every control plane component.
 
-To deploy a **highly-available** cluster with three (3) private and one (1) public workers node update `.deploy/options.json`:
+To deploy a **highly-available** cluster with three (3) private Kubernetes nodes update `.deploy/options.json`:
 
 ```
 {
@@ -87,8 +87,7 @@ To deploy a **highly-available** cluster with three (3) private and one (1) publ
   },
   "kubernetes": {
     "high_availability": true,
-    "private_node_count": 3,
-    "public_node_count": 1
+    "private_node_count": 3
   }
 }
 ```
