@@ -56,7 +56,7 @@ failing to install Kubernetes.
 ```
 custom_dcos_download_path = "CUSTOM_DCOS_DOWNLOAD_PATH"
 num_of_masters = "1"
-num_of_private_agents = "3"
+num_of_private_agents = "4"
 num_of_public_agents = "1"
 #
 aws_region = "us-west-1"

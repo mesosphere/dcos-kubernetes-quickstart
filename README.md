@@ -52,7 +52,7 @@ install Kubernetes.
 ```
 custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.12.0/dcos_generate_config.sh"
 num_of_masters = "1"
-num_of_private_agents = "3"
+num_of_private_agents = "4"
 num_of_public_agents = "1"
 #
 gcp_project = "YOUR_GCP_PROJECT"
