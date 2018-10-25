@@ -4,7 +4,7 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ![](docs/assets/ui-install.gif)
 
-**NOTE:** The latest `dcos-kubernetes-quickstart` doesn't support any Kubernetes framework version before `2.0.0-1.12.1`. The reason is that now creating Kubernetes clusters requires installation of the Kubernetes Manager, package: `Kubernetes`.
+**NOTE:** The latest `dcos-kubernetes-quickstart` doesn't support any Kubernetes framework version before `2.0.0-1.12.1`. The reason is that now creating Kubernetes clusters requires the installation of the [Mesosphere Kubernetes Engine](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/overview/#cluster-manager).
 
 ## Known limitations
 
@@ -75,7 +75,7 @@ For more advanced scenarios, please check the [terraform-dcos documentation for 
 
 **NOTE:** This `quickstart` will provision a Kubernetes cluster without `RBAC` support.
 
-To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/authn-and-authz/#rbac) update `.deploy/options.json`:
+To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/operations/authn-and-authz/#rbac) update `.deploy/options.json`:
 
 ```
 {
@@ -89,7 +89,7 @@ To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kub
 }
 ```
 
-If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
+If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/operations/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
 
 **NOTE:** The authorization mode for a cluster must be chosen when installing the package. Changing the authorization mode after installing the package is not supported.
 
