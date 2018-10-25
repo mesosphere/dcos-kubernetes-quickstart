@@ -140,15 +140,14 @@ ui:
 
 .PHONY: install
 install: check-dcos
-	$(DCOS_CMD) package install --yes marathon-lb;\
-	$(DCOS_CMD) marathon app add "$(PWD)/.deploy/kubeapi-proxy.json" || true
-	$(DCOS_CMD) package install --yes kubernetes --package-version="$(KUBERNETES_FRAMEWORK_VERSION)";\
-	sleep 30
-	$(DCOS_CMD) kubernetes cluster create --yes --options="$(PATH_TO_PACKAGE_OPTIONS)";\
+	$(DCOS_CMD) package install --yes marathon-lb
+	$(DCOS_CMD) marathon app add "$(PWD)/.deploy/kubeapi-proxy.json"
+	$(DCOS_CMD) package install --yes kubernetes --package-version="$(KUBERNETES_FRAMEWORK_VERSION)"
+	sleep 60
+	$(DCOS_CMD) kubernetes cluster create --yes --options="$(PATH_TO_PACKAGE_OPTIONS)"
 
-
-.PHONY: watch
-watch:
+.PHONY: watch-kubernetes-cluster
+watch-kubernetes-cluster:
 	watch dcos kubernetes cluster debug --cluster-name=dev/kubernetes01 plan show deploy
 
 .PHONY: watch-kubernetes
@@ -173,10 +172,10 @@ upgrade-dcos: check-terraform
 
 .PHONY: uninstall
 uninstall: check-dcos
-	$(DCOS_CMD) marathon app remove kubeapi-proxy || true
-	$(DCOS_CMD) package uninstall marathon-lb --yes ; \
+	$(DCOS_CMD) marathon app remove kubeapi-proxy
+	$(DCOS_CMD) package uninstall marathon-lb --yes
 	$(DCOS_CMD) kubernetes cluster delete --cluster-name dev/kubernetes01 --yes
-	$(DCOS_CMD) package uninstall kubernetes --yes ; \
+	$(DCOS_CMD) package uninstall kubernetes --yes
 
 .PHONY: destroy
 destroy: check-terraform

@@ -144,7 +144,7 @@ Wait until all tasks are running before trying to access the Kubernetes API.
 You can watch the progress what was deployed so far with:
 
 ```bash
-$ make watch
+$ make watch-kubernetes-cluster
 ```
 
 Below is an example of how it looks like when the install ran successfully:
@@ -162,8 +162,6 @@ deploy (serial strategy) (COMPLETE)
       kube-node-0:[kubelet] (COMPLETE)
    public-node (dependency strategy) (COMPLETE)
       kube-node-public-0:[kubelet] (COMPLETE)
-	Documentation: https://docs.mesosphere.com/service-docs/kubernetes-cluster
-	Issues: https://github.com/mesosphere/dcos-kubernetes-quickstart/issues
 
 ```
 
@@ -195,19 +193,27 @@ Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 
 ```bash
 $ ./kubectl --context devkubernetes01 get nodes
-NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    3m        v1.12.1
-kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    2m        v1.12.1
+NAME                                                  STATUS   ROLES    AGE     VERSION
+kube-control-plane-0-instance.devkubernetes01.mesos   Ready    master   5m18s   v1.12.1
+kube-node-0-kubelet.devkubernetes01.mesos             Ready    <none>   2m58s   v1.12.1
 ```
 
 And now, let's check how the system Kubernetes pods are doing:
 
 ```bash
 $ ./kubectl --context devkubernetes01 -n kube-system get pods
-NAME                                    READY     STATUS    RESTARTS   AGE
-kube-dns-797d4bd8dd-g4cd7               3/3       Running   0          10m
-kubernetes-dashboard-5c469b58b8-wxss9   1/1       Running   0          10m
-metrics-server-77c969f8c-ssbf8          1/1       Running   0          10m
+NAME                                                                          READY   STATUS    RESTARTS   AGE
+calico-node-s9828                                                             2/2     Running   0          3m21s
+calico-node-zc8qw                                                             2/2     Running   0          3m38s
+coredns-6c7669957f-rvz85                                                      1/1     Running   0          3m38s
+kube-apiserver-kube-control-plane-0-instance.devkubernetes01.mesos            1/1     Running   0          4m43s
+kube-controller-manager-kube-control-plane-0-instance.devkubernetes01.mesos   1/1     Running   0          4m42s
+kube-proxy-kube-control-plane-0-instance.devkubernetes01.mesos                1/1     Running   0          4m48s
+kube-proxy-kube-node-0-kubelet.devkubernetes01.mesos                          1/1     Running   0          3m21s
+kube-scheduler-kube-control-plane-0-instance.devkubernetes01.mesos            1/1     Running   0          4m26s
+kubernetes-dashboard-5cbf45898-nkjsm                                          1/1     Running   0          3m37s
+local-dns-dispatcher-kube-node-0-kubelet.devkubernetes01.mesos                1/1     Running   0          3m21s
+metrics-server-594576c7d8-cb4pj                                               1/1     Running   0          3m35s
 ```
 
 ### Accessing the Kubernetes Dashboard
@@ -215,7 +221,7 @@ metrics-server-77c969f8c-ssbf8          1/1       Running   0          10m
 You will be able to access the Kubernetes Dashboard by running:
 
 ```bash
-$ kubectl proxy
+$ kubectl --context devkubernetes01 proxy
 ```
 
 Then pointing your browser at:
@@ -223,6 +229,8 @@ Then pointing your browser at:
 ```
 http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 ```
+
+Please note that you will have to sign-in into the [Kubernetes Dashboard](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/operations/kubernetes-dashboard/#login-view-and-authorization) before being able to perform any action.
 
 ## Uninstall Kubernetes
 
