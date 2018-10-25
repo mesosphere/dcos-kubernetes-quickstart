@@ -83,9 +83,9 @@ As part of the last step, your browser will open and ask you to login with
 a Google, GitHub or Microsoft account. Choose an option and copy the resulting
 OpenID token to the shell where you ran the above mentioned command.
 
-## Installing `dcos-kubernetes`
+## Installing Mesosphere Kubernetes Engine
 
-To install `dcos-kubernetes` in the newly created DC/OS cluster run:
+To install Mesosphere Kuberentes Engine and create a Kubernetes cluster in the newly created DC/OS cluster run:
 
 ```shell
 $ KUBERNETES_FRAMEWORK_VERSION=2.0.0-1.12.1 \
@@ -96,44 +96,29 @@ Wait until all tasks are running before proceeding.
 You can track installation progress as follows:
 
 ```shell
-$ watch ./dcos kubernetes plan show deploy
+$ make watch-kubernetes-cluster
 ```
 
 When installation is successful you will see the following output:
 
 ```
+Using Kubernetes cluster: dev/kubernetes01
 deploy (serial strategy) (COMPLETE)
    etcd (serial strategy) (COMPLETE)
       etcd-0:[peer] (COMPLETE)
       etcd-1:[peer] (COMPLETE)
       etcd-2:[peer] (COMPLETE)
-   apiserver (dependency strategy) (COMPLETE)
-      kube-apiserver-0:[instance] (COMPLETE)
-      kube-apiserver-1:[instance] (COMPLETE)
-      kube-apiserver-2:[instance] (COMPLETE)
+   control-plane (dependency strategy) (COMPLETE)
+      kube-control-plane-0:[instance] (COMPLETE)
+      kube-control-plane-1:[instance] (COMPLETE)
+      kube-control-plane-2:[instance] (COMPLETE)
    mandatory-addons (serial strategy) (COMPLETE)
-      mandatory-addons-0:[additional-cluster-role-bindings] (COMPLETE)
-      mandatory-addons-0:[kubelet-tls-bootstrapping] (COMPLETE)
-      mandatory-addons-0:[kube-dns] (COMPLETE)
-      mandatory-addons-0:[metrics-server] (COMPLETE)
-      mandatory-addons-0:[dashboard] (COMPLETE)
-      mandatory-addons-0:[ark] (COMPLETE)
-   kubernetes-api-proxy (dependency strategy) (COMPLETE)
-      kubernetes-api-proxy-0:[install] (COMPLETE)
-   controller-manager (dependency strategy) (COMPLETE)
-      kube-controller-manager-0:[instance] (COMPLETE)
-      kube-controller-manager-1:[instance] (COMPLETE)
-      kube-controller-manager-2:[instance] (COMPLETE)
-   scheduler (dependency strategy) (COMPLETE)
-      kube-scheduler-0:[instance] (COMPLETE)
-      kube-scheduler-1:[instance] (COMPLETE)
-      kube-scheduler-2:[instance] (COMPLETE)
+      mandatory-addons-0:[instance] (COMPLETE)
    node (dependency strategy) (COMPLETE)
-      kube-node-0:[kube-proxy, coredns, kubelet] (COMPLETE)
-      kube-node-1:[kube-proxy, coredns, kubelet] (COMPLETE)
-      kube-node-2:[kube-proxy, coredns, kubelet] (COMPLETE)
+      kube-node-0:[kubelet] (COMPLETE)
+      kube-node-1:[kubelet] (COMPLETE)
+      kube-node-2:[kubelet] (COMPLETE)
    public-node (dependency strategy) (COMPLETE)
-      kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
 ```
 
 When all tasks are in state `COMPLETE`, press `Ctrl-C` to terminate the `watch`
@@ -146,19 +131,21 @@ first be able to access it. This can be achieved by running the following
 command:
 
 ```shell
-$ make kubeconfig
+$ make marathon-lb kubeconfig
 ```
 
-This command will configure `kubectl` to access our DC/OS Kubernetes cluster.
+This command will expose the Kubernetes API for our newly created Kubernetes cluster, and configure `kubectl` to access said Kubernetes cluster.
 Let's try and list this cluster's nodes:
 
 ```shell
-$ ./kubectl get nodes
-NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.12.1
-kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.12.1
-kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.12.1
-kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    1m        v1.12.1
+$ ./kubectl --context devkubernetes01 get nodes
+NAME                                                  STATUS   ROLES    AGE     VERSION
+kube-control-plane-0-instance.devkubernetes01.mesos   Ready    master   5m18s   v1.12.1
+kube-control-plane-1-instance.devkubernetes01.mesos   Ready    master   5m12s   v1.12.1
+kube-control-plane-2-instance.devkubernetes01.mesos   Ready    master   5m11s   v1.12.1
+kube-node-0-kubelet.devkubernetes01.mesos             Ready    <none>   2m58s   v1.12.1
+kube-node-1-kubelet.devkubernetes01.mesos             Ready    <none>   2m42s   v1.12.1
+kube-node-2-kubelet.devkubernetes01.mesos             Ready    <none>   2m39s   v1.12.1
 ```
 
 If the output is similar to what is shown above, you're good to go and run the
