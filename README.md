@@ -4,7 +4,7 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ![](docs/assets/ui-install.gif)
 
-**NOTE:** The latest `dcos-kubernetes-quickstart` doesn't support any Kubernetes framework version before `2.0.0-1.12.1`. The reason is that now creating Kubernetes clusters requires the installation of the [Mesosphere Kubernetes Engine](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/overview/#cluster-manager).
+**NOTE:** The latest `dcos-kubernetes-quickstart` doesn't support any Kubernetes framework version before `2.0.0-1.12.1`, now creating Kubernetes clusters requires the installation of the [Mesosphere Kubernetes Engine](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/overview/#cluster-manager).
 
 ## Known limitations
 
@@ -42,9 +42,7 @@ Then, start by generating the default infrastructure configuration:
 $ make gcp
 ```
 
-This will output sane defaults to `.deploy/desired_cluster_profile`.
-Now, edit said file and set your `project-id` and the `gce_ssh_pub_key_file`
-(the SSH public key you will use to log-in into your new VMs later).
+This will output sane defaults to `.deploy/desired_cluster_profile`. Now, edit said file and set your `project-id` and the `gce_ssh_pub_key_file` (the SSH public key you will use to log-in into your new VMs later).
 
 **WARNING:** Please, do not set a smaller instance (VM) type on the risk of failing to
 install Kubernetes.
@@ -94,8 +92,7 @@ If you want to give users access to the Kubernetes API check [documentation](htt
 
 #### HA Cluster
 
-**NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and
-a single instance of every control plane component.
+**NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and a single instance of every control plane component.
 
 To deploy a **highly-available** cluster with three (3) private Kubernetes nodes update `.deploy/options.json`:
 
@@ -120,9 +117,7 @@ client, `kubectl`:
 $ make get-cli
 ```
 
-The `dcos` and `kubectl` binaries will be downloaded to the current workdir.
-It's up to you to decided whether or not to copy or move them to another path,
-e.g. a path included in `PATH`.
+The `dcos` and `kubectl` binaries will be downloaded to the current workdir. It's up to you to decided whether or not to copy or move them to another path, e.g. a path included in `PATH`.
 
 ### Install
 
@@ -132,8 +127,7 @@ You are now ready to provision the DC/OS cluster and install the Kubernetes pack
 $ make deploy
 ```
 
-Terraform will now try and provision the infrastructure on your chosen cloud
-provider, and then proceed to install DC/OS.
+Terraform will now try and provision the infrastructure on your chosen cloud provider, and then proceed to install DC/OS.
 
 When DC/OS is up and running, the Kubernetes package installation will take place.
 
@@ -169,22 +163,17 @@ $ make ui
 
 ### Exposing the Kubernetes API
 
-Check the [exposing Kubernetes API doc](docs/exposing_kubernetes_api.md) to understand how
-the Kubernetes API gets exposed.
-To actually expose the Kubernetes API for the new Kubernetes cluster using Marathon-LB, run:
+Check the [exposing Kubernetes API doc](docs/exposing_kubernetes_api.md) to understand how the Kubernetes API gets exposed. To actually expose the Kubernetes API for the new Kubernetes cluster using Marathon-LB, run:
 
 ```bash
 $ make marathon-lb
 ```
 
-**NOTE:** If you have changed in `.deploy/desired_cluster_profile` file the number of
-`num_of_public_agents` to more than `1`, please scale `marathon-lb` service to the same number,
-so you can access Kubernetes API from any DC/OS public agent.
+**NOTE:** Changing the file `.deploy/desired_cluster_profile` so that the number of `num_of_public_agents > 1` requires scaling`marathon-lb` service to the same number, enabling access to the Kubernetes API from all DC/OS public agents.
 
 ### Accessing the Kubernetes API
 
-In order to access the Kubernetes API from outside the DC/OS cluster, one needs
-to configure `kubectl`, the Kubernetes CLI tool:
+In order to access the Kubernetes API from outside the DC/OS cluster, one needs to configure `kubectl`, the Kubernetes CLI tool:
 
 ```bash
 $ make kubeconfig
@@ -242,9 +231,7 @@ run:
 $ make uninstall
 ```
 
-**NOTE:** This will only uninstall Kubernetes. Make sure you destroy your DC/OS
-cluster using the instructions below when you finish testing, or otherwise you
-will need to delete all cloud resources manually!
+**NOTE:** The above command will uninstall Kubernetes and supporting services like marathon-lb. Make sure you destroy your DC/OS cluster using the instructions below when you finish testing, or otherwise you will need to delete all cloud resources manually!
 
 ## Destroy cluster
 
