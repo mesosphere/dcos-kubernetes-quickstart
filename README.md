@@ -23,7 +23,7 @@ Check the requirements for running this quickstart:
   account with enough permissions to provide the needed infrastructure
 
 * macOS
-  * `watch`, you can install with brew:
+  * `watch`, you can install with [brew](https://brew.sh/):
   ```bash
   $ brew install watch
   ```
