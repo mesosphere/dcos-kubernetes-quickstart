@@ -14,14 +14,19 @@ Before proceeding, please check the [current package limitations](https://docs.m
 
 Check the requirements for running this quickstart:
 
-* Linux or MacOS
-* [Terraform 0.11.x](https://www.terraform.io/downloads.html). On MacOS, you can install with [brew](https://brew.sh/):
+* Linux or macOS
+  * [Terraform 0.11.x](https://www.terraform.io/downloads.html). On MacOS, you can install with [brew](https://brew.sh/):
   ```bash
   $ brew install terraform
   ```
-* [Google Cloud](docs/gcp.md), [AWS](docs/aws.md) or [Azure](docs/azure.md)
+  * [Google Cloud](docs/gcp.md), [AWS](docs/aws.md) or [Azure](docs/azure.md)
   account with enough permissions to provide the needed infrastructure
 
+* macOS
+  * `watch`, you can install with brew:
+  ```bash
+  $ brew install watch
+  ```
 ## Quickstart
 
 Once the pre-requisites are met, clone this repo:
@@ -42,7 +47,8 @@ Then, start by generating the default infrastructure configuration:
 $ make gcp
 ```
 
-This will output sane defaults to `.deploy/desired_cluster_profile`. Now, edit said file and set your `project-id` and the `gce_ssh_pub_key_file` (the SSH public key you will use to log-in into your new VMs later).
+This will output sane defaults to `.deploy/desired_cluster_profile`. 
+Now, edit said file and set the value `gcp_project` with your `project-id` and add your ssh file path to `gcp_ssh_pub_key_file` (the SSH public key, [`~/.ssh/google_compute_engine`](docs/gcp.md)), you will use to log-in into your new VMs later with the username `core`).
 
 **WARNING:** Please, do not set a smaller instance (VM) type on the risk of failing to
 install Kubernetes.
@@ -55,7 +61,7 @@ num_of_public_agents = "1"
 #
 gcp_project = "YOUR_GCP_PROJECT"
 gcp_region = "us-central1"
-gce_ssh_pub_key_file = "/PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
+gcp_ssh_pub_key_file = "/PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
 #
 gcp_bootstrap_instance_type = "n1-standard-1"
 gcp_master_instance_type = "n1-standard-8"
@@ -67,46 +73,7 @@ admin_cidr = "0.0.0.0/0"
 
 For more advanced scenarios, please check the [terraform-dcos documentation for Google Cloud](https://github.com/dcos/terraform-dcos/tree/master/gcp).
 
-### Kubernetes configuration
-
-#### RBAC
-
-**NOTE:** This `quickstart` will provision a Kubernetes cluster without `RBAC` support.
-
-To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/operations/authn-and-authz/#rbac) update `.deploy/options.json`:
-
-```
-{
-  "service": {
-    "name": "dev/kubernetes01"
-  },
-  "kubernetes": {
-    "authorization_mode": "RBAC"
-  }
-}
-```
-
-If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/2.0.0-1.12.1/operations/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
-
-**NOTE:** The authorization mode for a cluster must be chosen when installing the package. Changing the authorization mode after installing the package is not supported.
-
-#### HA Cluster
-
-**NOTE:** By default, it will provision a Kubernetes cluster with one (1) worker node, and a single instance of every control plane component.
-
-To deploy a **highly-available** cluster with three (3) private Kubernetes nodes update `.deploy/options.json`:
-
-```
-{
-  "service": {
-    "name": "dev/kubernetes01"
-  },
-  "kubernetes": {
-    "high_availability": true,
-    "private_node_count": 3
-  }
-}
-```
+**NOTE:** The Kubernetes cluster is launched with default configurations, meaning without RBAC and no HA. Please read [Kubernetes Configurations](docs/k8s_configs.md) for details.
 
 ### Download command-line tools
 
@@ -117,7 +84,8 @@ client, `kubectl`:
 $ make get-cli
 ```
 
-The `dcos` and `kubectl` binaries will be downloaded to the current workdir. It's up to you to decided whether or not to copy or move them to another path, e.g. a path included in `PATH`.
+The `dcos` and `kubectl` binaries will be downloaded to the current working directory. 
+It's up to you to decided whether or not to copy or move them to another path, e.g. a path included in `PATH`.
 
 ### Install
 
@@ -163,7 +131,8 @@ $ make ui
 
 ### Exposing the Kubernetes API
 
-Check the [exposing Kubernetes API doc](docs/exposing_kubernetes_api.md) to understand how the Kubernetes API gets exposed. To actually expose the Kubernetes API for the new Kubernetes cluster using Marathon-LB, run:
+Check the [exposing Kubernetes API doc](docs/exposing_kubernetes_api.md) to understand how the Kubernetes API gets exposed. 
+To actually expose the Kubernetes API for the new Kubernetes cluster using Marathon-LB, run:
 
 ```bash
 $ make marathon-lb
@@ -231,7 +200,8 @@ run:
 $ make uninstall
 ```
 
-**NOTE:** The above command will uninstall Kubernetes and supporting services like marathon-lb. Make sure you destroy your DC/OS cluster using the instructions below when you finish testing, or otherwise you will need to delete all cloud resources manually!
+**NOTE:** The above command will uninstall Kubernetes and supporting services like marathon-lb. 
+Make sure you destroy your DC/OS cluster using the instructions below when you finish testing, or otherwise you will need to delete all cloud resources manually!
 
 ## Destroy cluster
 
@@ -245,6 +215,7 @@ Last, clean generated resources:
 ```bash
 $ make clean
 ```
+
 
 ## Documentation
 
