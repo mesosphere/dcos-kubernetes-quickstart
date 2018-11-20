@@ -70,7 +70,7 @@ admin_cidr = "0.0.0.0/0"
 Now, launch the DC/OS cluster by running:
 
 ```shell
-$ KUBERNETES_VERSION=1.12.1 make get-cli launch-dcos setup-cli
+$ KUBERNETES_VERSION=1.12.2 make get-cli launch-dcos setup-cli
 ```
 
 This command will:
@@ -140,12 +140,12 @@ Let's try and list this cluster's nodes:
 ```shell
 $ ./kubectl --context devkubernetes01 get nodes
 NAME                                                  STATUS   ROLES    AGE     VERSION
-kube-control-plane-0-instance.devkubernetes01.mesos   Ready    master   5m18s   v1.12.1
-kube-control-plane-1-instance.devkubernetes01.mesos   Ready    master   5m12s   v1.12.1
-kube-control-plane-2-instance.devkubernetes01.mesos   Ready    master   5m11s   v1.12.1
-kube-node-0-kubelet.devkubernetes01.mesos             Ready    <none>   2m58s   v1.12.1
-kube-node-1-kubelet.devkubernetes01.mesos             Ready    <none>   2m42s   v1.12.1
-kube-node-2-kubelet.devkubernetes01.mesos             Ready    <none>   2m39s   v1.12.1
+kube-control-plane-0-instance.devkubernetes01.mesos   Ready    master   5m18s   v1.12.2
+kube-control-plane-1-instance.devkubernetes01.mesos   Ready    master   5m12s   v1.12.2
+kube-control-plane-2-instance.devkubernetes01.mesos   Ready    master   5m11s   v1.12.2
+kube-node-0-kubelet.devkubernetes01.mesos             Ready    <none>   2m58s   v1.12.2
+kube-node-1-kubelet.devkubernetes01.mesos             Ready    <none>   2m42s   v1.12.2
+kube-node-2-kubelet.devkubernetes01.mesos             Ready    <none>   2m39s   v1.12.2
 ```
 
 If the output is similar to what is shown above, you're good to go and run the
