@@ -4,8 +4,8 @@ SSH_USER := core
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.12
 CUSTOM_DCOS_DOWNLOAD_PATH := https://downloads.dcos.io/dcos/stable/1.12.0/dcos_generate_config.sh
-KUBERNETES_VERSION ?= 1.12.2
-KUBERNETES_FRAMEWORK_VERSION ?= 2.0.1-1.12.2
+KUBERNETES_VERSION ?= 1.13.2
+KUBERNETES_FRAMEWORK_VERSION ?= 2.1.0-1.12.3
 # PATH_TO_PACKAGE_OPTIONS holds the path to the package options file to be used
 # when installing DC/OS Kubernetes.
 PATH_TO_PACKAGE_OPTIONS ?= "$(PWD)/.deploy/options.json"
@@ -138,6 +138,7 @@ ui:
 	$(call get_master_lb_ip)
 	$(OPEN) https://$(MASTER_LB_IP)
 
+KUBERNETES_CLUSTER_STUB_URL := https://universe-converter.mesosphere.com/transform?url=https://infinity-artifacts.s3.amazonaws.com/permanent/kubernetes-cluster/assets/63eaa87/stub-universe-kubernetes-cluster.json
 .PHONY: install
 install: check-dcos
 	@echo "Installing Mesosphere Kubernetes Engine..."
@@ -146,6 +147,8 @@ install: check-dcos
 	@while [[ ! $$($(DCOS_CMD) kubernetes manager plan show deploy 2> /dev/null | head -n1 | grep COMPLETE ) ]]; do \
 		sleep 1; \
 	done
+	@echo "Adding stub URL"
+	$(DCOS_CMD) package repo add --index=0 kubernetes-cluster-aws "$(KUBERNETES_CLUSTER_STUB_URL)"
 	@echo "Creating a Kubernetes cluster..."
 	$(DCOS_CMD) kubernetes cluster create --yes --options="$(PATH_TO_PACKAGE_OPTIONS)"
 
@@ -169,6 +172,22 @@ kubeconfig:
 	$(DCOS_CMD) kubernetes cluster kubeconfig --cluster-name dev/kubernetes01 --apiserver-url https://$(PUBLIC_AGENT_IP):6443 --context-name devkubernetes01 --insecure-skip-tls-verify
 	@scripts/poll_api.sh "Kubernetes API" $(PUBLIC_AGENT_IP) 6443
 
+.PHONY: aws-csi-driver
+aws-csi-driver:
+	wget https://github.com/mesosphere/csi-driver-deployments/archive/master.zip -O csi-driver-deployments.zip
+	unzip csi-driver-deployments.zip && rm csi-driver-deployments.zip
+	$(KUBECTL_CMD) apply -f csi-driver-deployments-master/aws-ebs/kubernetes/latest
+	@scripts/poll_aws_csi.sh
+	rm -rf csi-driver-deployments-master
+
+E2E_REPO := "git@github.com:kubernetes-sigs/aws-ebs-csi-driver.git"
+.PHONY: aws-csi-e2e
+aws-csi-e2e:
+	wget https://github.com/kubernetes-sigs/aws-ebs-csi-driver/archive/master.zip -O aws-ebs-csi-driver.zip
+	unzip aws-ebs-csi-driver.zip && rm aws-ebs-csi-driver.zip
+	cd aws-ebs-csi-driver-master && KUBECONFIG=~/.kube/config make test-e2e
+	rm -rf aws-ebs-csi-driver-master
+
 .PHONY: upgrade-infra
 upgrade-infra: launch-dcos
 
@@ -186,6 +205,7 @@ uninstall: check-dcos
 	for i in {1..8}; do ! $(DCOS_CMD) marathon app list --json | jq '.[].id' | grep '/dev/kubernetes01' >/dev/null && break || (echo "Kubernetes Cluster is still uninstalling. Retrying in 15 seconds..." && sleep 15) ; done
 	$(DCOS_CMD) package uninstall kubernetes --yes
 	for i in {1..8}; do ! $(DCOS_CMD) marathon app list --json | jq '.[].id' | grep '/kubernetes' >/dev/null && break || (echo "Mesosphere Kubernetes Engine is still uninstalling. Retrying in 15 seconds..." && sleep 15) ; done
+	$(DCOS_CMD) package repo remove kubernetes-cluster-aws
 
 .PHONY: destroy
 destroy: check-terraform

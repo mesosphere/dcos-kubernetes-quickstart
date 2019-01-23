@@ -233,6 +233,20 @@ http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/https:kubernetes-da
 
 Please note that you will have to sign-in into the [Kubernetes Dashboard](https://docs.mesosphere.com/services/kubernetes/2.0.1-1.12.2/operations/kubernetes-dashboard/#login-view-and-authorization) before being able to perform any action.
 
+## Installing AWS CSI Driver and Running E2E Tests
+
+To install the driver, run:
+
+```bash
+$ make aws-csi-driver
+```
+
+To run e2e tests for the driver:
+
+```bash
+$ make aws-csi-e2e
+```
+
 ## Uninstall Kubernetes
 
 To uninstall the DC/OS Kubernetes package while leaving your DC/OS cluster up,
