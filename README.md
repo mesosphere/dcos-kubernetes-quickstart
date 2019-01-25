@@ -50,7 +50,7 @@ Now, edit said file and set your `project-id` and the `gce_ssh_pub_key_file`
 install Kubernetes.
 
 ```
-custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.12.0/dcos_generate_config.sh"
+custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.12.1/dcos_generate_config.sh"
 num_of_masters = "1"
 num_of_private_agents = "4"
 num_of_public_agents = "1"

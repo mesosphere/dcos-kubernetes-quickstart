@@ -2,8 +2,8 @@
 RM := rm -f
 SSH_USER := core
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
-DCOS_VERSION := 1.12
-CUSTOM_DCOS_DOWNLOAD_PATH := https://downloads.dcos.io/dcos/stable/1.12.0/dcos_generate_config.sh
+DCOS_CLI_VERSION := 1.12
+CUSTOM_DCOS_DOWNLOAD_PATH := https://downloads.dcos.io/dcos/stable/1.12.1/dcos_generate_config.sh
 KUBERNETES_VERSION ?= 1.13.3
 KUBERNETES_FRAMEWORK_VERSION ?= 2.2.0-1.13.3
 # PATH_TO_PACKAGE_OPTIONS holds the path to the package options file to be used
@@ -35,7 +35,7 @@ endef
 
 .PHONY: get-cli
 get-cli:
-	$(eval export DCOS_VERSION)
+	$(eval export DCOS_CLI_VERSION)
 	$(eval export KUBERNETES_VERSION)
 	scripts/get_cli
 
