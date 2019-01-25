@@ -130,7 +130,7 @@ deploy: check-cli launch-dcos setup-cli install
 .PHONY: setup-cli
 setup-cli: check-dcos
 	$(call get_master_lb_ip)
-	$(DCOS_CMD) cluster setup https://$(MASTER_LB_IP) --insecure
+	for i in {1..20}; do $(DCOS_CMD) cluster setup https://$(MASTER_LB_IP) --insecure && break || (sleep 3) ; done
 	@scripts/poll_api.sh "DC/OS Master" $(MASTER_LB_IP) 443
 
 .PHONY: ui
@@ -183,7 +183,9 @@ uninstall: check-dcos
 	$(DCOS_CMD) marathon app remove kubeapi-proxy
 	$(DCOS_CMD) package uninstall marathon-lb --yes
 	$(DCOS_CMD) kubernetes cluster delete --cluster-name dev/kubernetes01 --yes
+	for i in {1..8}; do ! $(DCOS_CMD) marathon app list --json | jq '.[].id' | grep '/dev/kubernetes01' >/dev/null && break || (echo "Kubernetes Cluster is still uninstalling. Retrying in 15 seconds..." && sleep 15) ; done
 	$(DCOS_CMD) package uninstall kubernetes --yes
+	for i in {1..8}; do ! $(DCOS_CMD) marathon app list --json | jq '.[].id' | grep '/kubernetes' >/dev/null && break || (echo "Mesosphere Kubernetes Engine is still uninstalling. Retrying in 15 seconds..." && sleep 15) ; done
 
 .PHONY: destroy
 destroy: check-terraform
