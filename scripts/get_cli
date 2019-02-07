@@ -12,8 +12,8 @@ else
 fi
 
 #
-echo "Downloading dcos v$DCOS_VERSION cli for $OS"
-curl -o dcos https://downloads.dcos.io/binaries/cli/$OS/x86-64/dcos-$DCOS_VERSION/dcos
+echo "Downloading dcos v$DCOS_CLI_VERSION cli for $OS"
+curl -o dcos https://downloads.dcos.io/binaries/cli/$OS/x86-64/dcos-$DCOS_CLI_VERSION/dcos
 chmod +x dcos
 echo
 #

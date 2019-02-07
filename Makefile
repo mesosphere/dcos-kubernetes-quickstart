@@ -2,10 +2,12 @@
 RM := rm -f
 SSH_USER := core
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
-DCOS_VERSION := 1.12
-CUSTOM_DCOS_DOWNLOAD_PATH := https://downloads.dcos.io/dcos/stable/1.12.0/dcos_generate_config.sh
-KUBERNETES_VERSION ?= 1.12.2
-KUBERNETES_FRAMEWORK_VERSION ?= 2.0.1-1.12.2
+DCOS_CLI_VERSION := 1.12
+CUSTOM_DCOS_DOWNLOAD_PATH := https://downloads.dcos.io/dcos/stable/1.12.1/dcos_generate_config.sh
+KUBERNETES_VERSION ?= 1.13.3
+KUBERNETES_FRAMEWORK_VERSION ?= 2.2.0-1.13.3
+KUBERNETES_STUB_URL ?=
+KUBERNETES_CLUSTER_STUB_URL ?=
 # PATH_TO_PACKAGE_OPTIONS holds the path to the package options file to be used
 # when installing DC/OS Kubernetes.
 PATH_TO_PACKAGE_OPTIONS ?= "$(PWD)/.deploy/options.json"
@@ -35,7 +37,7 @@ endef
 
 .PHONY: get-cli
 get-cli:
-	$(eval export DCOS_VERSION)
+	$(eval export DCOS_CLI_VERSION)
 	$(eval export KUBERNETES_VERSION)
 	scripts/get_cli
 
@@ -130,7 +132,7 @@ deploy: check-cli launch-dcos setup-cli install
 .PHONY: setup-cli
 setup-cli: check-dcos
 	$(call get_master_lb_ip)
-	$(DCOS_CMD) cluster setup https://$(MASTER_LB_IP) --insecure
+	for i in {1..20}; do $(DCOS_CMD) cluster setup https://$(MASTER_LB_IP) --insecure && break || (sleep 3) ; done
 	@scripts/poll_api.sh "DC/OS Master" $(MASTER_LB_IP) 443
 
 .PHONY: ui
@@ -139,7 +141,7 @@ ui:
 	$(OPEN) https://$(MASTER_LB_IP)
 
 .PHONY: install
-install: check-dcos
+install: check-dcos add-stubs
 	@echo "Installing Mesosphere Kubernetes Engine..."
 	$(DCOS_CMD) package install --yes kubernetes --package-version="$(KUBERNETES_FRAMEWORK_VERSION)"
 	@echo "Waiting for Mesosphere Kubernetes Engine to be up..."
@@ -147,7 +149,18 @@ install: check-dcos
 		sleep 1; \
 	done
 	@echo "Creating a Kubernetes cluster..."
-	$(DCOS_CMD) kubernetes cluster create --yes --options="$(PATH_TO_PACKAGE_OPTIONS)"
+	$(DCOS_CMD) kubernetes cluster create --yes --options="$(PATH_TO_PACKAGE_OPTIONS)" --package-version="$(KUBERNETES_FRAMEWORK_VERSION)"
+
+.PHONY: add-stubs
+add-stubs:
+ifdef KUBERNETES_STUB_URL
+	@echo "Adding 'kubernetes' stub"
+	$(DCOS_CMD) package repo add --index=0 kubernetes-aws "$(KUBERNETES_STUB_URL)"
+endif
+ifdef KUBERNETES_CLUSTER_STUB_URL
+	@echo "Adding 'kubernetes-cluster' stub"
+	$(DCOS_CMD) package repo add --index=0 kubernetes-cluster-aws "$(KUBERNETES_CLUSTER_STUB_URL)"
+endif
 
 .PHONY: marathon-lb
 marathon-lb:
@@ -183,7 +196,17 @@ uninstall: check-dcos
 	$(DCOS_CMD) marathon app remove kubeapi-proxy
 	$(DCOS_CMD) package uninstall marathon-lb --yes
 	$(DCOS_CMD) kubernetes cluster delete --cluster-name dev/kubernetes01 --yes
+	for i in {1..8}; do ! $(DCOS_CMD) marathon app list --json | jq '.[].id' | grep '/dev/kubernetes01' >/dev/null && break || (echo "Kubernetes Cluster is still uninstalling. Retrying in 15 seconds..." && sleep 15) ; done
 	$(DCOS_CMD) package uninstall kubernetes --yes
+	for i in {1..8}; do ! $(DCOS_CMD) marathon app list --json | jq '.[].id' | grep '/kubernetes' >/dev/null && break || (echo "Mesosphere Kubernetes Engine is still uninstalling. Retrying in 15 seconds..." && sleep 15) ; done
+ifdef KUBERNETES_STUB_URL
+	@echo "Removing 'kubernetes' stub"
+	$(DCOS_CMD) package repo remove kubernetes-aws
+endif
+ifdef KUBERNETES_CLUSTER_STUB_URL
+	@echo "Removing 'kubernetes-cluster' stub"
+	$(DCOS_CMD) package repo remove kubernetes-cluster-aws
+endif
 
 .PHONY: destroy
 destroy: check-terraform
