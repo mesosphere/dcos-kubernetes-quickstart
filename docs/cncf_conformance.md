@@ -68,7 +68,7 @@ ssh_public_key_file = "/PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
 Now, launch the DC/OS cluster by running:
 
 ```shell
-$ KUBERNETES_VERSION=1.13.3 make get-cli launch-dcos setup-cli
+$ KUBERNETES_VERSION=1.14.1 make get-cli launch-dcos setup-cli
 ```
 
 This command will:
@@ -86,7 +86,7 @@ OpenID token to the shell where you ran the above mentioned command.
 To install Mesosphere Kuberentes Engine and create a Kubernetes cluster in the newly created DC/OS cluster run:
 
 ```shell
-$ KUBERNETES_FRAMEWORK_VERSION=2.2.0-1.13.3 \
+$ KUBERNETES_FRAMEWORK_VERSION=2.3.0-1.14.1 \
   PATH_TO_PACKAGE_OPTIONS=./resources/options-ha.json make install
 ```
 
@@ -138,12 +138,12 @@ Let's try and list this cluster's nodes:
 ```shell
 $ ./kubectl --context devkubernetes01 get nodes
 NAME                                                  STATUS   ROLES    AGE     VERSION
-kube-control-plane-0-instance.devkubernetes01.mesos   Ready    master   5m18s   v1.13.3
-kube-control-plane-1-instance.devkubernetes01.mesos   Ready    master   5m12s   v1.13.3
-kube-control-plane-2-instance.devkubernetes01.mesos   Ready    master   5m11s   v1.13.3
-kube-node-0-kubelet.devkubernetes01.mesos             Ready    <none>   2m58s   v1.13.3
-kube-node-1-kubelet.devkubernetes01.mesos             Ready    <none>   2m42s   v1.13.3
-kube-node-2-kubelet.devkubernetes01.mesos             Ready    <none>   2m39s   v1.13.3
+kube-control-plane-0-instance.devkubernetes01.mesos   Ready    master   5m18s   v1.14.1
+kube-control-plane-1-instance.devkubernetes01.mesos   Ready    master   5m12s   v1.14.1
+kube-control-plane-2-instance.devkubernetes01.mesos   Ready    master   5m11s   v1.14.1
+kube-node-0-kubelet.devkubernetes01.mesos             Ready    <none>   2m58s   v1.14.1
+kube-node-1-kubelet.devkubernetes01.mesos             Ready    <none>   2m42s   v1.14.1
+kube-node-2-kubelet.devkubernetes01.mesos             Ready    <none>   2m39s   v1.14.1
 ```
 
 If the output is similar to what is shown above, you're good to go and run the
