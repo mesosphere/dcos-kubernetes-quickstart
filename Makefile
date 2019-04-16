@@ -1,7 +1,7 @@
 
 RM := rm -f
 SSH_USER := core
-TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
+TERRAFORM_MODULE_BASE := dcos-terraform/dcos
 DCOS_CLI_VERSION := 1.12
 CUSTOM_DCOS_DOWNLOAD_PATH := https://downloads.dcos.io/dcos/stable/1.12.1/dcos_generate_config.sh
 KUBERNETES_VERSION ?= 1.13.3
@@ -11,6 +11,9 @@ KUBERNETES_CLUSTER_STUB_URL ?=
 # PATH_TO_PACKAGE_OPTIONS holds the path to the package options file to be used
 # when installing DC/OS Kubernetes.
 PATH_TO_PACKAGE_OPTIONS ?= "$(PWD)/.deploy/options.json"
+
+# CLOUD_PLATFORM should be set to one of "aws", "gcp" or "azure".
+CLOUD_PLATFORM ?= gcp
 
 # Set PATH (locally) to include local dir for locally downloaded binaries.
 FAKEPATH := "$(PWD):$(PATH)"
@@ -62,38 +65,9 @@ ifndef KUBECTL_CMD
 	$(error "$n$nNo kubectl command in $(FAKEPATH).$n$nPlease run 'make get-cli' to download required binaries.$n$n")
 endif
 
-.PHONY: azure
-azure: clean check-terraform
-	mkdir .deploy
-	cd .deploy; \
-	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure; \
-	sed 's@CUSTOM_DCOS_DOWNLOAD_PATH@'"$(CUSTOM_DCOS_DOWNLOAD_PATH)"'@g' ../resources/desired_cluster_profile.azure > desired_cluster_profile; \
-	cp ../resources/options.json.azure options.json; \
-	cp ../resources/override.azure.tf override.tf; \
-	cp ../resources/kubeapi-proxy.json .;\
- 	../scripts/kubeapi-proxy-azure.sh
-
-.PHONY: aws
-aws: clean check-terraform
-	mkdir .deploy
-	cd .deploy; \
-	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws; \
-	sed 's@CUSTOM_DCOS_DOWNLOAD_PATH@'"$(CUSTOM_DCOS_DOWNLOAD_PATH)"'@g' ../resources/desired_cluster_profile.aws > desired_cluster_profile; \
-	cp ../resources/options.json.aws options.json; \
-	cp ../resources/override.aws.tf override.tf; \
-	cp ../resources/kubeapi-proxy.json .;\
-	../scripts/kubeapi-proxy-aws.sh
-
-.PHONY: gcp
-gcp: clean check-terraform
-	mkdir .deploy
-	cd .deploy; \
-	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp; \
-	sed 's@CUSTOM_DCOS_DOWNLOAD_PATH@'"$(CUSTOM_DCOS_DOWNLOAD_PATH)"'@g' ../resources/desired_cluster_profile.gcp > desired_cluster_profile; \
-	cp ../resources/options.json.gcp options.json; \
-	cp ../resources/override.gcp.tf override.tf; \
-	cp ../resources/kubeapi-proxy.json .; \
-	../scripts/kubeapi-proxy-gcp.sh
+.PHONY: $(CLOUD_PLATFORM)
+$(CLOUD_PLATFORM): clean check-terraform
+	$(PWD)/scripts/terraform.sh $(CLOUD_PLATFORM) init
 
 .PHONY: get-master-lb-ip
 get-master-lb-ip: check-terraform
@@ -113,18 +87,9 @@ define get_public_agent_ip
 $(eval PUBLIC_AGENT_IP := $(shell $(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate  "Public Agent Public IPs" | head -1 | cut -f 1 -d ','))
 endef
 
-.PHONY: plan-dcos
-plan-dcos: check-terraform
-	@cd .deploy; \
-	$(TERRAFORM_CMD) plan -var-file desired_cluster_profile
-
 .PHONY: launch-dcos
 launch-dcos: check-terraform
-	@cd .deploy; \
-	$(TERRAFORM_CMD) apply $(TERRAFORM_APPLY_ARGS) -var-file desired_cluster_profile
-
-.PHONY: plan
-plan: plan-dcos
+	@$(PWD)/scripts/terraform.sh $(CLOUD_PLATFORM) apply
 
 .PHONY: deploy
 deploy: check-cli launch-dcos setup-cli install
