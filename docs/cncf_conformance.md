@@ -6,14 +6,14 @@ The following prerequisites apply to follow these instructions. You will need:
 
 * A Linux or MacOS machine with
   [Terraform 0.11.x](https://www.terraform.io/downloads.html) installed.
-* A [Google Cloud](gcp.md), [AWS](aws.md) or [Azure](azure.md)
-  account with enough permissions to provide the needed infrastructure
+* A [Google Cloud](gcp.md), or [AWS](aws.md) account with enough permissions to provide the needed
+  infrastructure
 
 ## Preparation
 
 **NOTE:** These instructions are targeted at a
-[Google Cloud Platform](gcp.md) deployment. To deploy in [AWS](aws.md)
-or [Azure](azure.md), please run `make aws` or `make azure` instead of
+[Google Cloud Platform](gcp.md) deployment. To deploy in [AWS](aws.md),
+please run `make aws` instead of
 `make gcp` in the step below, and edit the resulting file accordingly.
 
 **NOTE:** To install `dcos-kubernetes` in an existing cluster, please follow
@@ -32,39 +32,37 @@ Then generate the default infrastructure configuration:
 $ make gcp
 ```
 
-This will output sane defaults to `.deploy/desired_cluster_profile`. Now, edit
-said file and set the `gcp_project` and the `gce_ssh_pub_key_file` variables.
+This will output sane defaults to `.deploy/terraform.tfvars`. Now, edit
+said file and set the `gcp_project` and the `ssh_public_key_file` variables.
 Please, do not set a smaller instance (VM) type on the risk of failing to
-install Kubernetes. In the end, the `.deploy/desired_cluster_profile` file
+install Kubernetes. In the end, the `.deploy/terraform.tfvars` file
 should look something like this:
 
 ```
-custom_dcos_download_path = "CUSTOM_DCOS_DOWNLOAD_PATH"
+cluster_name = "dcos-kubernetes"
+cluster_name_random_string = true
+
+dcos_version = "1.12.3"
+
 num_of_masters = "1"
 num_of_private_agents = "4"
 num_of_public_agents = "1"
-#
-gcp_project = "<project-id>"
-gcp_region = "us-west1"
-gcp_ssh_pub_key_file = "<path-to-ssh-public-key>"
+
+bootstrap_instance_type = "n1-standard-1"
+master_instance_type = "n1-standard-8"
+private_agent_instance_type = "n1-standard-8"
+public_agent_instance_type = "n1-standard-8"
+
+# admin_ips = "0.0.0.0/0" # uncomment to access master from any IP
+
+gcp_project = "YOUR_GCP_PROJECT"
+gcp_region = "us-central1"
+ssh_public_key_file = "/PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
 #
 # If you want to use GCP service account key instead of GCP SDK
 # uncomment the line below and update it with the path to the key file
-#gcp_credentials_key_file = "/PATH/YOUR_GCP_SERVICE_ACCOUNT_KEY.json"
+# gcp_credentials = "/PATH/YOUR_GCP_SERVICE_ACCOUNT_KEY.json"
 #
-gcp_bootstrap_instance_type = "n1-standard-1"
-gcp_master_instance_type = "n1-standard-8"
-gcp_agent_instance_type = "n1-standard-8"
-gcp_public_agent_instance_type = "n1-standard-8"
-#
-# Change public/private subnetworks e.g. "10.65." if you want to run multiple clusters in the same project
-gcp_compute_subnetwork_public = "10.64.0.0/22"
-gcp_compute_subnetwork_private = "10.64.4.0/22"
-# Inbound Master Access
-admin_cidr = "0.0.0.0/0"
-
-# Uncomment the line below if you want short living cheap cluster for testing
-#gcp_scheduling_preemptible = "true"
 ```
 
 Now, launch the DC/OS cluster by running:
