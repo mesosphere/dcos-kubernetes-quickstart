@@ -1,8 +1,0 @@
-{
-  "service": {
-    "name": "dev/kubernetes01"
-  },
-  "kubernetes": {
-    "authorization_mode": "RBAC"
-  }
-}

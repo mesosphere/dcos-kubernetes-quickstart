@@ -62,38 +62,17 @@ ifndef KUBECTL_CMD
 	$(error "$n$nNo kubectl command in $(FAKEPATH).$n$nPlease run 'make get-cli' to download required binaries.$n$n")
 endif
 
-.PHONY: azure
-azure: clean check-terraform
-	mkdir .deploy
-	cd .deploy; \
-	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure; \
-	sed 's@CUSTOM_DCOS_DOWNLOAD_PATH@'"$(CUSTOM_DCOS_DOWNLOAD_PATH)"'@g' ../resources/desired_cluster_profile.azure > desired_cluster_profile; \
-	cp ../resources/options.json.azure options.json; \
-	cp ../resources/override.azure.tf override.tf; \
-	cp ../resources/kubeapi-proxy.json .;\
- 	../scripts/kubeapi-proxy-azure.sh
-
-.PHONY: aws
-aws: clean check-terraform
-	mkdir .deploy
-	cd .deploy; \
-	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws; \
-	sed 's@CUSTOM_DCOS_DOWNLOAD_PATH@'"$(CUSTOM_DCOS_DOWNLOAD_PATH)"'@g' ../resources/desired_cluster_profile.aws > desired_cluster_profile; \
-	cp ../resources/options.json.aws options.json; \
-	cp ../resources/override.aws.tf override.tf; \
-	cp ../resources/kubeapi-proxy.json .;\
-	../scripts/kubeapi-proxy-aws.sh
-
-.PHONY: gcp
-gcp: clean check-terraform
-	mkdir .deploy
-	cd .deploy; \
-	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp; \
-	sed 's@CUSTOM_DCOS_DOWNLOAD_PATH@'"$(CUSTOM_DCOS_DOWNLOAD_PATH)"'@g' ../resources/desired_cluster_profile.gcp > desired_cluster_profile; \
-	cp ../resources/options.json.gcp options.json; \
-	cp ../resources/override.gcp.tf override.tf; \
-	cp ../resources/kubeapi-proxy.json .; \
-	../scripts/kubeapi-proxy-gcp.sh
+.PHONY: gcp aws
+gcp aws: clean check-terraform
+	mkdir -p .deploy && \
+	cd .deploy && \
+	cp ../resources/main.$@.tf main.tf && \
+	cp ../resources/variables.$@.tf variables.tf && \
+	$(TERRAFORM_CMD) init && \
+	cp ../resources/desired_cluster_profile.$@.tfvars terraform.tfvars && \
+	cp ../resources/options.json . && \
+	cp ../resources/outputs.tf . && \
+	cp ../resources/kubeapi-proxy.json .
 
 .PHONY: get-master-lb-ip
 get-master-lb-ip: check-terraform
@@ -101,7 +80,7 @@ get-master-lb-ip: check-terraform
 	@echo $(MASTER_LB_IP)
 
 define get_master_lb_ip
-$(eval MASTER_LB_IP := $(shell $(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "Master Load Balancer Public IP"))
+$(eval MASTER_LB_IP := $(shell $(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "cluster-address"))
 endef
 
 .PHONY: get-public-agent-ip
@@ -110,18 +89,18 @@ get-public-agent-ip: check-terraform
 	@echo $(PUBLIC_AGENT_IP)
 
 define get_public_agent_ip
-$(eval PUBLIC_AGENT_IP := $(shell $(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate  "Public Agent Public IPs" | head -1 | cut -f 1 -d ','))
+$(eval PUBLIC_AGENT_IP := $(shell $(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate  "public-agents-loadbalancer"))
 endef
 
 .PHONY: plan-dcos
 plan-dcos: check-terraform
 	@cd .deploy; \
-	$(TERRAFORM_CMD) plan -var-file desired_cluster_profile
+	$(TERRAFORM_CMD) plan
 
 .PHONY: launch-dcos
 launch-dcos: check-terraform
 	@cd .deploy; \
-	$(TERRAFORM_CMD) apply $(TERRAFORM_APPLY_ARGS) -var-file desired_cluster_profile
+	$(TERRAFORM_CMD) apply $(TERRAFORM_APPLY_ARGS)
 
 .PHONY: plan
 plan: plan-dcos
@@ -185,12 +164,6 @@ kubeconfig:
 .PHONY: upgrade-infra
 upgrade-infra: launch-dcos
 
-.PHONY: upgrade-dcos
-upgrade-dcos: check-terraform
-	cd .deploy; \
-	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile.tfvars -var state=upgrade -target null_resource.bootstrap -target null_resource.master -parallelism=1; \
-	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile.tfvars -var state=upgrade
-
 .PHONY: uninstall
 uninstall: check-dcos
 	$(DCOS_CMD) marathon app remove kubeapi-proxy
@@ -211,7 +184,7 @@ endif
 .PHONY: destroy
 destroy: check-terraform
 	cd .deploy; \
-	$(TERRAFORM_CMD) destroy $(TERRAFORM_DESTROY_ARGS) -var-file desired_cluster_profile
+	$(TERRAFORM_CMD) destroy $(TERRAFORM_DESTROY_ARGS)
 
 .PHONY: clean
 clean:

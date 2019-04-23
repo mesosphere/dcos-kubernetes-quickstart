@@ -19,8 +19,8 @@ Check the requirements for running this quickstart:
   ```bash
   $ brew install terraform
   ```
-* [Google Cloud](docs/gcp.md), [AWS](docs/aws.md) or [Azure](docs/azure.md)
-  account with enough permissions to provide the needed infrastructure
+* [Google Cloud](docs/gcp.md) or [AWS](docs/aws.md) account with enough permissions to provide the
+  needed infrastructure
 
 ## Quickstart
 
@@ -42,40 +42,56 @@ Then, start by generating the default infrastructure configuration:
 $ make gcp
 ```
 
-This will output sane defaults to `.deploy/desired_cluster_profile`.
-Now, edit said file and set your `project-id` and the `gce_ssh_pub_key_file`
+This will output sane defaults to `.deploy/terraform.tfvars`.
+Now, edit said file and set your `gcp_project` and the `ssh_public_key_file`
 (the SSH public key you will use to log-in into your new VMs later).
 
 **WARNING:** Please, do not set a smaller instance (VM) type on the risk of failing to
 install Kubernetes.
 
 ```
-custom_dcos_download_path = "https://downloads.dcos.io/dcos/stable/1.12.1/dcos_generate_config.sh"
+cluster_name = "dcos-kubernetes"
+cluster_name_random_string = true
+
+dcos_version = "1.12.3"
+
 num_of_masters = "1"
 num_of_private_agents = "4"
 num_of_public_agents = "1"
-#
+
+bootstrap_instance_type = "n1-standard-1"
+master_instance_type = "n1-standard-8"
+private_agent_instance_type = "n1-standard-8"
+public_agent_instance_type = "n1-standard-8"
+
+# admin_ips = "0.0.0.0/0" # uncomment to access master from any IP
+
 gcp_project = "YOUR_GCP_PROJECT"
 gcp_region = "us-central1"
-gce_ssh_pub_key_file = "/PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
+ssh_public_key_file = "/PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
 #
-gcp_bootstrap_instance_type = "n1-standard-1"
-gcp_master_instance_type = "n1-standard-8"
-gcp_agent_instance_type = "n1-standard-8"
-gcp_public_agent_instance_type = "n1-standard-8"
-# Inbound Master Access
-admin_cidr = "0.0.0.0/0"
+# If you want to use GCP service account key instead of GCP SDK
+# uncomment the line below and update it with the path to the key file
+# gcp_credentials = "/PATH/YOUR_GCP_SERVICE_ACCOUNT_KEY.json"
+#
 ```
 
-For more advanced scenarios, please check the [terraform-dcos documentation for Google Cloud](https://github.com/dcos/terraform-dcos/tree/master/gcp).
+**NOTE:** The current release of the DC/OS GCP Terraform module also requires the `GOOGLE_PROJECT`
+and `GOOGLE_REGION` environment variables to be set. Please set them with appropriates values for
+your deployment:
+
+```
+$ export GOOGLE_PROJECT="YOUR_GCP_PROJECT"
+$ export GOOGLE_REGION="us-central1"
+```
 
 ### Kubernetes configuration
 
 #### RBAC
 
-**NOTE:** This `quickstart` will provision a Kubernetes cluster without `RBAC` support.
+**NOTE:** This `quickstart` will provision a Kubernetes cluster with `RBAC` support.
 
-To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kubernetes/2.2.0-1.13.3/operations/authn-and-authz/#rbac) update `.deploy/options.json`:
+To deploy a cluster with RBAC disabled [RBAC](https://docs.mesosphere.com/services/kubernetes/2.2.0-1.13.3/operations/authn-and-authz/#rbac) update `.deploy/options.json`:
 
 ```
 {
@@ -83,7 +99,7 @@ To deploy a cluster with enabled [RBAC](https://docs.mesosphere.com/services/kub
     "name": "dev/kubernetes01"
   },
   "kubernetes": {
-    "authorization_mode": "RBAC"
+    "authorization_mode": "AlwaysAllow"
   }
 }
 ```
@@ -177,7 +193,7 @@ To actually expose the Kubernetes API for the new Kubernetes cluster using Marat
 $ make marathon-lb
 ```
 
-**NOTE:** If you have changed in `.deploy/desired_cluster_profile` file the number of
+**NOTE:** If you have changed in `.deploy/terraform.tfvars` file the number of
 `num_of_public_agents` to more than `1`, please scale `marathon-lb` service to the same number,
 so you can access Kubernetes API from any DC/OS public agent.
 

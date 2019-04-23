@@ -46,30 +46,36 @@ Now, let's generate the default infrastructure configuration:
 $ make aws
 ```
 
-This will output sane defaults to `.deploy/desired_cluster_profile`.
-Now, edit said file and set `ssh_pub_key`, the public SSH key you will use to
+This will output sane defaults to `.deploy/terraform.tfvars`.
+Now, edit said file and set `ssh_public_key_file`, the public SSH key you will use to
 log-in into your new VMs later.
 
 **WARNING:** Please, do not set a smaller instance (VM) type on the risk of
 failing to install Kubernetes.
 
 ```
-custom_dcos_download_path = "CUSTOM_DCOS_DOWNLOAD_PATH"
+cluster_name = "dcos-kubernetes"
+cluster_name_random_string = true
+
+dcos_version = "1.12.3"
+dcos_security = "strict" # valid values are strict, permissive, disabled
+
 num_of_masters = "1"
 num_of_private_agents = "4"
 num_of_public_agents = "1"
-#
-aws_region = "us-west-2"
-aws_bootstrap_instance_type = "m4.large"
-aws_master_instance_type = "m4.2xlarge"
-aws_agent_instance_type = "m4.2xlarge"
-aws_public_agent_instance_type = "m4.2xlarge"
-ssh_key_name = "default"
-# Inbound Master Access
-admin_cidr = "0.0.0.0/0"
-```
 
-For more advanced scenarios, please check the [terraform-dcos documentation for AWS](https://github.com/dcos/terraform-dcos/tree/master/aws).
+instance_os = "centos_7.5"
+bootstrap_instance_type = "m5.large"
+master_instance_type = "m5.2xlarge"
+private_agent_instance_type = "m5.2xlarge"
+public_agent_instance_type = "m5.2xlarge"
+
+aws_region = "us-west-2"
+# ssh_public_key_file = ""
+# aws_key_name = "default" # uncomment to use an already defined AWS key
+# admin_ips = "0.0.0.0/0" # uncomment to access master from any IP
+
+```
 
 ### Kubernetes configuration
 
