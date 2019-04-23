@@ -8,7 +8,6 @@ num_of_masters = "1"
 num_of_private_agents = "4"
 num_of_public_agents = "1"
 
-instance_os = "coreos_1855.5.0"
 bootstrap_instance_type = "n1-standard-1"
 master_instance_type = "n1-standard-8"
 private_agent_instance_type = "n1-standard-8"

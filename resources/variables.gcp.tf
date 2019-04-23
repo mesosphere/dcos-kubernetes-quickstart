@@ -63,7 +63,7 @@ variable "num_of_masters" {
 
 variable "instance_os" {
   description = "Operating system to use."
-  default = "coreos_1855.5.0"
+  default = "centos_7.5"
 }
 
 variable "bootstrap_machine_type" {
