@@ -8,7 +8,6 @@ num_of_masters = "1"
 num_of_private_agents = "4"
 num_of_public_agents = "1"
 
-instance_os = "centos_7.5"
 bootstrap_instance_type = "m5.large"
 master_instance_type = "m5.2xlarge"
 private_agent_instance_type = "m5.2xlarge"
