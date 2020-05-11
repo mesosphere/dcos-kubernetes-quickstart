@@ -4,11 +4,11 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ![](docs/assets/ui-install.gif)
 
-**NOTE:** The latest `dcos-kubernetes-quickstart` doesn't support any Kubernetes framework version before `2.0.0-1.12.1`. The reason is that now creating Kubernetes clusters requires the installation of the [Mesosphere Kubernetes Engine](https://docs.mesosphere.com/services/kubernetes/2.3.0-1.14.1/overview/#cluster-manager).
+**NOTE:** The latest `dcos-kubernetes-quickstart` doesn't support any Kubernetes framework version before `2.0.0-1.12.1`. The reason is that now creating Kubernetes clusters requires the installation of the [Mesosphere Kubernetes Engine](https://docs.mesosphere.com/services/kubernetes/2.5.0-1.16.9/overview/#cluster-manager).
 
 ## Known limitations
 
-Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/2.3.0-1.14.1/limitations/).
+Before proceeding, please check the [current package limitations](https://docs.mesosphere.com/service-docs/kubernetes/2.5.0-1.16.9/limitations/).
 
 ## Pre-Requisites
 
@@ -91,7 +91,7 @@ $ export GOOGLE_REGION="us-central1"
 
 **NOTE:** This `quickstart` will provision a Kubernetes cluster with `RBAC` support.
 
-To deploy a cluster with RBAC disabled [RBAC](https://docs.mesosphere.com/services/kubernetes/2.3.0-1.14.1/operations/authn-and-authz/#rbac) update `.deploy/options.json`:
+To deploy a cluster with RBAC disabled [RBAC](https://docs.mesosphere.com/services/kubernetes/2.5.0-1.16.9/operations/authn-and-authz/#rbac) update `.deploy/options.json`:
 
 ```
 {
@@ -104,7 +104,7 @@ To deploy a cluster with RBAC disabled [RBAC](https://docs.mesosphere.com/servic
 }
 ```
 
-If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/2.3.0-1.14.1/operations/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
+If you want to give users access to the Kubernetes API check [documentation](https://docs.mesosphere.com/services/kubernetes/2.5.0-1.16.9/operations/authn-and-authz/#giving-users-access-to-the-kubernetes-api).
 
 **NOTE:** The authorization mode for a cluster must be chosen when installing the package. Changing the authorization mode after installing the package is not supported.
 
@@ -211,8 +211,8 @@ Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 ```bash
 $ ./kubectl --context devkubernetes01 get nodes
 NAME                                                  STATUS   ROLES    AGE     VERSION
-kube-control-plane-0-instance.devkubernetes01.mesos   Ready    master   5m18s   v1.14.1
-kube-node-0-kubelet.devkubernetes01.mesos             Ready    <none>   2m58s   v1.14.1
+kube-control-plane-0-instance.devkubernetes01.mesos   Ready    master   5m18s   v1.16.9
+kube-node-0-kubelet.devkubernetes01.mesos             Ready    <none>   2m58s   v1.16.9
 ```
 
 And now, let's check how the system Kubernetes pods are doing:
@@ -247,7 +247,7 @@ Then pointing your browser at:
 http://127.0.0.1:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 ```
 
-Please note that you will have to sign-in into the [Kubernetes Dashboard](https://docs.mesosphere.com/services/kubernetes/2.3.0-1.14.1/operations/kubernetes-dashboard/#login-view-and-authorization) before being able to perform any action.
+Please note that you will have to sign-in into the [Kubernetes Dashboard](https://docs.mesosphere.com/services/kubernetes/2.5.0-1.16.9/operations/kubernetes-dashboard/#login-view-and-authorization) before being able to perform any action.
 
 ## Uninstall Kubernetes
 
@@ -277,13 +277,7 @@ $ make clean
 
 ## Documentation
 
-For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/2.3.0-1.14.1)
+For more details, please see the [docs folder](docs) and as well check the official [service docs](https://docs.mesosphere.com/service-docs/kubernetes/2.5.0-1.16.9)
 
 ## Community
 Get help and connect with other users on the [mailing list](https://groups.google.com/a/dcos.io/forum/#!forum/kubernetes) or on DC/OS community [Slack](http://chat.dcos.io/) in the #kubernetes channel.
-
-## Roadmap for Kubernetes on DC/OS
-
-* [ ] Automatic, and secure exposure of the Kubernetes API
-* [ ] DC/OS as the cloud provider - fully integrated with DC/OS authentication, storage (CSI), and load-balancing (Service and Ingress)
-* [ ] Node Pools - each pool has its own configuration, including placement constraints, taints and tolerations, etc.
