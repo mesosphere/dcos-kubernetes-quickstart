@@ -45,4 +45,4 @@ Here is how this works:
 1. `"HAPROXY_0_SSL_CERT": "/etc/ssl/cert.pem"` tells Marathon-LB to expose the service with the self-signed Marathon-LB certificate (which has **no CN**)
 1. The last label `HAPROXY_0_BACKEND_SERVER_OPTIONS` indicates that Marathon-LB should forward traffic to the endpoint `apiserver.kubernetes.l4lb.thisdcos.directory:6443` rather than to the dummy application, and that the connection should be made using TLS without verification.
 
-For more options of exposing Kubernetes API, please check the [documentation](https://docs.mesosphere.com/services/kubernetes/2.3.0-1.14.1/operations/exposing-the-kubernetes-api/).
+For more options of exposing Kubernetes API, please check the [documentation](https://docs.mesosphere.com/services/kubernetes/2.5.0-1.16.9/operations/exposing-the-kubernetes-api/).

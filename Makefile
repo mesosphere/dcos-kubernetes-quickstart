@@ -3,9 +3,9 @@ RM := rm -f
 SSH_USER := core
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_CLI_VERSION := 1.12
-CUSTOM_DCOS_DOWNLOAD_PATH := https://downloads.dcos.io/dcos/stable/1.12.1/dcos_generate_config.sh
-KUBERNETES_VERSION ?= 1.14.1
-KUBERNETES_FRAMEWORK_VERSION ?= 2.3.0-1.14.1
+CUSTOM_DCOS_DOWNLOAD_PATH := https://downloads.dcos.io/dcos/stable/1.12.3/dcos_generate_config.sh
+KUBERNETES_VERSION ?= 1.16.9
+KUBERNETES_FRAMEWORK_VERSION ?= 2.5.0-1.16.9
 KUBERNETES_STUB_URL ?=
 KUBERNETES_CLUSTER_STUB_URL ?=
 # PATH_TO_PACKAGE_OPTIONS holds the path to the package options file to be used
